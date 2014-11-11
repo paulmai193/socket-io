@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datapackage>
+    <define>
+        <define-command name="ping" type="int" value="1">socket.server.datapackage.PingData</define-command>
+        <define-command name="receive_message" type="int" value="2">socket.server.datapackage.MessageData</define-command>
+        <define-command name="send_message" type="int" value="3">socket.server.datapackage.MessageData</define-command>
+        <define-command name="contact" type="int" value="4">socket.server.datapackage.ContactData</define-command>
+        <define-command name="file" type="int" value="5">socket.server.datapackage.FileData</define-command>
+        <define-command name="disconnect" type="int" value="6">socket.server.datapackage.DisconnectData</define-command>
+        <define-command name="listnumber" type="int" value="7">socket.server.datapackage.ListNumberData</define-command>
+    </define>
+
+	<command value="1">
+	    <data name="number" type="int"></data>
+	</command>
+
+	<command value="2">
+	    <data name="user" type="int"></data>
+		<data name="message" type="String"></data>
+	</command>
+
+	<command value="3">
+	    <data name="user" type="int"></data>
+		<data name="message" type="String"></data>
+	</command>
+	
+	<command value="4">
+	    <data name="contacts" type="List" elementtype="socket.server.datapackage.Contact">
+			<element name="name" type="String"></element>
+			<element name="phone" type="String"></element>
+			<element name="email" type="String"></element>
+	    </data>	    
+	</command>
+	
+	<command value="5">
+	    <data name="file" type="bytearray"></data>
+	</command>
+	
+	<command value="6">
+	</command>
+	
+	<command value="7">
+	    <data name="listnumber" type="list" elementtype="double">
+	        <element name="number" type="double"></element>
+	    </data>
+	</command>
+	
+</datapackage>
