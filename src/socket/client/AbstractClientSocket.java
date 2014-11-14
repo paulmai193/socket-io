@@ -51,7 +51,7 @@ public abstract class AbstractClientSocket implements SocketClientInterface {
 	/**
 	 * Instantiates a new abstract client socket.
 	 *
-	 * @param definePath the path of data parser file
+	 * @param definePath the path of xml define data parser file
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public AbstractClientSocket(String definePath) throws IOException {
@@ -80,9 +80,7 @@ public abstract class AbstractClientSocket implements SocketClientInterface {
 	 * @param command the command
 	 * @throws Exception the exception
 	 */
-	public void echo(WriteDataInterface data, int command) throws Exception {
-		writer.applyStream(outputStream, data, command);
-	}
+	public abstract void echo(WriteDataInterface data, int command) throws Exception;
 		
 	/* (non-Javadoc)
 	 * @see socket.Interface.SocketInterface#getReader()

@@ -28,7 +28,7 @@ public class Writer {
 	/**
 	 * Instantiates a new writer.
 	 *
-	 * @param definePath the path of data parser file
+	 * @param definePath the path of xml define data parser file
 	 */
 	public Writer(String definePath) {
 		this.definePath = definePath;

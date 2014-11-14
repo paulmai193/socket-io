@@ -35,7 +35,7 @@ public class Reader {
 	/**
 	 * Instantiates a new reader.
 	 *
-	 * @param definePath the path of data parser file
+	 * @param definePath the path of xml define data parser file
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public Reader(String definePath) throws IOException {

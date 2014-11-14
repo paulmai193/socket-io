@@ -1,6 +1,7 @@
 package socket.server;
 
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
@@ -14,7 +15,7 @@ import socket.Interface.SocketServerInterface;
 public abstract class AbstractServerSocket implements SocketServerInterface {
 
 	/** The server socket. */
-	protected java.net.ServerSocket serverSocket;
+	protected ServerSocket serverSocket;
 	
 	/** The port. */
 	protected int port;
@@ -91,14 +92,12 @@ public abstract class AbstractServerSocket implements SocketServerInterface {
 	public void run() {
 		isRunning = true;
 		try {
-			serverSocket = new java.net.ServerSocket(port);
+			serverSocket = new ServerSocket(port);
 			if (timeout > 0) {
 				serverSocket.setSoTimeout(timeout);
 			}
-			System.out.println("Server online on port " + port + " waiting for client...");
 			while (isRunning) {
 				Socket socket = serverSocket.accept();
-				System.out.println("Hello client on " + socket.getRemoteSocketAddress());
 				acceptClient(socket);
 			}
 		}
