@@ -2,7 +2,6 @@ package io.parser;
 
 import io.util.Reader;
 import io.util.Writer;
-import io.util.XmlParser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,8 +17,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import socket.listener.ReadDataListener;
-import socket.listener.WriteDataListener;
+import socket.Interface.ReadDataInterface;
+import socket.Interface.WriteDataInterface;
 
 /**
  * The Class DataParser. Read data from inputstream and Write data to outputstream base on data
@@ -102,7 +101,7 @@ public class DataParser {
 	
 	/**
 	 * Gets the data type by String.
-	 *
+	 * 
 	 * @param type the type string
 	 * @return the data type. NULL if type given by parameter not defined
 	 */
@@ -116,15 +115,14 @@ public class DataParser {
 	 * @param inputstream the byte buffer
 	 * @param reader the reader
 	 * @param definePath the define path
-	 * @return the read data listener
+	 * @return the read data object which implements ReadDataInterface
 	 * @throws Exception the exception
 	 */
-	public ReadDataListener readData(InputStream inputstream, Reader reader, String definePath) throws Exception {
+	public ReadDataInterface readData(InputStream inputstream, Reader reader, String definePath) throws Exception {
 		int idCommand = reader.readInt(inputstream);
-		
 		if (idCommand != -1) {
 			XmlParser xml = new XmlParser(definePath);
-			ReadDataListener data = getInstanceReadData(idCommand, xml);
+			ReadDataInterface data = getInstanceReadData(idCommand, xml);
 			if (data != null) {
 				NodeList listCommand = xml.getListNode("command", xml.getRoot());
 				for (int i = 0; i < listCommand.getLength(); i++) {
@@ -148,10 +146,10 @@ public class DataParser {
 	 * 
 	 * @param idCommand the id command
 	 * @param xml the xml
-	 * @return the data instance
+	 * @return the instance of ReadDataInterface
 	 */
-	private ReadDataListener getInstanceReadData(int idCommand, XmlParser xml) {
-		ReadDataListener data = null;
+	private ReadDataInterface getInstanceReadData(int idCommand, XmlParser xml) {
+		ReadDataInterface data = null;
 		NodeList list = xml.getListNode("define", xml.getRoot());
 		try {
 			Node define = list.item(0);
@@ -161,7 +159,7 @@ public class DataParser {
 				String valueCommand = xml.getAttribute(nodeCommand, "value");
 				String className = xml.getValue(nodeCommand);
 				if (Integer.parseInt(valueCommand) == idCommand) {
-					data = (ReadDataListener) Class.forName(className).newInstance();
+					data = (ReadDataInterface) Class.forName(className).newInstance();
 					break;
 				}
 			}
@@ -193,7 +191,6 @@ public class DataParser {
 			if (objData instanceof ArrayList) {
 				int size = reader.readInt(inputstream);
 				String elementType = xml.getAttribute(nodeData, "elementtype");
-				//				Object element = Class.forName(elementType).newInstance();
 				objData = new ArrayList<Object>();
 				for (int k = 0; k < size; k++) {
 					Object element = readDataByType(elementType, reader, inputstream);
@@ -289,15 +286,15 @@ public class DataParser {
 	 * @param writer the writer
 	 * @param command the command
 	 * @param out the data output stream
-	 * @param data the data
+	 * @param data the data object which implements WriteDataInterface
 	 * @param definePath the define path
 	 * @return the data output stream
 	 * @throws Exception the exception
 	 */
-	public void writeData(Writer writer, int command, OutputStream out, WriteDataListener data, String definePath) throws Exception {
+	public void writeData(Writer writer, int command, OutputStream out, WriteDataInterface data, String definePath) throws Exception {
 		// Get object data by command
 		XmlParser xml = new XmlParser(definePath);
-		WriteDataListener writedata = getInstanceWriteData(command, xml);
+		WriteDataInterface writedata = getInstanceWriteData(command, xml);
 		if (data != null) {
 			// Write command first
 			writer.writeInt(out, command);
@@ -321,10 +318,10 @@ public class DataParser {
 	 * 
 	 * @param idCommand the id command
 	 * @param xml the xml
-	 * @return the instance write data
+	 * @return the instance of WriteDataInterface
 	 */
-	private WriteDataListener getInstanceWriteData(int idCommand, XmlParser xml) {
-		WriteDataListener data = null;
+	private WriteDataInterface getInstanceWriteData(int idCommand, XmlParser xml) {
+		WriteDataInterface data = null;
 		NodeList list = xml.getListNode("define", xml.getRoot());
 		try {
 			Node define = list.item(0);
@@ -334,7 +331,7 @@ public class DataParser {
 				String valueCommand = xml.getAttribute(nodeCommand, "value");
 				String className = xml.getValue(nodeCommand);
 				if (Integer.parseInt(valueCommand) == idCommand) {
-					data = (WriteDataListener) Class.forName(className).newInstance();
+					data = (WriteDataInterface) Class.forName(className).newInstance();
 					break;
 				}
 			}
@@ -367,17 +364,17 @@ public class DataParser {
 	
 	/**
 	 * Write data by type.
-	 *
+	 * 
 	 * @param typeData the data type of each field in data object
-	 * @param nameData the data name of each field in data object. If field is null, the object is
-	 * primitive data type
+	 * @param nameData the data name of each field in data object. If field name is null, the data
+	 *            is not object's field
 	 * @param writer the writer
 	 * @param out the data output stream
 	 * @param data the data
 	 * @throws Exception the exception
 	 */
 	private void writeDataByType(String typeData, String nameData, Writer writer, OutputStream out, Object data) throws Exception {
-		Byte objType = DICTIONARY.get(typeData);
+		Byte objType = getDataType(typeData);
 		if (objType == null) {
 			objType = Byte.MIN_VALUE;
 		}

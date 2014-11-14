@@ -1,13 +1,13 @@
-package socket.client.datapackage;
+package implement.client.datapackage;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import socket.listener.ReadDataListener;
-import socket.listener.SocketListener;
-import socket.listener.WriteDataListener;
+import socket.Interface.ReadDataInterface;
+import socket.Interface.SocketClientInterface;
+import socket.Interface.WriteDataInterface;
 
 /**
  * The Class FileData. This class implements both ReadDataListener and WriteDataListener to read
@@ -15,7 +15,7 @@ import socket.listener.WriteDataListener;
  * 
  * @author Paul Mai
  */
-public class FileData implements ReadDataListener, WriteDataListener {
+public class FileData implements ReadDataInterface, WriteDataInterface {
 	
 	/** The picture. */
 	byte[] file;
@@ -49,7 +49,7 @@ public class FileData implements ReadDataListener, WriteDataListener {
 	 * 
 	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket) */
 	@Override
-	public void executeData(SocketListener clientSocket) {
+	public void executeData(SocketClientInterface clientSocket) {
 		System.out.println("Receive file from server");
 		try {
 			OutputStream out = new FileOutputStream("C:/Users/Paul Mai/Desktop/Candy.jpg");

@@ -1,22 +1,22 @@
-package socket.server.datapackage;
+package implement.server.datapackage;
+
+import implement.server.ClientOnServerImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import socket.Interface.ReadDataInterface;
+import socket.Interface.SocketClientInterface;
+import socket.Interface.WriteDataInterface;
 import define.Command;
 
-import socket.listener.ReadDataListener;
-import socket.listener.SocketListener;
-import socket.listener.WriteDataListener;
-import socket.server.ClientConnectSocket;
-
 /**
- * The Class ContactData. This class implements both ReadDataListener and WriteDataListener to read
- * / write Message data package
+ * The Class ContactData. This class implements both ReadDataInterface and WriteDataInterface to read
+ * / write list contact data package
  * 
  * @author Paul Mai
  */
-public class ContactData implements ReadDataListener, WriteDataListener {
+public class ContactData implements ReadDataInterface, WriteDataInterface {
 	
 	/** The contacts. */
 	private List<Contact> contacts;
@@ -59,7 +59,7 @@ public class ContactData implements ReadDataListener, WriteDataListener {
 	 * 
 	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket) */
 	@Override
-	public void executeData(SocketListener clientSocket) {
+	public void executeData(SocketClientInterface clientSocket) {
 		System.out.println("Client send contact list");
 		ListNumberData listNumberData = new ListNumberData();
 		for (Contact contact : contacts) {
@@ -67,8 +67,13 @@ public class ContactData implements ReadDataListener, WriteDataListener {
 			listNumberData.addnumber(Double.parseDouble(contact.getPhone()));
 		}
 		System.out.println("Return list phone to client");
-		((ClientConnectSocket)clientSocket).echoClient(listNumberData, Command.LIST_NUMBER);
-		
+		try {
+			((ClientOnServerImpl) clientSocket).echo(listNumberData, Command.LIST_NUMBER);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+//		((ClientConnectSocket)clientSocket).echoClient(listNumberData, Command.LIST_NUMBER);		
 	}
 
 	/* (non-Javadoc)

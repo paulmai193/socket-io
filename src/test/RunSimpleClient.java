@@ -1,45 +1,30 @@
 package test;
+import implement.client.ClientImpl;
+import implement.client.datapackage.Contact;
+import implement.client.datapackage.ContactData;
+
 import java.io.IOException;
 
-import socket.client.ClientSocket;
-import socket.client.datapackage.Contact;
-import socket.client.datapackage.ContactData;
-import socket.client.datapackage.MessageData;
 import define.Command;
+import define.Config;
 
 public class RunSimpleClient {
 	
 	public static void main(String[] args) {
 		try {			
 			// Start socket
-			ClientSocket client = new ClientSocket();			
+			ClientImpl client = new ClientImpl("localhost", 3333, 0, Config.DATA_PACKAGE_PATH_CLIENT);
 			client.connect();
-			new Thread(client).start();
 			
-			// Waiting 5 seconds before execute test
-			Thread.sleep(5000);
-			
-			// Test 1: Send message
-			client.echoServer(new MessageData(100, "Chào thân ái và quyết thắng!!"), Command.RECEIVE_MESSAGE);
-			
-			// Waiting 5 seconds before execute next test
-			Thread.sleep(5000);
-			
-			// Test 2: Send contact list
-			ContactData contacts = new ContactData();
-			for (int i = 0; i < 10; i++) {
-				Contact contact = new Contact();
-				contact.setEmail(i + "@yahoo.com");
-				contact.setName("Nguyễn Văn " + i);
-				contact.setPhone("0933101959");
-				
-				contacts.addContact(contact);
-			}			
-			client.echoServer(contacts, Command.CONTACT);			
-			
-			// Disconnect after 3 seconds
-			Thread.sleep(3000);
-			client.disconnect();
+			new Thread(client).start();			
+			ContactData contactData = new ContactData();
+			for (int j = 1; j < 20; j++) {
+				Contact contact = new Contact("Nguyễn Văn A " + j, "0933101959", "a" + j + "@abc.com");
+				contactData.addContact(contact);
+			}
+			client.echo(contactData, Command.CONTACT);	
+						
+//			client.disconnect();
 		}
 		catch (IOException e) {
 			e.printStackTrace();

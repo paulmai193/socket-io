@@ -1,11 +1,11 @@
-package socket.server.datapackage;
+package implement.client.datapackage;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import socket.listener.ReadDataListener;
-import socket.listener.SocketListener;
-import socket.listener.WriteDataListener;
+import socket.Interface.ReadDataInterface;
+import socket.Interface.SocketClientInterface;
+import socket.Interface.WriteDataInterface;
 
 /**
  * The Class ListNumberData. This class implements both ReadDataListener and WriteDataListener to read
@@ -13,7 +13,7 @@ import socket.listener.WriteDataListener;
  * 
  * @author Paul Mai
  */
-public class ListNumberData implements ReadDataListener, WriteDataListener {
+public class ListNumberData implements ReadDataInterface, WriteDataInterface {
 	
 	/** The listnumber. */
 	private List<Double> listnumber;
@@ -56,8 +56,8 @@ public class ListNumberData implements ReadDataListener, WriteDataListener {
 	 * 
 	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket) */
 	@Override
-	public void executeData(SocketListener clientSocket) {
-		System.out.println("Client send list numbers");
+	public void executeData(SocketClientInterface clientSocket) {
+		System.out.println("Server send list numbers");
 		for (Double number : listnumber) {
 			System.out.println(number);			
 		}

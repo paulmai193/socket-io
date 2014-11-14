@@ -3,19 +3,16 @@ package socket.server;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
-import factory.threadpool.ThreadFactory;
+import socket.Interface.SocketServerInterface;
 
 /**
- * The Class ServerSocket.
+ * The Class AbstractServerSocket.
  * 
  * @author Paul Mai
  */
-public class ServerSocket implements Runnable {
-	
+public abstract class AbstractServerSocket implements SocketServerInterface {
+
 	/** The server socket. */
 	protected java.net.ServerSocket serverSocket;
 	
@@ -28,30 +25,29 @@ public class ServerSocket implements Runnable {
 	/** The timeout in milliseconds. */
 	protected int timeout;
 	
-	/** The _hash set. */
-	public Set<ClientConnectSocket> _hashSet = Collections.synchronizedSet(new HashSet<ClientConnectSocket>());
+	
 	
 	/** The thread socket. */
 	public Thread threadSocket;
-	
+
 	/**
-	 * Instantiates a new server socket.
-	 * 
+	 * Instantiates a new abstract server socket.
+	 *
 	 * @param port the port
 	 */
-	public ServerSocket(int port) {
+	public AbstractServerSocket(int port) {
 		this.port = port;
 		this.timeout = 0;
 		isRunning = false;
 	}
-	
+
 	/**
-	 * Instantiates a new server socket.
-	 * 
+	 * Instantiates a new abstract server socket.
+	 *
 	 * @param port the port
 	 * @param timeout the timeout
 	 */
-	public ServerSocket(int port, int timeout) {
+	public AbstractServerSocket(int port, int timeout) {
 		this.port = port;
 		this.timeout = timeout;
 		isRunning = false;
@@ -64,7 +60,7 @@ public class ServerSocket implements Runnable {
 		threadSocket = new Thread(this);
 		threadSocket.start();
 	}
-	
+
 	/**
 	 * Stop.
 	 */
@@ -87,9 +83,9 @@ public class ServerSocket implements Runnable {
 		}
 		System.out.println("Server offline!!!");
 	}
-
+	
 	/* (non-Javadoc)
-	 * @see java.lang.Runnable#run()
+	 * @see socket.Interface.SocketServerInterface#run()
 	 */
 	@Override
 	public void run() {
@@ -103,8 +99,7 @@ public class ServerSocket implements Runnable {
 			while (isRunning) {
 				Socket socket = serverSocket.accept();
 				System.out.println("Hello client on " + socket.getRemoteSocketAddress());
-				ClientConnectSocket clientSocket = new ClientConnectSocket(this, socket);
-				ThreadFactory.getInstance().start(clientSocket);
+				acceptClient(socket);
 			}
 		}
 		catch (SocketTimeoutException e) {
@@ -115,4 +110,15 @@ public class ServerSocket implements Runnable {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Accept client.
+	 *
+	 * @param socket the socket
+	 * @return the socket client interface
+	 * @throws SocketTimeoutException the socket timeout exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public abstract void acceptClient(Socket socket) throws SocketTimeoutException, IOException;
+	
 }

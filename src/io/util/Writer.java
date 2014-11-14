@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 
-import socket.listener.WriteDataListener;
+import socket.Interface.WriteDataInterface;
 
 /**
  * The Class Writer write data from package into outputstream.
@@ -15,12 +15,23 @@ import socket.listener.WriteDataListener;
  * @author Paul Mai
  */
 public class Writer {
+	/** The path to xml define data parser file . */
+	private String definePath;
 	
 	/**
 	 * Instantiates a new writer.
 	 */
 	public Writer() {
 		
+	}
+	
+	/**
+	 * Instantiates a new writer.
+	 *
+	 * @param definePath the path of data parser file
+	 */
+	public Writer(String definePath) {
+		this.definePath = definePath;
 	}
 	
 	/**
@@ -181,16 +192,14 @@ public class Writer {
 	}
 	
 	/**
-	 * Apply stream.
+	 * Apply stream. Get and write data from instance of WriteDataInterface into stream
 	 *
 	 * @param outputStream the output stream
-	 * @param dataListener the data listener
+	 * @param dataListener the instance of WriteDataInterface
 	 * @param command the command
-	 * @param definePath the xml define path
 	 * @throws Exception the exception
 	 */
-	public synchronized void applyStream(OutputStream outputStream, WriteDataListener dataListener, int command, String definePath)
-			throws Exception {
+	public synchronized void applyStream(OutputStream outputStream, WriteDataInterface dataListener, int command) throws Exception {
 		DataParser parser = new DataParser();
 		parser.writeData(this, command, outputStream, dataListener, definePath);
 	}

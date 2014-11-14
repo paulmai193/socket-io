@@ -10,8 +10,8 @@ import java.lang.reflect.Field;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 
-import socket.listener.ReadDataListener;
-import socket.listener.SocketListener;
+import socket.Interface.ReadDataInterface;
+import socket.Interface.SocketClientInterface;
 
 /**
  * The Class Reader read and parse data from inputstream to each data package type.
@@ -20,6 +20,9 @@ import socket.listener.SocketListener;
  */
 public class Reader {
 	
+	/** The path to xml define data parser file . */
+	private String definePath;
+	
 	/**
 	 * Instantiates a new reader.
 	 * 
@@ -27,6 +30,16 @@ public class Reader {
 	 */
 	public Reader() throws IOException {
 		
+	}
+	
+	/**
+	 * Instantiates a new reader.
+	 *
+	 * @param definePath the path of data parser file
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public Reader(String definePath) throws IOException {
+		this.definePath = definePath;
 	}
 
 	/**
@@ -194,13 +207,12 @@ public class Reader {
 	}
 
 	/**
-	 * Apply stream.
+	 * Apply data from stream. Read parse data from stream into instance of ReadDataInterface
 	 *
 	 * @param inputstream the inputstream
-	 * @param definePath the define path
 	 */
-	public synchronized void applyStream(InputStream inputstream, String definePath) {
-		ReadDataListener data = null;
+	public synchronized void applyStream(InputStream inputstream) {
+		ReadDataInterface data = null;
 		try {
 			do {
 				DataParser parser = new DataParser();
@@ -226,13 +238,13 @@ public class Reader {
 	}
 	
 	/**
-	 * Apply stream from SocketListener.
+	 * Apply stream from instance of SocketInterface. Read and parse data from stream into instance of ReadDataInterface
 	 *
-	 * @param clientSocket the client socket
+	 * @param clientSocket the instance of SocketInterface
 	 * @param definePath the xml define path
 	 */
-	public synchronized void applyStream(SocketListener clientSocket, String definePath) {
-		ReadDataListener data = null;
+	public synchronized void applyStream(SocketClientInterface clientSocket) {
+		ReadDataInterface data = null;
 		try {
 			do {
 				DataParser parser = new DataParser();
@@ -241,12 +253,13 @@ public class Reader {
 					data.executeData(clientSocket);
 				}
 				else {
-					System.err.println("Error when read data");
+					System.err.println("Not recognize data from stream");
 					break;
 				}
 			} while (clientSocket.isConnected());
 		}
 		catch (SocketException e) {
+			e.printStackTrace();
 			System.out.println("Socket close");
 		}
 		catch (IOException e) {

@@ -1,19 +1,19 @@
-package socket.client.datapackage;
+package implement.client.datapackage;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import socket.listener.ReadDataListener;
-import socket.listener.SocketListener;
-import socket.listener.WriteDataListener;
+import socket.Interface.ReadDataInterface;
+import socket.Interface.SocketClientInterface;
+import socket.Interface.WriteDataInterface;
 
 /**
- * The Class ContactData. This class implements both ReadDataListener and WriteDataListener to read
- * / write Message data package
+ * The Class ContactData. This class implements both ReadDataInterface and WriteDataInterface to read
+ * / write list contact data package
  * 
  * @author Paul Mai
  */
-public class ContactData implements ReadDataListener, WriteDataListener {
+public class ContactData implements ReadDataInterface, WriteDataInterface {
 	
 	/** The contacts. */
 	private List<Contact> contacts;
@@ -56,7 +56,7 @@ public class ContactData implements ReadDataListener, WriteDataListener {
 	 * 
 	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket) */
 	@Override
-	public void executeData(SocketListener clientSocket) {
+	public void executeData(SocketClientInterface clientSocket) {
 		System.out.println("Server send contact list");
 		for (Contact contact : contacts) {
 			System.out.println(contact.getName() + " - " + contact.getEmail() + " - " + contact.getPhone());			

@@ -1,7 +1,7 @@
 package factory.threadpool;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * A factory for creating Thread objects.
@@ -14,8 +14,8 @@ public class ThreadFactory {
 	private static final ThreadFactory instance = new ThreadFactory();
 	
 	/** The thread pool. */
-	private static ExecutorService pool;
-	
+//	private static ExecutorService pool;
+	private static ThreadPoolExecutor pool;
 	/**
 	 * Gets the single instance of ThreadFactory.
 	 * 
@@ -31,7 +31,9 @@ public class ThreadFactory {
 	 * @param poolSize the pool size
 	 */
 	public void connect(int maxConnection) {
-		pool = Executors.newFixedThreadPool(maxConnection, new MyThreadFactory());
+//		pool = Executors.newFixedThreadPool(maxConnection, new MyThreadFactory());
+		pool = (ThreadPoolExecutor) Executors.newCachedThreadPool(new MyThreadFactory());
+		pool.setMaximumPoolSize(maxConnection);
 	}
 	
 	/**
@@ -80,5 +82,14 @@ public class ThreadFactory {
 			return t;
 		}
 		
+	}
+	
+	/**
+	 * Gets the pool.
+	 *
+	 * @return the pool
+	 */
+	public ThreadPoolExecutor getPool() {
+		return pool;
 	}
 }

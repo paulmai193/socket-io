@@ -1,8 +1,8 @@
-package socket.server.datapackage;
+package implement.client.datapackage;
 
-import socket.listener.ReadDataListener;
-import socket.listener.SocketListener;
-import socket.listener.WriteDataListener;
+import socket.Interface.ReadDataInterface;
+import socket.Interface.SocketClientInterface;
+import socket.Interface.WriteDataInterface;
 
 /**
  * The Class ReceiveMessageData. This class implements both ReadDataListener and WriteDataListener
@@ -10,7 +10,7 @@ import socket.listener.WriteDataListener;
  * 
  * @author Paul Mai
  */
-public class MessageData implements ReadDataListener, WriteDataListener {
+public class MessageData implements ReadDataInterface, WriteDataInterface {
 	
 	/** The recipient. */
 	private int user;
@@ -27,7 +27,7 @@ public class MessageData implements ReadDataListener, WriteDataListener {
 	
 	/**
 	 * Instantiates a new message data.
-	 * 
+	 *
 	 * @param user the user
 	 * @param message the message
 	 */
@@ -76,9 +76,8 @@ public class MessageData implements ReadDataListener, WriteDataListener {
 	 * 
 	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket) */
 	@Override
-	public void executeData(SocketListener clientSocket) {
-		System.out.println("Receiver message " + message + " from client");
-		
+	public void executeData(SocketClientInterface clientSocket) {
+		System.out.println("Receive message '" + message + "' with ID " + user + " from server");			
 	}
 
 	/* (non-Javadoc)

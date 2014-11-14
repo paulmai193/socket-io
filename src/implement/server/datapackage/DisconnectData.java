@@ -1,8 +1,8 @@
-package socket.server.datapackage;
+package implement.server.datapackage;
 
-import socket.listener.ReadDataListener;
-import socket.listener.SocketListener;
-import socket.listener.WriteDataListener;
+import socket.Interface.ReadDataInterface;
+import socket.Interface.SocketClientInterface;
+import socket.Interface.WriteDataInterface;
 
 /**
  * The Class DisconnectData. This class implements both ReadDataListener and WriteDataListener to read /
@@ -10,7 +10,7 @@ import socket.listener.WriteDataListener;
  * 
  * @author Paul Mai
  */
-public class DisconnectData implements ReadDataListener, WriteDataListener {
+public class DisconnectData implements ReadDataInterface, WriteDataInterface {
 	
 	/**
 	 * Instantiates a new disconnect data.
@@ -23,7 +23,7 @@ public class DisconnectData implements ReadDataListener, WriteDataListener {
 	 * 
 	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket) */
 	@Override
-	public void executeData(SocketListener clientSocket) {
+	public void executeData(SocketClientInterface clientSocket) {
 		System.out.println("Client want to disconnect");
 		clientSocket.disconnect();
 	}

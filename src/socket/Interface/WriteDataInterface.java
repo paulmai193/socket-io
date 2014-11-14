@@ -1,4 +1,4 @@
-package socket.listener;
+package socket.Interface;
 
 /**
  * The listener interface for receiving writeData events. The class that is interested in processing
@@ -8,6 +8,6 @@ package socket.listener;
  * 
  * @author Paul Mai
  */
-public interface WriteDataListener {
+public interface WriteDataInterface {
 	
 }

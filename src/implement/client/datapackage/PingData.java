@@ -1,8 +1,8 @@
-package socket.client.datapackage;
+package implement.client.datapackage;
 
-import socket.listener.ReadDataListener;
-import socket.listener.SocketListener;
-import socket.listener.WriteDataListener;
+import socket.Interface.ReadDataInterface;
+import socket.Interface.SocketClientInterface;
+import socket.Interface.WriteDataInterface;
 
 /**
  * The Class PingData. This class implements both ReadDataListener and WriteDataListener to read /
@@ -10,7 +10,7 @@ import socket.listener.WriteDataListener;
  * 
  * @author Paul Mai
  */
-public class PingData implements ReadDataListener, WriteDataListener {
+public class PingData implements ReadDataInterface, WriteDataInterface {
 	
 	/** The number. */
 	int number;
@@ -53,7 +53,7 @@ public class PingData implements ReadDataListener, WriteDataListener {
 	 * 
 	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket) */
 	@Override
-	public void executeData(SocketListener clientSocket) {
+	public void executeData(SocketClientInterface clientSocket) {
 		System.out.println("Server ping number " + number + " to client");		
 	}
 

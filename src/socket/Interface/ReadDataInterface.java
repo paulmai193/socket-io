@@ -1,4 +1,4 @@
-package socket.listener;
+package socket.Interface;
 
 
 /**
@@ -9,7 +9,7 @@ package socket.listener;
  * 
  * @author Paul Mai
  */
-public interface ReadDataListener {
+public interface ReadDataInterface {
 	
 	/**
 	 * Execute data when read data from stream finish.
@@ -23,5 +23,5 @@ public interface ReadDataListener {
 	 * 
 	 * @param clientSocket the client socket
 	 */
-	public void executeData(SocketListener clientSocket) throws Exception;
+	public void executeData(SocketClientInterface clientSocket) throws Exception;
 }

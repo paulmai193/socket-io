@@ -1,4 +1,4 @@
-package socket.client.datapackage;
+package implement.client.datapackage;
 
 /**
  * The Class Contact.
@@ -21,6 +21,19 @@ public class Contact {
 	 */
 	public Contact() {
 		
+	}
+	
+	/**
+	 * Instantiates a new contact.
+	 *
+	 * @param name the name
+	 * @param phone the phone
+	 * @param email the email
+	 */
+	public Contact(String name, String phone, String email) {
+		this.email = email;
+		this.phone = phone;
+		this.name = name;
 	}
 	
 	/**
