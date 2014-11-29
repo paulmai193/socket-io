@@ -366,30 +366,6 @@ public class DataParser {
 				break;
 			}
 		}
-//		int j = 0;
-//		do {
-//			Node nodeData = listData.item(j);
-//			String nameData = xml.getAttribute(nodeData, "name");
-//			String typeData = xml.getAttribute(nodeData, "type");
-//			String checkData = xml.getAttribute(nodeData, "check");
-//			Object objData = readDataByType(typeData, inputstream);
-//			if (objData instanceof ArrayList) {
-//				int size = reader.readInt(inputstream);
-//				String elementType = xml.getAttribute(nodeData, "elementtype");
-//				objData = new ArrayList<Object>();
-//				for (int k = 0; k < size; k++) {
-//					Object element = readDataByType(elementType, inputstream);
-//					((ArrayList) objData).add(element);
-//				}
-//			}
-//			setValueOf(data, nameData, objData);
-//			if (checkData != null && checkData.equals(objData)) {
-//				j = j + 2; // Ignore next node
-//			}
-//			else {
-//				j = j + 1;
-//			}
-//		} while (j < listData.getLength());
 	}
 	
 	/**
