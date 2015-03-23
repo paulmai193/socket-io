@@ -16,6 +16,7 @@ import logia.io.util.Writer;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.WriteDataInterface;
+import logia.utility.readfile.XmlUtil;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -285,7 +286,7 @@ public class DataParser {
 			return data;
 		}
 		else if (idCommand != -1) {
-			XmlParser xml = new XmlParser(definePath);
+			XmlUtil xml = new XmlUtil(definePath);
 			data = getInstanceReadData(idCommand, xml);
 			if (data != null) {
 				NodeList listCommand = xml.getListNode("command", xml.getRoot());
@@ -312,7 +313,7 @@ public class DataParser {
 	 * @param xml the xml
 	 * @return the instance of ReadDataInterface
 	 */
-	private ReadDataInterface getInstanceReadData(int idCommand, XmlParser xml) {
+	private ReadDataInterface getInstanceReadData(int idCommand, XmlUtil xml) {
 		ReadDataInterface data = null;
 		NodeList list = xml.getListNode("define", xml.getRoot());
 		try {
@@ -344,7 +345,7 @@ public class DataParser {
 	 * @throws Exception the exception
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void readDataInstance(XmlParser xml, Element elementCommand, Object data, InputStream inputstream) throws Exception {
+	private void readDataInstance(XmlUtil xml, Element elementCommand, Object data, InputStream inputstream) throws Exception {
 		NodeList listData = xml.getListNode("data", elementCommand);
 		for (int j = 0; j < listData.getLength(); j++) {
 			Node nodeData = listData.item(j);
@@ -457,7 +458,7 @@ public class DataParser {
 	 */
 	public void writeData(int command, OutputStream out, WriteDataInterface data) throws Exception {
 		// Get object data by command
-		XmlParser xml = new XmlParser(definePath);
+		XmlUtil xml = new XmlUtil(definePath);
 		WriteDataInterface writedata = getInstanceWriteData(command, xml);
 		if (data != null) {
 			// Write command first
@@ -484,7 +485,7 @@ public class DataParser {
 	 * @param xml the xml
 	 * @return the instance of WriteDataInterface
 	 */
-	private WriteDataInterface getInstanceWriteData(int idCommand, XmlParser xml) {
+	private WriteDataInterface getInstanceWriteData(int idCommand, XmlUtil xml) {
 		WriteDataInterface data = null;
 		NodeList list = xml.getListNode("define", xml.getRoot());
 		try {
@@ -515,7 +516,7 @@ public class DataParser {
 	 * @param out the data output stream
 	 * @throws Exception the exception
 	 */
-	private void writeDataInstance(XmlParser xml, Element elementCommand, Object data, OutputStream out) throws Exception {
+	private void writeDataInstance(XmlUtil xml, Element elementCommand, Object data, OutputStream out) throws Exception {
 		NodeList listData = xml.getListNode("data", elementCommand);
 		for (int j = 0; j < listData.getLength(); j++) {
 			Node nodeData = listData.item(j);
