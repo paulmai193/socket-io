@@ -1,4 +1,4 @@
-package client.datapackage;
+package implement.client.datapackage;
 
 /**
  * The Class Contact.

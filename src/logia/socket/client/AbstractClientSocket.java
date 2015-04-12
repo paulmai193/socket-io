@@ -35,6 +35,12 @@ public abstract class AbstractClientSocket implements SocketClientInterface {
 	/** The timeout of connection. */
 	protected int timeout;
 	
+	/** The start time. */
+	protected final long startTime;
+	
+	/** The id. */
+	private String id;
+	
 	/**
 	 * Instantiates a new abstract client socket.
 	 *
@@ -44,6 +50,7 @@ public abstract class AbstractClientSocket implements SocketClientInterface {
 		isConnected = false;
 		parser = new DataParser();
 		timeout = 0;
+		startTime = System.currentTimeMillis();
 	}
 	
 	/**
@@ -56,6 +63,7 @@ public abstract class AbstractClientSocket implements SocketClientInterface {
 		isConnected = false;
 		parser = new DataParser(definePath);
 		timeout = 0;
+		startTime = System.currentTimeMillis();
 	}
 	
 	/* (non-Javadoc)
@@ -95,6 +103,14 @@ public abstract class AbstractClientSocket implements SocketClientInterface {
 	}
 	
 	/* (non-Javadoc)
+	 * @see logia.socket.Interface.SocketClientInterface#getLiveTime()
+	 */
+	@Override
+	public long getLiveTime() {
+		return System.currentTimeMillis() - startTime;
+	}
+	
+	/* (non-Javadoc)
 	 * @see socket.Interface.SocketInterface#isConnected()
 	 */
 	@Override
@@ -108,6 +124,22 @@ public abstract class AbstractClientSocket implements SocketClientInterface {
 	@Override
 	public void run() {
 		listen();
+	}
+	
+	/* (non-Javadoc)
+	 * @see logia.socket.Interface.SocketClientInterface#getId()
+	 */
+	@Override
+	public String getId() {
+		return id;
+	}
+	/**
+	 * Sets the id.
+	 *
+	 * @param id the new id
+	 */
+	protected void setId(String id) {
+		this.id = id;
 	}
 	
 }

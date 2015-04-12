@@ -1,4 +1,7 @@
-package server.datapackage;
+package implement.server.datapackage;
+
+import implement.define.Command;
+import implement.server.ClientOnServerImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +9,6 @@ import java.util.List;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.WriteDataInterface;
-import server.ClientOnServerImpl;
-import define.Command;
 
 /**
  * The Class ContactData. This class implements both ReadDataInterface and WriteDataInterface to read

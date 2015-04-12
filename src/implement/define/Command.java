@@ -1,9 +1,12 @@
-package define;
+package implement.define;
 
 /**
  * The Class define all Command constant.
  */
 public class Command {
+	
+	/** The Constant PING. */
+	public static final int PONG = 0;
 	
 	/** The Constant PING. */
 	public static final int PING = 1;

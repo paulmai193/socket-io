@@ -1,8 +1,14 @@
-package server;
+package implement.server;
+
+import implement.define.Command;
+import implement.server.datapackage.PingData;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
+import logia.socket.Interface.SocketServerInterface;
 import logia.socket.Interface.WriteDataInterface;
 import logia.socket.client.AbstractClientSocket;
 
@@ -14,20 +20,7 @@ import logia.socket.client.AbstractClientSocket;
 public class ClientOnServerImpl extends AbstractClientSocket {
 	
 	/** The server socket. */
-	private SocketServerImpl serverSocket;
-	
-	/**
-	 * Instantiates a new client on server impl.
-	 * 
-	 * @param serverSocket the server socket
-	 * @param socket the socket
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public ClientOnServerImpl(SocketServerImpl serverSocket, Socket socket) throws IOException {
-		super();
-		this.serverSocket = serverSocket;
-		this.socket = socket;
-	}
+	private SocketServerInterface serverSocket;
 	
 	/**
 	 * Instantiates a new client on server impl.
@@ -37,11 +30,12 @@ public class ClientOnServerImpl extends AbstractClientSocket {
 	 * @param definePath the define path locate the xml define data package
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public ClientOnServerImpl(SocketServerImpl serverSocket, Socket socket, String definePath) throws IOException {
+	public ClientOnServerImpl(SocketServerInterface serverSocket, Socket socket, String definePath) throws IOException {
 		super(definePath);
 		this.serverSocket = serverSocket;
 		this.socket = socket;
 		connect();
+		setId(socket.getRemoteSocketAddress().toString());
 	}
 	
 	/* (non-Javadoc)
@@ -71,7 +65,7 @@ public class ClientOnServerImpl extends AbstractClientSocket {
 	@Override
 	public void disconnect() {
 		isConnected = false;
-		serverSocket._hashSet.remove(this);
+		serverSocket.removeClient(this);
 		if (inputStream != null) {
 			try {
 				inputStream.close();
@@ -124,6 +118,30 @@ public class ClientOnServerImpl extends AbstractClientSocket {
 	 * @see socket.client.AbstractClientSocket#listen() */
 	@Override
 	public void listen() {
-		parser.applyInputStream(this);
+		try {
+			parser.applyInputStream(this);
+		}
+		catch (SocketTimeoutException e) {
+			try {
+				echo(new PingData(), Command.PING);
+			}
+			catch (Exception e1) {
+				System.err.println(e1.getMessage() + ". Disconnect");
+				disconnect();
+			}
+		}
+		catch (SocketException e) {
+			System.err.println(e.getMessage() + ". Disconnect");
+			disconnect();
+		}
+		catch (IOException e) {
+			System.err.println(e.getMessage() + ". Disconnect");
+			disconnect();
+		}
+		catch (Exception e) {
+			System.err.println(e.getMessage() + ". Disconnect");
+			disconnect();
+		}
 	}
+
 }

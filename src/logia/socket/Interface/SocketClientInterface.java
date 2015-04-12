@@ -40,6 +40,13 @@ public interface SocketClientInterface extends Runnable {
 	public DataParser getDataParser();
 	
 	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
+	public String getId();
+	
+	/**
 	 * Gets the input stream.
 	 * 
 	 * @return the input stream
@@ -52,6 +59,13 @@ public interface SocketClientInterface extends Runnable {
 	 * @return the output stream
 	 */
 	public OutputStream getOutputStream();
+	
+	/**
+	 * Gets the live time.
+	 *
+	 * @return the live time
+	 */
+	public long getLiveTime();
 	
 	/**
 	 * Checks if is connected.

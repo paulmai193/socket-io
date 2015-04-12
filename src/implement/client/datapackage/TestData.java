@@ -1,8 +1,9 @@
-package client.datapackage;
+package implement.client.datapackage;
 
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.WriteDataInterface;
+
 
 /**
  * The Class TestData. This class implements both ReadDataInterface and WriteDataInterface to read /

@@ -1,4 +1,4 @@
-package client;
+package implement.client;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -147,13 +147,18 @@ public class ClientImpl extends AbstractClientSocket {
 			parser.applyOutputStream(outputStream, data, command);
 		}
 	}
-	
+
 	/* (non-Javadoc)
-	 * 
-	 * @see socket.client.AbstractClientSocket#listen() */
+	 * @see logia.socket.Interface.SocketClientInterface#listen()
+	 */
 	@Override
 	public void listen() {
-		parser.applyInputStream(this);
-	}
-	
+		try {
+			parser.applyInputStream(this);
+		}
+		catch (Exception e) {
+			System.err.println(e.getMessage() + ". Disconnect");
+			disconnect();
+		}
+	}	
 }

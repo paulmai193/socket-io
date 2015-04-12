@@ -2,6 +2,7 @@
 <datapackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="jar:file:/e:/FoodMob/Android/workspace/Test/src/lib/socketio.jar!/logia/io/define/datapackage.xsd">
 	<define>
+		<define-command name="pong" value="0">client.datapackage.PongData</define-command>
 		<define-command name="ping" value="1">client.datapackage.PingData</define-command>
 		<define-command name="receive_message" value="2">client.datapackage.MessageData</define-command>
 		<define-command name="send_message" value="3">client.datapackage.MessageData</define-command>
@@ -12,9 +13,9 @@
 		<define-command name="ping" value="1001">client.datapackage.TestData</define-command>
 	</define>
 
-	<command value="1">
-		<data name="number" type="int"></data>
-	</command>
+	<command value="0"></command>
+
+	<command value="1"></command>
 
 	<command value="2">
 		<data name="user" type="int"></data>

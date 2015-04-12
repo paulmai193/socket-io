@@ -1,4 +1,4 @@
-package threadpool;
+package implement.threadpool;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -14,7 +14,6 @@ public class ThreadFactory {
 	private static final ThreadFactory instance = new ThreadFactory();
 	
 	/** The thread pool. */
-//	private static ExecutorService pool;
 	private static ThreadPoolExecutor pool;
 	/**
 	 * Gets the single instance of ThreadFactory.
@@ -31,7 +30,6 @@ public class ThreadFactory {
 	 * @param poolSize the pool size
 	 */
 	public void connect(int maxConnection) {
-//		pool = Executors.newFixedThreadPool(maxConnection, new MyThreadFactory());
 		pool = (ThreadPoolExecutor) Executors.newCachedThreadPool(new MyThreadFactory());
 		pool.setMaximumPoolSize(maxConnection);
 	}

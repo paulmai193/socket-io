@@ -1,18 +1,19 @@
-package run;
+package implement.run;
+
+import implement.client.ClientImpl;
+import implement.client.datapackage.TestData;
+import implement.define.Config;
 
 import java.io.IOException;
 
-import client.ClientImpl;
-import client.datapackage.TestData;
-import define.Config;
+import logia.socket.Interface.SocketClientInterface;
 
 public class RunSimpleClient {
 
 	public static void main(String[] args) {
 		try {
 			// Start socket
-			ClientImpl client = new ClientImpl("localhost", 3333, 0,
-					Config.DATA_PACKAGE_PATH_CLIENT);
+			SocketClientInterface client = new ClientImpl("localhost", 3333, 0, Config.DATA_PACKAGE_PATH_CLIENT);
 			client.connect();
 
 			new Thread(client).start();
@@ -23,9 +24,11 @@ public class RunSimpleClient {
 			Thread.sleep(30000);
 
 			client.disconnect();
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			e.printStackTrace();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

@@ -1,4 +1,4 @@
-package define;
+package implement.define;
 
 /**
  * The Class define all Command constant.
