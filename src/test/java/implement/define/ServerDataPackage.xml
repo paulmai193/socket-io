@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<datapackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="jar:file:/e:/FoodMob/Android/workspace/Test/src/lib/socketio.jar!/logia/io/define/datapackage.xsd">
+	<define>
+		<define-command name="ping" value="0">server.datapackage.PongData</define-command>
+		<define-command name="ping" value="1">server.datapackage.PingData</define-command>
+		<define-command name="receive_message" value="2">server.datapackage.MessageData</define-command>
+		<define-command name="send_message" value="3">server.datapackage.MessageData
+		</define-command>
+		<define-command name="contact" value="4">server.datapackage.ContactData
+		</define-command>
+		<define-command name="file" value="5">server.datapackage.FileData
+		</define-command>
+		<define-command name="disconnect" value="6">server.datapackage.DisconnectData
+		</define-command>
+		<define-command name="listnumber" value="7">server.datapackage.ListNumberData
+		</define-command>
+		<define-command name="ping" value="1001">server.datapackage.TestData</define-command>
+	</define>
+
+	<command value="0"></command>
+
+	<command value="1"></command>
+
+	<command value="2">
+		<data name="user" type="int" />
+		<data name="message" type="String" />
+	</command>
+
+	<command value="3">
+		<data name="user" type="int"></data>
+		<data name="message" type="String"></data>
+	</command>
+
+	<command value="4">
+		<data name="contacts" type="List" elementtype="server.datapackage.Contact">
+			<element name="name" type="String"></element>
+			<element name="phone" type="String"></element>
+			<element name="email" type="String"></element>
+		</data>
+	</command>
+
+	<command value="5">
+		<data name="file" type="bytearray"></data>
+	</command>
+
+	<command value="6">
+	</command>
+
+	<command value="7">
+		<data name="listnumber" type="list" elementtype="double">
+			<element name="number" type="double"></element>
+		</data>
+	</command>
+
+	<command value="1001">
+		<data name="number" type="long" breakvalue="0"></data>
+		<data name="name" type="string"></data>
+		<data name="message" type="string"></data>
+	</command>
+
+</datapackage>
