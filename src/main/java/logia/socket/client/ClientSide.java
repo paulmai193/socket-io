@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import logia.io.parser.DataParser;
@@ -104,6 +105,27 @@ public class ClientSide implements SocketClientInterface {
 		this.timeout = timeout;
 	}
 
+	/**
+	 * Instantiates a new client side.
+	 *
+	 * @param host the host
+	 * @param port the port
+	 * @param timeout the timeout
+	 * @param definePath the define path
+	 * @param timeoutListener the timeout listener
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public ClientSide(String host, int port, int timeout, String definePath, SocketTimeoutListener timeoutListener) throws IOException {
+		this.isConnected = false;
+		this.parser = new DataParser(definePath);
+		timeout = 0;
+		this.startTime = System.currentTimeMillis();
+		this.host = host;
+		this.port = port;
+		this.timeout = timeout;
+		this.timeoutListener = timeoutListener;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -174,6 +196,12 @@ public class ClientSide implements SocketClientInterface {
 				e.printStackTrace();
 			}
 			this.socket = null;
+		}
+		if (this.parser != null) {
+			this.parser = null;
+		}
+		if (this.timeoutListener != null) {
+			this.timeoutListener = null;
 		}
 		try {
 			this.finalize();
@@ -285,6 +313,14 @@ public class ClientSide implements SocketClientInterface {
 	public void listen() {
 		try {
 			this.parser.applyInputStream(this);
+		}
+		catch (SocketTimeoutException e) {
+			if (this.timeoutListener != null) {
+				this.timeoutListener.solveTimeout();
+			}
+			else {
+				this.disconnect();
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();

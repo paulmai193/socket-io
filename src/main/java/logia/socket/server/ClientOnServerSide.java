@@ -312,17 +312,12 @@ public class ClientOnServerSide implements SocketClientInterface {
 			this.parser.applyInputStream(this);
 		}
 		catch (SocketTimeoutException e) {
-			if (this.timeoutListener == null) {
-				this.timeoutListener = new SocketTimeoutListener() {
-
-					@Override
-					public void solveTimeout() {
-						ClientOnServerSide.this.disconnect();
-
-					}
-				};
+			if (this.timeoutListener != null) {
+				this.timeoutListener.solveTimeout();
 			}
-			this.timeoutListener.solveTimeout();
+			else {
+				this.disconnect();
+			}
 		}
 		catch (SocketException e) {
 			e.printStackTrace();
