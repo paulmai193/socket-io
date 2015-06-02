@@ -39,9 +39,9 @@ public class Writer {
 	 */
 	public void writeByteArray(OutputStream out, byte[] data) throws IOException {
 		int length = data.length;
-		writeInt(out, length);
+		this.writeInt(out, length);
 		for (int i = 0; i < length; i++) {
-			writeByte(out, data[i]);
+			this.writeByte(out, data[i]);
 		}
 	}
 
@@ -106,6 +106,49 @@ public class Writer {
 	}
 
 	/**
+	 * Write object.
+	 * 
+	 * @param out the data output stream
+	 * @param data the data
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws InstantiationException the instantiation exception
+	 */
+	public void writeObject(OutputStream out, Object data) throws IllegalArgumentException, IllegalAccessException, IOException,
+	InstantiationException {
+		Field[] fields = data.getClass().getDeclaredFields();
+		for (Field field : fields) {
+			field.setAccessible(true);
+			Object fieldType = field.getType().newInstance();
+			if (fieldType instanceof Byte) {
+				this.writeByte(out, field.getByte(data));
+			}
+			else if (fieldType instanceof Byte[]) {
+				this.writeByteArray(out, (byte[]) field.get(data));
+			}
+			else if (fieldType instanceof Double) {
+				this.writeDouble(out, field.getDouble(data));
+			}
+			else if (fieldType instanceof Float) {
+				this.writeFloat(out, field.getFloat(data));
+			}
+			else if (fieldType instanceof Integer) {
+				this.writeInt(out, field.getInt(data));
+			}
+			else if (fieldType instanceof Long) {
+				this.writeLong(out, field.getLong(data));
+			}
+			else if (fieldType instanceof Short) {
+				this.writeShort(out, field.getShort(data));
+			}
+			else if (fieldType instanceof String) {
+				this.writeString(out, (String) field.get(data));
+			}
+		}
+	}
+
+	/**
 	 * Write short.
 	 * 
 	 * @param out the data output stream
@@ -129,51 +172,7 @@ public class Writer {
 	 */
 	public void writeString(OutputStream out, String data) throws IOException {
 		byte[] bytes = data.getBytes("UTF-8");
-		writeByteArray(out, bytes);
-	}
-
-	/**
-	 * Write object.
-	 * 
-	 * @param out the data output stream
-	 * @param data the data
-	 * @throws IllegalArgumentException the illegal argument exception
-	 * @throws IllegalAccessException the illegal access exception
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws InstantiationException the instantiation exception
-	 */
-	public void writeObject(OutputStream out, Object data) throws IllegalArgumentException, IllegalAccessException, IOException,
-	        InstantiationException {
-		Field[] fields = data.getClass().getDeclaredFields();
-		for (int i = 0; i < fields.length; i++) {
-			Field field = fields[i];
-			field.setAccessible(true);
-			Object fieldType = field.getType().newInstance();
-			if (fieldType instanceof Byte) {
-				writeByte(out, field.getByte(data));
-			}
-			else if (fieldType instanceof Byte[]) {
-				writeByteArray(out, (byte[]) field.get(data));
-			}
-			else if (fieldType instanceof Double) {
-				writeDouble(out, field.getDouble(data));
-			}
-			else if (fieldType instanceof Float) {
-				writeFloat(out, field.getFloat(data));
-			}
-			else if (fieldType instanceof Integer) {
-				writeInt(out, field.getInt(data));
-			}
-			else if (fieldType instanceof Long) {
-				writeLong(out, field.getLong(data));
-			}
-			else if (fieldType instanceof Short) {
-				writeShort(out, field.getShort(data));
-			}
-			else if (fieldType instanceof String) {
-				writeString(out, (String) field.get(data));
-			}
-		}
+		this.writeByteArray(out, bytes);
 	}
 
 }

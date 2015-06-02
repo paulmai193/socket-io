@@ -61,43 +61,43 @@ public class DataParser {
 	static {
 		DICTIONARY = new HashMap<String, Byte>();
 
-		DICTIONARY.put("byte", TYPE_BYTE);
-		DICTIONARY.put("Byte", TYPE_BYTE);
-		DICTIONARY.put("java.lang.Byte", TYPE_BYTE);
+		DataParser.DICTIONARY.put("byte", DataParser.TYPE_BYTE);
+		DataParser.DICTIONARY.put("Byte", DataParser.TYPE_BYTE);
+		DataParser.DICTIONARY.put("java.lang.Byte", DataParser.TYPE_BYTE);
 
-		DICTIONARY.put("byte[]", TYPE_BYTE_ARRAY);
-		DICTIONARY.put("bytearray", TYPE_BYTE_ARRAY);
-		DICTIONARY.put("Bytearray", TYPE_BYTE_ARRAY);
-		DICTIONARY.put("ByteArray", TYPE_BYTE_ARRAY);
+		DataParser.DICTIONARY.put("byte[]", DataParser.TYPE_BYTE_ARRAY);
+		DataParser.DICTIONARY.put("bytearray", DataParser.TYPE_BYTE_ARRAY);
+		DataParser.DICTIONARY.put("Bytearray", DataParser.TYPE_BYTE_ARRAY);
+		DataParser.DICTIONARY.put("ByteArray", DataParser.TYPE_BYTE_ARRAY);
 
-		DICTIONARY.put("double", TYPE_DOUBLE);
-		DICTIONARY.put("Double", TYPE_DOUBLE);
-		DICTIONARY.put("java.lang.Double", TYPE_DOUBLE);
+		DataParser.DICTIONARY.put("double", DataParser.TYPE_DOUBLE);
+		DataParser.DICTIONARY.put("Double", DataParser.TYPE_DOUBLE);
+		DataParser.DICTIONARY.put("java.lang.Double", DataParser.TYPE_DOUBLE);
 
-		DICTIONARY.put("float", TYPE_FLOAT);
-		DICTIONARY.put("Float", TYPE_FLOAT);
-		DICTIONARY.put("java.lang.Float", TYPE_FLOAT);
+		DataParser.DICTIONARY.put("float", DataParser.TYPE_FLOAT);
+		DataParser.DICTIONARY.put("Float", DataParser.TYPE_FLOAT);
+		DataParser.DICTIONARY.put("java.lang.Float", DataParser.TYPE_FLOAT);
 
-		DICTIONARY.put("int", TYPE_INTERGER);
-		DICTIONARY.put("Integer", TYPE_INTERGER);
-		DICTIONARY.put("java.lang.Integer", TYPE_INTERGER);
+		DataParser.DICTIONARY.put("int", DataParser.TYPE_INTERGER);
+		DataParser.DICTIONARY.put("Integer", DataParser.TYPE_INTERGER);
+		DataParser.DICTIONARY.put("java.lang.Integer", DataParser.TYPE_INTERGER);
 
-		DICTIONARY.put("long", TYPE_LONG);
-		DICTIONARY.put("Long", TYPE_LONG);
-		DICTIONARY.put("java.lang.Long", TYPE_LONG);
+		DataParser.DICTIONARY.put("long", DataParser.TYPE_LONG);
+		DataParser.DICTIONARY.put("Long", DataParser.TYPE_LONG);
+		DataParser.DICTIONARY.put("java.lang.Long", DataParser.TYPE_LONG);
 
-		DICTIONARY.put("arraylist", TYPE_LIST);
-		DICTIONARY.put("ArrayList", TYPE_LIST);
-		DICTIONARY.put("list", TYPE_LIST);
-		DICTIONARY.put("List", TYPE_LIST);
+		DataParser.DICTIONARY.put("arraylist", DataParser.TYPE_LIST);
+		DataParser.DICTIONARY.put("ArrayList", DataParser.TYPE_LIST);
+		DataParser.DICTIONARY.put("list", DataParser.TYPE_LIST);
+		DataParser.DICTIONARY.put("List", DataParser.TYPE_LIST);
 
-		DICTIONARY.put("short", TYPE_SHORT);
-		DICTIONARY.put("Short", TYPE_SHORT);
-		DICTIONARY.put("java.lang.Short", TYPE_SHORT);
+		DataParser.DICTIONARY.put("short", DataParser.TYPE_SHORT);
+		DataParser.DICTIONARY.put("Short", DataParser.TYPE_SHORT);
+		DataParser.DICTIONARY.put("java.lang.Short", DataParser.TYPE_SHORT);
 
-		DICTIONARY.put("string", TYPE_STRING);
-		DICTIONARY.put("String", TYPE_STRING);
-		DICTIONARY.put("java.lang.String", TYPE_STRING);
+		DataParser.DICTIONARY.put("string", DataParser.TYPE_STRING);
+		DataParser.DICTIONARY.put("String", DataParser.TYPE_STRING);
+		DataParser.DICTIONARY.put("java.lang.String", DataParser.TYPE_STRING);
 	}
 
 	/** The path to xml define data parser file . */
@@ -113,9 +113,9 @@ public class DataParser {
 	 * Instantiates a new data parser with default define package reader is data-package.xml file.
 	 */
 	public DataParser() {
-		reader = new Reader();
-		writer = new Writer();
-		definePath = DataParser.class.getClassLoader().getResource("data-package.xml").getPath();
+		this.reader = new Reader();
+		this.writer = new Writer();
+		this.definePath = DataParser.class.getClassLoader().getResource("data-package.xml").getPath();
 	}
 
 	/**
@@ -124,13 +124,13 @@ public class DataParser {
 	 * @param definePath the path of xml define data parser file
 	 */
 	public DataParser(String definePath) {
-		reader = new Reader();
-		writer = new Writer();
+		this.reader = new Reader();
+		this.writer = new Writer();
 		this.definePath = definePath;
 	}
 
 	/**
-	 * Apply data from stream. Read parse data from stream into instance of ReadDataInterface and execute this data after reading
+	 * Apply data from stream. Read parse data from stream into instance of ReadDataInterface and execute this data after reading.
 	 * 
 	 * @param inputstream the inputstream
 	 */
@@ -138,7 +138,7 @@ public class DataParser {
 		ReadDataInterface data = null;
 		try {
 			do {
-				data = readData(inputstream);
+				data = this.readData(inputstream);
 				if (data != null) {
 					data.executeData();
 				}
@@ -161,8 +161,8 @@ public class DataParser {
 	}
 
 	/**
-	 * Apply stream from instance of SocketInterface. Read and parse data from stream into instance of ReadDataInterface. The reader was set timeout,
-	 * so when the socket timeout, it will test the connection with <b>Minimum byte number</b>, if target response, the timeout will reset.
+	 * Apply stream from instance of SocketInterface. Read and parse data from stream into instance of ReadDataInterface and execute this data after
+	 * reading.
 	 *
 	 * @param clientSocket the instance of SocketInterface
 	 * @throws SocketTimeoutException the socket timeout exception
@@ -173,7 +173,7 @@ public class DataParser {
 	public void applyInputStream(SocketClientInterface clientSocket) throws SocketTimeoutException, SocketException, IOException, Exception {
 		ReadDataInterface data = null;
 		do {
-			data = readData(clientSocket.getInputStream());
+			data = this.readData(clientSocket.getInputStream());
 			if (data != null) {
 				data.executeData(clientSocket);
 			}
@@ -194,7 +194,7 @@ public class DataParser {
 	 * @throws Exception the exception
 	 */
 	public void applyOutputStream(OutputStream outputStream, WriteDataInterface dataListener, int command) throws Exception {
-		writeData(command, outputStream, dataListener);
+		this.writeData(command, outputStream, dataListener);
 	}
 
 	/**
@@ -204,7 +204,7 @@ public class DataParser {
 	 * @return the data type. NULL if type given by parameter not defined
 	 */
 	public Byte getDataType(String type) {
-		return DICTIONARY.get(type);
+		return DataParser.DICTIONARY.get(type);
 	}
 
 	/**
@@ -216,17 +216,17 @@ public class DataParser {
 	 */
 	public ReadDataInterface readData(InputStream inputstream) throws Exception {
 		ReadDataInterface data;
-		int idCommand = reader.readInt(inputstream);
+		int idCommand = this.reader.readInt(inputstream);
 		if (idCommand != -1) {
-			XmlUtil xml = new XmlUtil(definePath);
-			data = getInstanceReadData(idCommand, xml);
+			XmlUtil xml = new XmlUtil(this.definePath);
+			data = this.getInstanceReadData(idCommand, xml);
 			if (data != null) {
 				NodeList listCommand = xml.getListNode("command", xml.getRoot());
 				for (int i = 0; i < listCommand.getLength(); i++) {
 					Node nodeCommand = listCommand.item(i);
 					String valueCommand = xml.getAttribute(nodeCommand, "value");
 					if (Integer.parseInt(valueCommand) == idCommand) {
-						readDataInstance(xml, (Element) nodeCommand, data, inputstream);
+						this.readDataInstance(xml, (Element) nodeCommand, data, inputstream);
 						break;
 					}
 				}
@@ -235,6 +235,37 @@ public class DataParser {
 		}
 		else {
 			throw new SocketException();
+		}
+	}
+
+	/**
+	 * Write data.
+	 * 
+	 * @param command the command
+	 * @param out the data output stream
+	 * @param data the data object which implements WriteDataInterface
+	 * @return the data output stream
+	 * @throws Exception the exception
+	 */
+	public void writeData(int command, OutputStream out, WriteDataInterface data) throws Exception {
+		// Get object data by command
+		XmlUtil xml = new XmlUtil(this.definePath);
+		WriteDataInterface writedata = this.getInstanceWriteData(command, xml);
+		if (data != null) {
+			// Write command first
+			this.writer.writeInt(out, command);
+
+			data.getClass().cast(writedata);
+			NodeList listCommand = xml.getListNode("command", xml.getRoot());
+			for (int i = 0; i < listCommand.getLength(); i++) {
+				Node nodeCommand = listCommand.item(i);
+				String valueCommand = xml.getAttribute(nodeCommand, "value");
+				if (Integer.parseInt(valueCommand) == command) {
+					this.writeDataInstance(xml, (Element) nodeCommand, data, out);
+					break;
+				}
+			}
+			out.flush();
 		}
 	}
 
@@ -268,155 +299,6 @@ public class DataParser {
 	}
 
 	/**
-	 * Read and parse data into instance.
-	 * 
-	 * @param xml the xml
-	 * @param elementCommand the element command
-	 * @param data the data instance
-	 * @param inputstream the byte buffer
-	 * @throws Exception the exception
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void readDataInstance(XmlUtil xml, Element elementCommand, Object data, InputStream inputstream) throws Exception {
-		NodeList listData = xml.getListNode("data", elementCommand);
-		for (int j = 0; j < listData.getLength(); j++) {
-			Node nodeData = listData.item(j);
-			String nameData = xml.getAttribute(nodeData, "name");
-			String typeData = xml.getAttribute(nodeData, "type");
-			String checkData = xml.getAttribute(nodeData, "breakvalue");
-			Object objData = readDataByType(typeData, inputstream);
-			if (objData instanceof ArrayList) {
-				int size = reader.readInt(inputstream);
-				String elementType = xml.getAttribute(nodeData, "elementtype");
-				objData = new ArrayList<Object>();
-				for (int k = 0; k < size; k++) {
-					Object element = readDataByType(elementType, inputstream);
-					((ArrayList) objData).add(element);
-				}
-			}
-			try {
-				setValueOf(data, nameData, objData);
-			}
-			catch (Exception e) {
-				System.err.println("Try to set value " + objData + " to field " + nameData + " in " + typeData + " type.");
-			}
-
-			if (checkData != null && checkData.toString().equals(objData.toString())) {
-				break;
-			}
-		}
-	}
-
-	/**
-	 * Read data by type.
-	 * 
-	 * @param typeData the type data
-	 * @param inputstream the byte buffer
-	 * @return the object
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	private Object readDataByType(String typeData, InputStream inputstream) throws IOException {
-		Object value = null;
-		Byte objType = getDataType(typeData);
-		if (objType == null) {
-			objType = Byte.MIN_VALUE;
-		}
-		switch (objType) {
-			case TYPE_BYTE:
-				value = reader.readByte(inputstream);
-				break;
-
-			case TYPE_BYTE_ARRAY:
-				value = reader.readByteArray(inputstream);
-				break;
-
-			case TYPE_DOUBLE:
-				value = reader.readDouble(inputstream);
-				break;
-
-			case TYPE_FLOAT:
-				value = reader.readFloat(inputstream);
-				break;
-
-			case TYPE_INTERGER:
-				value = reader.readInt(inputstream);
-				break;
-
-			case TYPE_LONG:
-				value = reader.readLong(inputstream);
-				break;
-
-			case TYPE_SHORT:
-				value = reader.readShort(inputstream);
-				break;
-
-			case TYPE_STRING:
-				value = reader.readString(inputstream);
-				break;
-
-			case TYPE_LIST:
-				value = new ArrayList<>();
-				break;
-
-			default:
-				try {
-					value = Class.forName(typeData).newInstance();
-					value = reader.readObject(value.getClass(), inputstream);
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
-				break;
-		}
-		return value;
-	}
-
-	/**
-	 * Sets the value of.
-	 * 
-	 * @param clazz the clazz
-	 * @param lookingForValue the looking for value
-	 * @param value the value
-	 * @throws Exception the exception
-	 */
-	private void setValueOf(Object clazz, String lookingForValue, Object value) throws Exception {
-		Field field = clazz.getClass().getDeclaredField(lookingForValue);
-		field.setAccessible(true);
-		field.set(clazz, value);
-	}
-
-	/**
-	 * Write data.
-	 * 
-	 * @param command the command
-	 * @param out the data output stream
-	 * @param data the data object which implements WriteDataInterface
-	 * @return the data output stream
-	 * @throws Exception the exception
-	 */
-	public void writeData(int command, OutputStream out, WriteDataInterface data) throws Exception {
-		// Get object data by command
-		XmlUtil xml = new XmlUtil(definePath);
-		WriteDataInterface writedata = getInstanceWriteData(command, xml);
-		if (data != null) {
-			// Write command first
-			writer.writeInt(out, command);
-
-			data.getClass().cast(writedata);
-			NodeList listCommand = xml.getListNode("command", xml.getRoot());
-			for (int i = 0; i < listCommand.getLength(); i++) {
-				Node nodeCommand = listCommand.item(i);
-				String valueCommand = xml.getAttribute(nodeCommand, "value");
-				if (Integer.parseInt(valueCommand) == command) {
-					writeDataInstance(xml, (Element) nodeCommand, data, out);
-					break;
-				}
-			}
-			out.flush();
-		}
-	}
-
-	/**
 	 * Gets the instance write data.
 	 * 
 	 * @param idCommand the id command
@@ -446,6 +328,267 @@ public class DataParser {
 	}
 
 	/**
+	 * Read data by type.
+	 * 
+	 * @param typeData the type data
+	 * @param inputstream the byte buffer
+	 * @return the object
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	private Object readDataByType(String typeData, InputStream inputstream) throws IOException {
+		Object value = null;
+		Byte objType = this.getDataType(typeData);
+		if (objType == null) {
+			objType = Byte.MIN_VALUE;
+		}
+		switch (objType) {
+			case TYPE_BYTE:
+				value = this.reader.readByte(inputstream);
+				break;
+
+			case TYPE_BYTE_ARRAY:
+				value = this.reader.readByteArray(inputstream);
+				break;
+
+			case TYPE_DOUBLE:
+				value = this.reader.readDouble(inputstream);
+				break;
+
+			case TYPE_FLOAT:
+				value = this.reader.readFloat(inputstream);
+				break;
+
+			case TYPE_INTERGER:
+				value = this.reader.readInt(inputstream);
+				break;
+
+			case TYPE_LONG:
+				value = this.reader.readLong(inputstream);
+				break;
+
+			case TYPE_SHORT:
+				value = this.reader.readShort(inputstream);
+				break;
+
+			case TYPE_STRING:
+				value = this.reader.readString(inputstream);
+				break;
+
+			case TYPE_LIST:
+				value = new ArrayList<>();
+				break;
+
+			default:
+				try {
+					value = Class.forName(typeData).newInstance();
+					value = this.reader.readObject(value.getClass(), inputstream);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
+		}
+		return value;
+	}
+
+	/**
+	 * Read and parse data into instance.
+	 * 
+	 * @param xml the xml
+	 * @param elementCommand the element command
+	 * @param data the data instance
+	 * @param inputstream the byte buffer
+	 * @throws Exception the exception
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void readDataInstance(XmlUtil xml, Element elementCommand, Object data, InputStream inputstream) throws Exception {
+		NodeList listData = xml.getListNode("data", elementCommand);
+		for (int j = 0; j < listData.getLength(); j++) {
+			Node nodeData = listData.item(j);
+			String nameData = xml.getAttribute(nodeData, "name");
+			String typeData = xml.getAttribute(nodeData, "type");
+			String checkData = xml.getAttribute(nodeData, "breakvalue");
+			Object fieldData = this.readDataByType(typeData, inputstream);
+			if (fieldData instanceof ArrayList) {
+				int size = this.reader.readInt(inputstream);
+				String elementType = xml.getAttribute(nodeData, "elementtype");
+				fieldData = new ArrayList<Object>();
+				for (int k = 0; k < size; k++) {
+					Object element = this.readDataByType(elementType, inputstream);
+					((ArrayList) fieldData).add(element);
+				}
+			}
+			try {
+				this.setValueOf(data, nameData, fieldData);
+			}
+			catch (Exception e) {
+				System.err.println("Try to set value " + fieldData + " to field " + nameData + " in " + typeData + " type.");
+			}
+
+			if (checkData != null && checkData.toString().equals(fieldData.toString())) {
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Sets the value of.
+	 * 
+	 * @param clazz the clazz
+	 * @param lookingForValue the looking for value
+	 * @param value the value
+	 * @throws Exception the exception
+	 */
+	private void setValueOf(Object clazz, String lookingForValue, Object value) throws Exception {
+		Field field = clazz.getClass().getDeclaredField(lookingForValue);
+		field.setAccessible(true);
+		field.set(clazz, value);
+	}
+
+	/**
+	 * Write data by type.
+	 * 
+	 * @param typeData the data type of each field in data object
+	 * @param nameData the data name of each field in data object. If field name is null, the data is not object's field
+	 * @param out the data output stream
+	 * @param data the data
+	 * @return
+	 * @throws Exception the exception
+	 */
+	private String writeDataByType(String typeData, String nameData, OutputStream out, Object data) throws Exception {
+		Byte objType = this.getDataType(typeData);
+		if (objType == null) {
+			objType = Byte.MIN_VALUE;
+		}
+		Field field;
+		String returnValue = "";
+		switch (objType) {
+
+			case TYPE_BYTE:
+				if (nameData.equals("")) {
+					this.writer.writeByte(out, (byte) data);
+					returnValue = data.toString();
+				}
+				else {
+					field = data.getClass().getDeclaredField(nameData);
+					field.setAccessible(true);
+					this.writer.writeByte(out, field.getByte(data));
+					returnValue = field.get(data).toString();
+				}
+				break;
+
+			case TYPE_BYTE_ARRAY:
+				if (nameData.equals("")) {
+					this.writer.writeByteArray(out, (byte[]) data);
+					returnValue = data.toString();
+				}
+				else {
+					field = data.getClass().getDeclaredField(nameData);
+					field.setAccessible(true);
+					this.writer.writeByteArray(out, (byte[]) field.get(data));
+					returnValue = field.get(data).toString();
+				}
+				break;
+
+			case TYPE_DOUBLE:
+				if (nameData.equals("")) {
+					this.writer.writeDouble(out, (double) data);
+					returnValue = data.toString();
+				}
+				else {
+					field = data.getClass().getDeclaredField(nameData);
+					field.setAccessible(true);
+					this.writer.writeDouble(out, field.getDouble(data));
+					returnValue = field.get(data).toString();
+				}
+				break;
+
+			case TYPE_FLOAT:
+				if (nameData.equals("")) {
+					this.writer.writeFloat(out, (float) data);
+					returnValue = data.toString();
+				}
+				else {
+					field = data.getClass().getDeclaredField(nameData);
+					field.setAccessible(true);
+					this.writer.writeFloat(out, field.getFloat(data));
+					returnValue = field.get(data).toString();
+				}
+				break;
+
+			case TYPE_INTERGER:
+				if (nameData.equals("")) {
+					this.writer.writeInt(out, (int) data);
+					returnValue = data.toString();
+				}
+				else {
+					field = data.getClass().getDeclaredField(nameData);
+					field.setAccessible(true);
+					this.writer.writeInt(out, field.getInt(data));
+					returnValue = field.get(data).toString();
+				}
+				break;
+
+			case TYPE_LONG:
+				if (nameData.equals("")) {
+					this.writer.writeLong(out, (long) data);
+					returnValue = data.toString();
+				}
+				else {
+					field = data.getClass().getDeclaredField(nameData);
+					field.setAccessible(true);
+					this.writer.writeLong(out, field.getLong(data));
+					returnValue = field.get(data).toString();
+				}
+				break;
+
+			case TYPE_SHORT:
+				if (nameData.equals("")) {
+					this.writer.writeShort(out, (short) data);
+					returnValue = data.toString();
+				}
+				else {
+					field = data.getClass().getDeclaredField(nameData);
+					field.setAccessible(true);
+					this.writer.writeShort(out, field.getShort(data));
+					returnValue = field.get(data).toString();
+				}
+				break;
+
+			case TYPE_STRING:
+				if (nameData.equals("")) {
+					this.writer.writeString(out, (String) data);
+					returnValue = data.toString();
+				}
+				else {
+					field = data.getClass().getDeclaredField(nameData);
+					field.setAccessible(true);
+					this.writer.writeString(out, (String) field.get(data));
+					returnValue = field.get(data).toString();
+				}
+				break;
+
+			case TYPE_LIST:
+				field = data.getClass().getDeclaredField(nameData);
+				field.setAccessible(true);
+				@SuppressWarnings("rawtypes")
+				List list = (List) field.get(data);
+				this.writer.writeInt(out, list.size());
+				for (Object object : list) {
+					String objectType = object.getClass().getName();
+					this.writeDataByType(objectType, "", out, object);
+				}
+				break;
+
+			default:
+				this.writer.writeObject(out, data);
+				returnValue = data.toString();
+				break;
+		}
+		return returnValue;
+	}
+
+	/**
 	 * Write data instance.
 	 * 
 	 * @param xml the xml
@@ -460,154 +603,11 @@ public class DataParser {
 			Node nodeData = listData.item(j);
 			String nameData = xml.getAttribute(nodeData, "name");
 			String typeData = xml.getAttribute(nodeData, "type");
-			String checkValue = xml.getAttribute(nodeData, "checkvalue");
-			String checkData = writeDataByType(typeData, nameData, out, data);
+			String checkValue = xml.getAttribute(nodeData, "breakvalue");
+			String checkData = this.writeDataByType(typeData, nameData, out, data);
 			if (checkValue != null && checkValue.toString().equals(checkData.toString())) {
 				break;
 			}
 		}
-	}
-
-	/**
-	 * Write data by type.
-	 * 
-	 * @param typeData the data type of each field in data object
-	 * @param nameData the data name of each field in data object. If field name is null, the data is not object's field
-	 * @param out the data output stream
-	 * @param data the data
-	 * @return
-	 * @throws Exception the exception
-	 */
-	private String writeDataByType(String typeData, String nameData, OutputStream out, Object data) throws Exception {
-		Byte objType = getDataType(typeData);
-		if (objType == null) {
-			objType = Byte.MIN_VALUE;
-		}
-		Field field;
-		String returnValue = "";
-		switch (objType) {
-
-			case TYPE_BYTE:
-				if (nameData.equals("")) {
-					writer.writeByte(out, (byte) data);
-					returnValue = data.toString();
-				}
-				else {
-					field = data.getClass().getDeclaredField(nameData);
-					field.setAccessible(true);
-					writer.writeByte(out, field.getByte(data));
-					returnValue = field.get(data).toString();
-				}
-				break;
-
-			case TYPE_BYTE_ARRAY:
-				if (nameData.equals("")) {
-					writer.writeByteArray(out, (byte[]) data);
-					returnValue = data.toString();
-				}
-				else {
-					field = data.getClass().getDeclaredField(nameData);
-					field.setAccessible(true);
-					writer.writeByteArray(out, (byte[]) field.get(data));
-					returnValue = field.get(data).toString();
-				}
-				break;
-
-			case TYPE_DOUBLE:
-				if (nameData.equals("")) {
-					writer.writeDouble(out, (double) data);
-					returnValue = data.toString();
-				}
-				else {
-					field = data.getClass().getDeclaredField(nameData);
-					field.setAccessible(true);
-					writer.writeDouble(out, field.getDouble(data));
-					returnValue = field.get(data).toString();
-				}
-				break;
-
-			case TYPE_FLOAT:
-				if (nameData.equals("")) {
-					writer.writeFloat(out, (float) data);
-					returnValue = data.toString();
-				}
-				else {
-					field = data.getClass().getDeclaredField(nameData);
-					field.setAccessible(true);
-					writer.writeFloat(out, field.getFloat(data));
-					returnValue = field.get(data).toString();
-				}
-				break;
-
-			case TYPE_INTERGER:
-				if (nameData.equals("")) {
-					writer.writeInt(out, (int) data);
-					returnValue = data.toString();
-				}
-				else {
-					field = data.getClass().getDeclaredField(nameData);
-					field.setAccessible(true);
-					writer.writeInt(out, field.getInt(data));
-					returnValue = field.get(data).toString();
-				}
-				break;
-
-			case TYPE_LONG:
-				if (nameData.equals("")) {
-					writer.writeLong(out, (long) data);
-					returnValue = data.toString();
-				}
-				else {
-					field = data.getClass().getDeclaredField(nameData);
-					field.setAccessible(true);
-					writer.writeLong(out, field.getLong(data));
-					returnValue = field.get(data).toString();
-				}
-				break;
-
-			case TYPE_SHORT:
-				if (nameData.equals("")) {
-					writer.writeShort(out, (short) data);
-					returnValue = data.toString();
-				}
-				else {
-					field = data.getClass().getDeclaredField(nameData);
-					field.setAccessible(true);
-					writer.writeShort(out, field.getShort(data));
-					returnValue = field.get(data).toString();
-				}
-				break;
-
-			case TYPE_STRING:
-				if (nameData.equals("")) {
-					writer.writeString(out, (String) data);
-					returnValue = data.toString();
-				}
-				else {
-					field = data.getClass().getDeclaredField(nameData);
-					field.setAccessible(true);
-					writer.writeString(out, (String) field.get(data));
-					returnValue = field.get(data).toString();
-				}
-				break;
-
-			case TYPE_LIST:
-				field = data.getClass().getDeclaredField(nameData);
-				field.setAccessible(true);
-				@SuppressWarnings("rawtypes")
-				List list = (List) field.get(data);
-				writer.writeInt(out, list.size());
-				for (Object object : list) {
-					String objectType = object.getClass().getName();
-					writeDataByType(objectType, "", out, object);
-				}
-				break;
-
-			default:
-				writer.writeObject(out, data);
-				returnValue = data.toString();
-				break;
-		}
-		return returnValue;
 	}
 }

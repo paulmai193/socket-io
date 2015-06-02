@@ -26,22 +26,14 @@ public class FileData implements ReadDataInterface, WriteDataInterface {
 
 	}
 
-	/**
-	 * Gets the file.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @return the file
+	 * @see socket.listener.ReadDataListener#executeData()
 	 */
-	public byte[] getFile() {
-		return file;
-	}
+	@Override
+	public void executeData() throws Exception {
 
-	/**
-	 * Sets the file.
-	 * 
-	 * @param picture the new file
-	 */
-	public void setFile(byte[] file) {
-		this.file = file;
 	}
 
 	/*
@@ -54,8 +46,8 @@ public class FileData implements ReadDataInterface, WriteDataInterface {
 		System.out.println("Client send file to server");
 		try {
 			OutputStream out = new FileOutputStream("C:/Users/Paul Mai/Desktop/Candy.jpg");
-			for (int i = 0; i < this.file.length; i++) {
-				out.write(file[i]);
+			for (byte element : this.file) {
+				out.write(element);
 			}
 			out.close();
 			System.out.println("Write file finish");
@@ -69,14 +61,22 @@ public class FileData implements ReadDataInterface, WriteDataInterface {
 
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Gets the file.
 	 * 
-	 * @see socket.listener.ReadDataListener#executeData()
+	 * @return the file
 	 */
-	@Override
-	public void executeData() throws Exception {
+	public byte[] getFile() {
+		return this.file;
+	}
 
+	/**
+	 * Sets the file.
+	 * 
+	 * @param picture the new file
+	 */
+	public void setFile(byte[] file) {
+		this.file = file;
 	}
 
 }

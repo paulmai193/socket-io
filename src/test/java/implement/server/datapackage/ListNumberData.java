@@ -25,24 +25,6 @@ public class ListNumberData implements ReadDataInterface, WriteDataInterface {
 	}
 
 	/**
-	 * Gets the listnumber.
-	 *
-	 * @return the listnumber
-	 */
-	public List<Double> getlistnumber() {
-		return listnumber;
-	}
-
-	/**
-	 * Sets the listnumber.
-	 *
-	 * @param listnumber the new listnumber
-	 */
-	public void setlistnumber(List<Double> listnumber) {
-		this.listnumber = listnumber;
-	}
-
-	/**
 	 * Addnumber.
 	 *
 	 * @param number the number
@@ -54,24 +36,42 @@ public class ListNumberData implements ReadDataInterface, WriteDataInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket)
-	 */
-	@Override
-	public void executeData(SocketClientInterface clientSocket) {
-		System.out.println("Client send list numbers");
-		for (Double number : listnumber) {
-			System.out.println(number);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see socket.listener.ReadDataListener#executeData()
 	 */
 	@Override
 	public void executeData() throws Exception {
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket)
+	 */
+	@Override
+	public void executeData(SocketClientInterface clientSocket) {
+		System.out.println("Client send list numbers");
+		for (Double number : this.listnumber) {
+			System.out.println(number);
+		}
+	}
+
+	/**
+	 * Gets the listnumber.
+	 *
+	 * @return the listnumber
+	 */
+	public List<Double> getlistnumber() {
+		return this.listnumber;
+	}
+
+	/**
+	 * Sets the listnumber.
+	 *
+	 * @param listnumber the new listnumber
+	 */
+	public void setlistnumber(List<Double> listnumber) {
+		this.listnumber = listnumber;
 	}
 
 }

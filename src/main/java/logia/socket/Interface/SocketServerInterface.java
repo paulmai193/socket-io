@@ -18,18 +18,18 @@ public interface SocketServerInterface extends Runnable {
 	public void addClient(SocketClientInterface client);
 
 	/**
-	 * Checks if is running.
-	 *
-	 * @return true, if is running
-	 */
-	public boolean isRunning();
-
-	/**
 	 * Gets the list clients.
 	 *
 	 * @return the list clients
 	 */
 	public Collection<SocketClientInterface> getListClients();
+
+	/**
+	 * Checks if is running.
+	 *
+	 * @return true, if is running
+	 */
+	public boolean isRunning();
 
 	/**
 	 * Removes the client.
@@ -46,4 +46,21 @@ public interface SocketServerInterface extends Runnable {
 	 */
 	@Override
 	public void run();
+
+	/**
+	 * Sets the accept client listener.
+	 *
+	 * @param acceptClientListener the new accept client listener
+	 */
+	public void setAcceptClientListener(AcceptClientListener acceptClientListener);
+
+	/**
+	 * Start.
+	 */
+	public void start();
+
+	/**
+	 * Stop.
+	 */
+	public void stop();
 }

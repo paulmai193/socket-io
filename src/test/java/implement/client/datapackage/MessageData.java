@@ -31,8 +31,28 @@ public class MessageData implements ReadDataInterface, WriteDataInterface {
 	 * @param message the message
 	 */
 	public MessageData(int user, String message) {
-		setUser(user);
-		setMessage(message);
+		this.setUser(user);
+		this.setMessage(message);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see socket.listener.ReadDataListener#executeData()
+	 */
+	@Override
+	public void executeData() throws Exception {
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket)
+	 */
+	@Override
+	public void executeData(SocketClientInterface clientSocket) {
+		System.out.println("Receive message '" + this.message + "' with ID " + this.user + " from server");
 	}
 
 	/**
@@ -41,7 +61,16 @@ public class MessageData implements ReadDataInterface, WriteDataInterface {
 	 * @return the message
 	 */
 	public String getMessage() {
-		return message;
+		return this.message;
+	}
+
+	/**
+	 * Gets the user.
+	 * 
+	 * @return the user
+	 */
+	public int getUser() {
+		return this.user;
 	}
 
 	/**
@@ -54,41 +83,12 @@ public class MessageData implements ReadDataInterface, WriteDataInterface {
 	}
 
 	/**
-	 * Gets the user.
-	 * 
-	 * @return the user
-	 */
-	public int getUser() {
-		return user;
-	}
-
-	/**
 	 * Sets the user.
 	 * 
 	 * @param user the new user
 	 */
 	public void setUser(int user) {
 		this.user = user;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket)
-	 */
-	@Override
-	public void executeData(SocketClientInterface clientSocket) {
-		System.out.println("Receive message '" + message + "' with ID " + user + " from server");
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see socket.listener.ReadDataListener#executeData()
-	 */
-	@Override
-	public void executeData() throws Exception {
-
 	}
 
 }

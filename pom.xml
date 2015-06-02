@@ -12,6 +12,7 @@
 				<directory>src/main/resource</directory>
 			</resource>
 		</resources>
+		<testSourceDirectory>src/test/java</testSourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -37,7 +38,7 @@
 		<dependency>
 			<groupId>logia</groupId>
 			<artifactId>logia-utility</artifactId>
-			<version>0.0.6</version>
+			<version>0.0.8</version>
 		</dependency>
 	</dependencies>
 </project>

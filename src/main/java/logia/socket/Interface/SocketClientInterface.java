@@ -53,6 +53,13 @@ public interface SocketClientInterface extends Runnable {
 	public InputStream getInputStream();
 
 	/**
+	 * Gets the live time.
+	 *
+	 * @return the live time
+	 */
+	public long getLiveTime();
+
+	/**
 	 * Gets the output stream.
 	 * 
 	 * @return the output stream
@@ -60,11 +67,11 @@ public interface SocketClientInterface extends Runnable {
 	public OutputStream getOutputStream();
 
 	/**
-	 * Gets the live time.
+	 * Gets the timeout listener.
 	 *
-	 * @return the live time
+	 * @return the timeout listener
 	 */
-	public long getLiveTime();
+	public SocketTimeoutListener getTimeoutListener();
 
 	/**
 	 * Checks if is connected.
@@ -77,4 +84,11 @@ public interface SocketClientInterface extends Runnable {
 	 * Listen method. Start reading data send through connection
 	 */
 	public void listen();
+
+	/**
+	 * Sets the timeout listener.
+	 *
+	 * @param listener the new timeout listener
+	 */
+	public void setTimeoutListener(SocketTimeoutListener listener);
 }

@@ -10,62 +10,6 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 public class ThreadFactory {
 
-	/** The Constant instance. */
-	private static final ThreadFactory instance = new ThreadFactory();
-
-	/** The thread pool. */
-	private static ThreadPoolExecutor  pool;
-
-	/**
-	 * Gets the single instance of ThreadFactory.
-	 * 
-	 * @return single instance of ThreadFactory
-	 */
-	public final static ThreadFactory getInstance() {
-		return instance;
-	}
-
-	/**
-	 * Inits the pool.
-	 * 
-	 * @param poolSize the pool size
-	 */
-	public void connect(int maxConnection) {
-		pool = (ThreadPoolExecutor) Executors.newCachedThreadPool(new MyThreadFactory());
-		pool.setMaximumPoolSize(maxConnection);
-	}
-
-	/**
-	 * Release pool.
-	 */
-	public void release() {
-		pool.shutdown();
-		int count = 0;
-		while (!pool.isTerminated()) {
-			count++;
-			if (count == 30) {
-				// Force shutdown after 30 seconds
-				pool.shutdownNow();
-			}
-			try {
-				Thread.sleep(1000);
-			}
-			catch (InterruptedException e) {
-
-			}
-		}
-		pool = null;
-	}
-
-	/**
-	 * Get and the thread get from thread pool.
-	 * 
-	 * @param runnable the runnable
-	 */
-	public void start(Runnable runnable) {
-		pool.execute(runnable);
-	}
-
 	/**
 	 * A factory for creating MyThread objects.
 	 */
@@ -85,12 +29,68 @@ public class ThreadFactory {
 
 	}
 
+	/** The Constant instance. */
+	private static final ThreadFactory instance = new ThreadFactory();
+
+	/** The thread pool. */
+	private static ThreadPoolExecutor  pool;
+
+	/**
+	 * Inits the pool.
+	 * 
+	 * @param poolSize the pool size
+	 */
+	public void connect(int maxConnection) {
+		ThreadFactory.pool = (ThreadPoolExecutor) Executors.newCachedThreadPool(new MyThreadFactory());
+		ThreadFactory.pool.setMaximumPoolSize(maxConnection);
+	}
+
 	/**
 	 * Gets the pool.
 	 *
 	 * @return the pool
 	 */
 	public ThreadPoolExecutor getPool() {
-		return pool;
+		return ThreadFactory.pool;
+	}
+
+	/**
+	 * Release pool.
+	 */
+	public void release() {
+		ThreadFactory.pool.shutdown();
+		int count = 0;
+		while (!ThreadFactory.pool.isTerminated()) {
+			count++;
+			if (count == 30) {
+				// Force shutdown after 30 seconds
+				ThreadFactory.pool.shutdownNow();
+			}
+			try {
+				Thread.sleep(1000);
+			}
+			catch (InterruptedException e) {
+
+			}
+		}
+		ThreadFactory.pool = null;
+	}
+
+	/**
+	 * Get and the thread get from thread pool.
+	 * 
+	 * @param runnable the runnable
+	 */
+	public void start(Runnable runnable) {
+		ThreadFactory.pool.execute(runnable);
+	}
+
+	/**
+	 * Gets the single instance of ThreadFactory.
+	 * 
+	 * @return single instance of ThreadFactory
+	 */
+	public final static ThreadFactory getInstance() {
+		return ThreadFactory.instance;
 	}
 }

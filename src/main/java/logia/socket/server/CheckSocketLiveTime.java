@@ -34,9 +34,9 @@ public class CheckSocketLiveTime implements Runnable {
 	 */
 	@Override
 	public void run() {
-		while (server.isRunning()) {
-			for (SocketClientInterface client : server.getListClients()) {
-				if (client.getLiveTime() > maxLiveTime) {
+		while (this.server.isRunning()) {
+			for (SocketClientInterface client : this.server.getListClients()) {
+				if (client.getLiveTime() > this.maxLiveTime) {
 					client.disconnect();
 				}
 				try {

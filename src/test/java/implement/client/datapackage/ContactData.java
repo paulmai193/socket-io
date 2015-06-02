@@ -25,24 +25,6 @@ public class ContactData implements ReadDataInterface, WriteDataInterface {
 	}
 
 	/**
-	 * Gets the contacts.
-	 * 
-	 * @return the contacts
-	 */
-	public List<Contact> getContacts() {
-		return contacts;
-	}
-
-	/**
-	 * Sets the contacts.
-	 * 
-	 * @param contacts the new contacts
-	 */
-	public void setContacts(List<Contact> contacts) {
-		this.contacts = contacts;
-	}
-
-	/**
 	 * Adds the contact.
 	 * 
 	 * @param contact the contact
@@ -54,24 +36,42 @@ public class ContactData implements ReadDataInterface, WriteDataInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket)
-	 */
-	@Override
-	public void executeData(SocketClientInterface clientSocket) {
-		System.out.println("Server send contact list");
-		for (Contact contact : contacts) {
-			System.out.println(contact.getName() + " - " + contact.getEmail() + " - " + contact.getPhone());
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see socket.listener.ReadDataListener#executeData()
 	 */
 	@Override
 	public void executeData() throws Exception {
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket)
+	 */
+	@Override
+	public void executeData(SocketClientInterface clientSocket) {
+		System.out.println("Server send contact list");
+		for (Contact contact : this.contacts) {
+			System.out.println(contact.getName() + " - " + contact.getEmail() + " - " + contact.getPhone());
+		}
+	}
+
+	/**
+	 * Gets the contacts.
+	 * 
+	 * @return the contacts
+	 */
+	public List<Contact> getContacts() {
+		return this.contacts;
+	}
+
+	/**
+	 * Sets the contacts.
+	 * 
+	 * @param contacts the new contacts
+	 */
+	public void setContacts(List<Contact> contacts) {
+		this.contacts = contacts;
 	}
 
 }

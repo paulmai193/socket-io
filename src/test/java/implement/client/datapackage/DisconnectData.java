@@ -21,21 +21,21 @@ public class DisconnectData implements ReadDataInterface, WriteDataInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket)
-	 */
-	@Override
-	public void executeData(SocketClientInterface clientSocket) {
-		clientSocket.disconnect();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see socket.listener.ReadDataListener#executeData()
 	 */
 	@Override
 	public void executeData() throws Exception {
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket)
+	 */
+	@Override
+	public void executeData(SocketClientInterface clientSocket) {
+		clientSocket.disconnect();
 	}
 
 }

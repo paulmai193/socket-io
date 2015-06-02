@@ -1,7 +1,6 @@
 package implement.server.datapackage;
 
 import implement.define.Command;
-import implement.server.ClientOnServerImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +8,7 @@ import java.util.List;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.WriteDataInterface;
+import logia.socket.server.ClientOnServerSide;
 
 /**
  * The Class ContactData. This class implements both ReadDataInterface and WriteDataInterface to read / write list contact data package
@@ -28,24 +28,6 @@ public class ContactData implements ReadDataInterface, WriteDataInterface {
 	}
 
 	/**
-	 * Gets the contacts.
-	 * 
-	 * @return the contacts
-	 */
-	public List<Contact> getContacts() {
-		return contacts;
-	}
-
-	/**
-	 * Sets the contacts.
-	 * 
-	 * @param contacts the new contacts
-	 */
-	public void setContacts(List<Contact> contacts) {
-		this.contacts = contacts;
-	}
-
-	/**
 	 * Adds the contact.
 	 * 
 	 * @param contact the contact
@@ -57,19 +39,29 @@ public class ContactData implements ReadDataInterface, WriteDataInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see socket.listener.ReadDataListener#executeData()
+	 */
+	@Override
+	public void executeData() throws Exception {
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket)
 	 */
 	@Override
 	public void executeData(SocketClientInterface clientSocket) {
 		System.out.println("Client send contact list");
 		ListNumberData listNumberData = new ListNumberData();
-		for (Contact contact : contacts) {
+		for (Contact contact : this.contacts) {
 			System.out.println(contact.getName() + " - " + contact.getEmail() + " - " + contact.getPhone());
 			listNumberData.addnumber(Double.parseDouble(contact.getPhone()));
 		}
 		System.out.println("Return list phone to client");
 		try {
-			((ClientOnServerImpl) clientSocket).echo(listNumberData, Command.LIST_NUMBER);
+			((ClientOnServerSide) clientSocket).echo(listNumberData, Command.LIST_NUMBER);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -77,14 +69,22 @@ public class ContactData implements ReadDataInterface, WriteDataInterface {
 		// ((ClientConnectSocket)clientSocket).echoClient(listNumberData, Command.LIST_NUMBER);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Gets the contacts.
 	 * 
-	 * @see socket.listener.ReadDataListener#executeData()
+	 * @return the contacts
 	 */
-	@Override
-	public void executeData() throws Exception {
+	public List<Contact> getContacts() {
+		return this.contacts;
+	}
 
+	/**
+	 * Sets the contacts.
+	 * 
+	 * @param contacts the new contacts
+	 */
+	public void setContacts(List<Contact> contacts) {
+		this.contacts = contacts;
 	}
 
 }

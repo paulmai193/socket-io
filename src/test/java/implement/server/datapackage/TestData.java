@@ -1,5 +1,6 @@
 package implement.server.datapackage;
 
+import implement.define.Command;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.WriteDataInterface;
@@ -40,22 +41,39 @@ public class TestData implements ReadDataInterface, WriteDataInterface {
 		this.message = message;
 	}
 
-	/**
-	 * Gets the number.
-	 *
-	 * @return the number
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see socket.listener.ReadDataListener#executeData()
 	 */
-	public long getNumber() {
-		return number;
+	@Override
+	public void executeData() throws Exception {
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket)
+	 */
+	@Override
+	public void executeData(SocketClientInterface clientSocket) {
+		System.out.println("Client " + this.name + " ping number " + this.number + " with message " + this.message + " to server");
+		try {
+			clientSocket.echo(new DisconnectData(), Command.DISCONNECT);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
-	 * Sets the number.
+	 * Gets the message.
 	 *
-	 * @param number the number to set
+	 * @return the message
 	 */
-	public void setNumber(long number) {
-		this.number = number;
+	public String getMessage() {
+		return this.message;
 	}
 
 	/**
@@ -64,7 +82,25 @@ public class TestData implements ReadDataInterface, WriteDataInterface {
 	 * @return the name
 	 */
 	public String getName() {
-		return name;
+		return this.name;
+	}
+
+	/**
+	 * Gets the number.
+	 *
+	 * @return the number
+	 */
+	public long getNumber() {
+		return this.number;
+	}
+
+	/**
+	 * Sets the message.
+	 *
+	 * @param message the message to set
+	 */
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 	/**
@@ -77,41 +113,12 @@ public class TestData implements ReadDataInterface, WriteDataInterface {
 	}
 
 	/**
-	 * Gets the message.
+	 * Sets the number.
 	 *
-	 * @return the message
+	 * @param number the number to set
 	 */
-	public String getMessage() {
-		return message;
-	}
-
-	/**
-	 * Sets the message.
-	 *
-	 * @param message the message to set
-	 */
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket)
-	 */
-	@Override
-	public void executeData(SocketClientInterface clientSocket) {
-		System.out.println("Client " + name + " ping number " + number + " with message " + message + " to server");
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see socket.listener.ReadDataListener#executeData()
-	 */
-	@Override
-	public void executeData() throws Exception {
-
+	public void setNumber(long number) {
+		this.number = number;
 	}
 
 }
