@@ -222,14 +222,20 @@ public class DataParser {
 			data = this.getInstanceReadData(idCommand, xml);
 			if (data != null) {
 				NodeList listCommand = xml.getListNode("command", xml.getRoot());
-				for (int i = 0; i < listCommand.getLength(); i++) {
-					Node nodeCommand = listCommand.item(i);
-					String valueCommand = xml.getAttribute(nodeCommand, "value");
-					if (Integer.parseInt(valueCommand) == idCommand) {
-						this.readDataInstance(xml, (Element) nodeCommand, data, inputstream);
-						break;
-					}
-				}
+				if (listCommand != null && listCommand.getLength() > 0) {
+					for (int i = 0; i < listCommand.getLength(); i++) {
+						Node nodeCommand = listCommand.item(i);
+						String valueCommand = xml.getAttribute(nodeCommand, "value");
+						if (Integer.parseInt(valueCommand) == idCommand) {
+							this.readDataInstance(xml, (Element) nodeCommand, data, inputstream);
+							break;
+						}
+					}    
+                }
+                else {
+
+                }
+				
 			}
 			return data;
 		}

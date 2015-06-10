@@ -12,7 +12,7 @@ public class RunSimpleClient {
 
 	public static void main(String[] args) {
 		try {
-			SocketClientInterface client = new ClientSide("localhost", 3333, 0, Config.DATA_PACKAGE_PATH_CLIENT);
+			SocketClientInterface client = new ClientSide("192.168.1.27", 3333, 0, Config.DATA_PACKAGE_PATH_CLIENT);
 			client.connect();
 
 			new Thread(client).start();
