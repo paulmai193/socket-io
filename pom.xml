@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>logia</groupId>
 	<artifactId>logia-socketio</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<build>
-		<defaultGoal>clean source:jar install</defaultGoal>
+		<defaultGoal>source:jar install</defaultGoal>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<resources>
 			<resource>
@@ -39,6 +39,12 @@
 			<groupId>logia</groupId>
 			<artifactId>logia-utility</artifactId>
 			<version>0.0.8</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>jmf</artifactId>
+					<groupId>javax.media</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 </project>

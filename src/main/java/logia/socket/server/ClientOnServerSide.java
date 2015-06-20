@@ -141,7 +141,6 @@ public class ClientOnServerSide implements SocketClientInterface {
 	@Override
 	public void disconnect() {
 		this.isConnected = false;
-		this.serverSocket.removeClient(this);
 		if (this.inputStream != null) {
 			try {
 				this.inputStream.close();
@@ -169,13 +168,14 @@ public class ClientOnServerSide implements SocketClientInterface {
 			}
 			this.socket = null;
 		}
-		try {
-			this.finalize();
+		if (this.parser != null) {
+			this.parser = null;
 		}
-		catch (Throwable e) {
-			e.printStackTrace();
+		if (this.timeoutListener != null) {
+			this.timeoutListener = null;
 		}
 		System.out.println("A client disconnected");
+		this.serverSocket.removeClient(this);
 	}
 
 	/*

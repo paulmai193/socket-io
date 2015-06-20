@@ -230,12 +230,8 @@ public class DataParser {
 							this.readDataInstance(xml, (Element) nodeCommand, data, inputstream);
 							break;
 						}
-					}    
-                }
-                else {
-
-                }
-				
+					}
+				}
 			}
 			return data;
 		}

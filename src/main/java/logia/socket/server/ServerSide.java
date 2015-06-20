@@ -8,6 +8,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import logia.socket.Interface.AcceptClientListener;
 import logia.socket.Interface.SocketClientInterface;
@@ -42,7 +45,7 @@ public class ServerSide implements SocketServerInterface {
 	private static Thread                      _threadSocket;
 
 	/** The thread check socket live time. */
-	private static Thread                      _threadCheckSocket;
+	ScheduledExecutorService                   _executorService;
 
 	/** The accept client listener. */
 	private AcceptClientListener               acceptClientListener;
@@ -136,6 +139,7 @@ public class ServerSide implements SocketServerInterface {
 	@Override
 	public void removeClient(SocketClientInterface client) {
 		this.clients.remove(client.getId());
+		client = null;
 	}
 
 	/*
@@ -192,8 +196,8 @@ public class ServerSide implements SocketServerInterface {
 		ServerSide._threadSocket = new Thread(this);
 		ServerSide._threadSocket.start();
 		if (this.maxLiveTime > 0) {
-			ServerSide._threadCheckSocket = new Thread(new CheckSocketLiveTime(this, this.maxLiveTime));
-			ServerSide._threadCheckSocket.start();
+			this._executorService = Executors.newSingleThreadScheduledExecutor();
+			this._executorService.scheduleWithFixedDelay(new CheckSocketLiveTime(this, this.maxLiveTime), 10, 10, TimeUnit.MINUTES);
 		}
 		System.out.println("Server online");
 	}
@@ -221,8 +225,11 @@ public class ServerSide implements SocketServerInterface {
 		if (ServerSide._threadSocket != null && ServerSide._threadSocket.isAlive()) {
 			ServerSide._threadSocket.interrupt();
 		}
-		if (ServerSide._threadCheckSocket != null && ServerSide._threadCheckSocket.isAlive()) {
-			ServerSide._threadCheckSocket.interrupt();
+		// if (ServerSide._threadCheckSocket != null && ServerSide._threadCheckSocket.isAlive()) {
+		// ServerSide._threadCheckSocket.interrupt();
+		// }
+		if (this._executorService != null) {
+			this._executorService.shutdown();
 		}
 		System.out.println("Server offline!!!");
 	}
