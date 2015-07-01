@@ -1,4 +1,4 @@
-package logia.io.annotation;
+package logia.io.annotation.type;
 
 /**
  * The Enum CommandType.

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <datapackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="jar:file:/e:/FoodMob/Android/workspace/Test/src/lib/socketio.jar!/logia/io/define/datapackage.xsd">
-	<define>
+	<define type="int">
 		<define-command name="ping" value="0">implement.server.datapackage.PongData</define-command>
 		<define-command name="ping" value="1">implement.server.datapackage.PingData</define-command>
 		<define-command name="receive_message" value="2">implement.server.datapackage.MessageData</define-command>

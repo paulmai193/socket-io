@@ -11,11 +11,11 @@ import logia.socket.Interface.WriteDataInterface;
  */
 public class MessageData implements ReadDataInterface, WriteDataInterface {
 
-	/** The recipient. */
-	private int    user;
-
 	/** The message. */
 	private String message;
+
+	/** The recipient. */
+	private int    user;
 
 	/**
 	 * Instantiates a new receive message data.

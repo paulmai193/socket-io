@@ -23,35 +23,35 @@ import logia.socket.Interface.SocketServerInterface;
  */
 public class ServerSide implements SocketServerInterface {
 
-	/** The server socket. */
-	protected ServerSocket                     serverSocket;
+	/** The thread socket. */
+	private static Thread                      _threadSocket;
 
-	/** The port. */
-	protected int                              port;
-
-	/** The timeout in milliseconds. */
-	protected int                              timeout;
+	/** The instance. */
+	public final ServerSide                    instance;
 
 	/** The is running. */
 	public boolean                             isRunning;
 
+	/** The accept client listener. */
+	private AcceptClientListener               acceptClientListener;
+
 	/** The clients. */
 	private Map<String, SocketClientInterface> clients;
+
+	/** The thread check socket live time. */
+	private ScheduledExecutorService           executorService;
 
 	/** The max socket live time. */
 	private final long                         maxLiveTime;
 
-	/** The thread socket. */
-	private static Thread                      _threadSocket;
+	/** The port. */
+	protected int                              port;
 
-	/** The thread check socket live time. */
-	ScheduledExecutorService                   _executorService;
+	/** The server socket. */
+	protected ServerSocket                     serverSocket;
 
-	/** The accept client listener. */
-	private AcceptClientListener               acceptClientListener;
-
-	/** The instance. */
-	public final ServerSide                    instance;
+	/** The timeout in milliseconds. */
+	protected int                              timeout;
 
 	/**
 	 * Instantiates a new server side of socket.
@@ -196,8 +196,8 @@ public class ServerSide implements SocketServerInterface {
 		ServerSide._threadSocket = new Thread(this);
 		ServerSide._threadSocket.start();
 		if (this.maxLiveTime > 0) {
-			this._executorService = Executors.newSingleThreadScheduledExecutor();
-			this._executorService.scheduleWithFixedDelay(new CheckSocketLiveTime(this, this.maxLiveTime), 10, 10, TimeUnit.MINUTES);
+			this.executorService = Executors.newSingleThreadScheduledExecutor();
+			this.executorService.scheduleWithFixedDelay(new CheckSocketLiveTime(this, this.maxLiveTime), 10, 10, TimeUnit.MINUTES);
 		}
 		System.out.println("Server online");
 	}
@@ -228,8 +228,8 @@ public class ServerSide implements SocketServerInterface {
 		// if (ServerSide._threadCheckSocket != null && ServerSide._threadCheckSocket.isAlive()) {
 		// ServerSide._threadCheckSocket.interrupt();
 		// }
-		if (this._executorService != null) {
-			this._executorService.shutdown();
+		if (this.executorService != null) {
+			this.executorService.shutdown();
 		}
 		System.out.println("Server offline!!!");
 	}

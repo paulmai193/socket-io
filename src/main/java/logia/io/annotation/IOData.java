@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import logia.io.annotation.type.DataType;
+
 /**
  * The annotation IOData.
  * 
@@ -13,6 +15,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.FIELD })
 public @interface IOData {
+
+	public String breakValue() default "";
 
 	/**
 	 * The data order.

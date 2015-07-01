@@ -3,8 +3,6 @@ package logia.socket.Interface;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import logia.io.parser.DataParser;
-
 /**
  * The Interface SocketClientInterface.
  * 
@@ -36,7 +34,7 @@ public interface SocketClientInterface extends Runnable {
 	 *
 	 * @return the data parser
 	 */
-	public DataParser getDataParser();
+	public ParserInterface getDataParser();
 
 	/**
 	 * Gets the id.
@@ -84,6 +82,20 @@ public interface SocketClientInterface extends Runnable {
 	 * Listen method. Start reading data send through connection
 	 */
 	public void listen();
+
+	/**
+	 * Sets the data parser.
+	 *
+	 * @param dataParser the new data parser
+	 */
+	public void setDataParser(ParserInterface dataParser);
+
+	/**
+	 * Sets the id.
+	 *
+	 * @param id the new id
+	 */
+	public void setId(String id);
 
 	/**
 	 * Sets the timeout listener.

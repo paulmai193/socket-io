@@ -1,4 +1,4 @@
-package logia.io.annotation;
+package logia.io.annotation.type;
 
 /**
  * The Enum DataType.
@@ -17,12 +17,12 @@ public enum DataType {
 	FLOAT,
 	/** The integer. */
 	INTEGER,
+	/** The list. */
+	LIST,
 	/** The long. */
 	LONG,
 	/** The short. */
 	SHORT,
 	/** The string. */
-	STRING,
-	/** The list. */
-	LIST
+	STRING
 }

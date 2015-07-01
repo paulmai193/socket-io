@@ -8,7 +8,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
-import logia.io.parser.DataParser;
+import logia.socket.Interface.ParserInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.SocketTimeoutListener;
 import logia.socket.Interface.WriteDataInterface;
@@ -20,32 +20,11 @@ import logia.socket.Interface.WriteDataInterface;
  */
 public class ClientSide implements SocketClientInterface {
 
-	/** The socket. */
-	protected Socket              socket;
-
-	/** The input stream. */
-	protected InputStream         inputStream;
-
-	/** The output stream. */
-	protected OutputStream        outputStream;
-
-	/** The data parser. */
-	protected DataParser          parser;
-
-	/** The is connected. */
-	protected boolean             isConnected;
-
-	/** The timeout of connection. */
-	protected int                 timeout;
-
-	/** The start time. */
-	protected final long          startTime;
+	/** The host. */
+	private String                host;
 
 	/** The id. */
 	private String                id;
-
-	/** The host. */
-	private String                host;
 
 	/** The port. */
 	private int                   port;
@@ -53,20 +32,26 @@ public class ClientSide implements SocketClientInterface {
 	/** The timeout listener. */
 	private SocketTimeoutListener timeoutListener;
 
-	/**
-	 * Instantiates a new client side.
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public ClientSide() throws IOException {
-		this.isConnected = false;
-		this.parser = new DataParser();
-		this.timeout = 0;
-		this.startTime = System.currentTimeMillis();
-		this.host = "localhost";
-		this.port = 3333;
-		this.timeout = 0;
-	}
+	/** The input stream. */
+	protected InputStream         inputStream;
+
+	/** The is connected. */
+	protected boolean             isConnected;
+
+	/** The output stream. */
+	protected OutputStream        outputStream;
+
+	/** The data parser. */
+	protected ParserInterface     parser;
+
+	/** The socket. */
+	protected Socket              socket;
+
+	/** The start time. */
+	protected final long          startTime;
+
+	/** The timeout of connection. */
+	protected int                 timeout;
 
 	/**
 	 * Instantiates a new client side.
@@ -78,8 +63,6 @@ public class ClientSide implements SocketClientInterface {
 	 */
 	public ClientSide(String host, int port, int timeout) throws IOException {
 		this.isConnected = false;
-		this.parser = new DataParser();
-		timeout = 0;
 		this.startTime = System.currentTimeMillis();
 		this.host = host;
 		this.port = port;
@@ -92,13 +75,12 @@ public class ClientSide implements SocketClientInterface {
 	 * @param host the host
 	 * @param port the port
 	 * @param timeout the timeout
-	 * @param definePath the define path
+	 * @param dataParser the data parser
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public ClientSide(String host, int port, int timeout, String definePath) throws IOException {
+	public ClientSide(String host, int port, int timeout, ParserInterface dataParser) throws IOException {
 		this.isConnected = false;
-		this.parser = new DataParser(definePath);
-		timeout = 0;
+		this.parser = dataParser;
 		this.startTime = System.currentTimeMillis();
 		this.host = host;
 		this.port = port;
@@ -111,14 +93,13 @@ public class ClientSide implements SocketClientInterface {
 	 * @param host the host
 	 * @param port the port
 	 * @param timeout the timeout
-	 * @param definePath the define path
+	 * @param dataParser the data parser
 	 * @param timeoutListener the timeout listener
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public ClientSide(String host, int port, int timeout, String definePath, SocketTimeoutListener timeoutListener) throws IOException {
+	public ClientSide(String host, int port, int timeout, ParserInterface dataParser, SocketTimeoutListener timeoutListener) throws IOException {
 		this.isConnected = false;
-		this.parser = new DataParser(definePath);
-		timeout = 0;
+		this.parser = dataParser;
 		this.startTime = System.currentTimeMillis();
 		this.host = host;
 		this.port = port;
@@ -224,7 +205,7 @@ public class ClientSide implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#getDataParser()
 	 */
 	@Override
-	public DataParser getDataParser() {
+	public ParserInterface getDataParser() {
 		return this.parser;
 	}
 
@@ -321,6 +302,26 @@ public class ClientSide implements SocketClientInterface {
 	@Override
 	public void run() {
 		this.listen();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see logia.socket.Interface.SocketClientInterface#setDataParser(logia.socket.Interface.ParserInterface)
+	 */
+	@Override
+	public void setDataParser(ParserInterface dataParser) {
+		this.parser = dataParser;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see logia.socket.Interface.SocketClientInterface#setId(java.lang.String)
+	 */
+	@Override
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	/*

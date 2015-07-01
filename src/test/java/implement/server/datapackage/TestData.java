@@ -1,6 +1,10 @@
 package implement.server.datapackage;
 
 import implement.define.Command;
+import logia.io.annotation.IOCommand;
+import logia.io.annotation.IOData;
+import logia.io.annotation.type.CommandType;
+import logia.io.annotation.type.DataType;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.WriteDataInterface;
@@ -10,16 +14,20 @@ import logia.socket.Interface.WriteDataInterface;
  * 
  * @author Paul Mai
  */
+@IOCommand(type = { CommandType.READER, CommandType.WRITER }, value = 10)
 public class TestData implements ReadDataInterface, WriteDataInterface {
 
-	/** The number. */
-	long   number;
+	/** The message. */
+	@IOData(order = 3, type = DataType.STRING)
+	String message;
 
 	/** The name. */
+	@IOData(order = 2, type = DataType.STRING)
 	String name;
 
-	/** The message. */
-	String message;
+	/** The number. */
+	@IOData(order = 1, type = DataType.LONG)
+	long   number;
 
 	/**
 	 * Instantiates a new test data.

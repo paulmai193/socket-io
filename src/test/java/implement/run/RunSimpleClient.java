@@ -1,10 +1,14 @@
 package implement.run;
 
-import implement.client.datapackage.TestData;
+import implement.client.datapackage.Contact;
+import implement.client.datapackage.ContactData;
 import implement.define.Config;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import logia.io.parser.DataParserByAnnotation;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.client.ClientSide;
 
@@ -12,13 +16,20 @@ public class RunSimpleClient {
 
 	public static void main(String[] args) {
 		try {
-			SocketClientInterface client = new ClientSide("192.168.1.27", 3333, 0, Config.DATA_PACKAGE_PATH_CLIENT);
+			DataParserByAnnotation parser = new DataParserByAnnotation(Config.DATA_PACKAGE_PATH_CLIENT);
+			SocketClientInterface client = new ClientSide("localhost", 1234, 0, parser);
 			client.connect();
 
 			new Thread(client).start();
 
-			TestData testData = new TestData(Long.MAX_VALUE, "Babe", "Hello");
-			client.echo(testData, 10);
+			List<Contact> contacts = new ArrayList<Contact>();
+			for (int i = 1; i < 11; i++) {
+				Contact contact = new Contact("Name " + i, "Phone " + i, "Email " + i);
+				contacts.add(contact);
+			}
+			ContactData contactData = new ContactData();
+			contactData.setContacts(contacts);
+			client.echo(contactData, 4);
 
 			Thread.sleep(30000);
 
@@ -29,6 +40,9 @@ public class RunSimpleClient {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+		}
+		finally {
+			System.exit(0);
 		}
 	}
 }

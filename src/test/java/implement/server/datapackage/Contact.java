@@ -1,5 +1,8 @@
 package implement.server.datapackage;
 
+import logia.io.annotation.IOData;
+import logia.io.annotation.type.DataType;
+
 /**
  * The Class Contact.
  * 
@@ -7,14 +10,17 @@ package implement.server.datapackage;
  */
 public class Contact {
 
+	/** The email. */
+	@IOData(order = 3, type = DataType.STRING)
+	String email;
+
 	/** The name. */
+	@IOData(order = 1, type = DataType.STRING)
 	String name;
 
 	/** The phone. */
+	@IOData(order = 2, type = DataType.STRING)
 	String phone;
-
-	/** The email. */
-	String email;
 
 	/**
 	 * Instantiates a new contact.

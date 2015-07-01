@@ -29,6 +29,9 @@ import org.w3c.dom.NodeList;
  */
 public class DataParser {
 
+	/** The Constant DICTIONARY, use to get data type by input string. */
+	private static final Map<String, Byte> DICTIONARY;
+
 	/** The Constant TYPE_BYTE. */
 	private static final byte              TYPE_BYTE       = 1;
 
@@ -44,6 +47,9 @@ public class DataParser {
 	/** The Constant TYPE_INTERGER. */
 	private static final byte              TYPE_INTERGER   = 6;
 
+	/** The Constant TYPE_LIST. */
+	private static final byte              TYPE_LIST       = 10;
+
 	/** The Constant TYPE_LONG. */
 	private static final byte              TYPE_LONG       = 7;
 
@@ -52,12 +58,6 @@ public class DataParser {
 
 	/** The Constant TYPE_STRING. */
 	private static final byte              TYPE_STRING     = 9;
-
-	/** The Constant TYPE_LIST. */
-	private static final byte              TYPE_LIST       = 10;
-
-	/** The Constant DICTIONARY, use to get data type by input string. */
-	private static final Map<String, Byte> DICTIONARY;
 	static {
 		DICTIONARY = new HashMap<String, Byte>();
 

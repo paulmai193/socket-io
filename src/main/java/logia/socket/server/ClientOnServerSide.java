@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
-import logia.io.parser.DataParser;
+import logia.socket.Interface.ParserInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.SocketServerInterface;
 import logia.socket.Interface.SocketTimeoutListener;
@@ -20,32 +20,32 @@ import logia.socket.Interface.WriteDataInterface;
  */
 public class ClientOnServerSide implements SocketClientInterface {
 
-	/** The server socket. */
-	private SocketServerInterface serverSocket;
-
-	/** The timeout listener. */
-	private SocketTimeoutListener timeoutListener;
-
-	/** The socket. */
-	private Socket                socket;
+	/** The id. */
+	private String                id;
 
 	/** The input stream. */
 	private InputStream           inputStream;
+
+	/** The is connected. */
+	private boolean               isConnected;
 
 	/** The output stream. */
 	private OutputStream          outputStream;
 
 	/** The data parser. */
-	private DataParser            parser;
+	private ParserInterface       parser;
 
-	/** The is connected. */
-	private boolean               isConnected;
+	/** The server socket. */
+	private SocketServerInterface serverSocket;
+
+	/** The socket. */
+	private Socket                socket;
 
 	/** The start time. */
 	private final long            startTime;
 
-	/** The id. */
-	private String                id;
+	/** The timeout listener. */
+	private SocketTimeoutListener timeoutListener;
 
 	/**
 	 * Instantiates a new client socket on server side.
@@ -56,7 +56,6 @@ public class ClientOnServerSide implements SocketClientInterface {
 	 */
 	public ClientOnServerSide(SocketServerInterface serverSocket, Socket socket) throws IOException {
 		this.isConnected = false;
-		this.parser = new DataParser();
 		this.startTime = System.currentTimeMillis();
 		this.serverSocket = serverSocket;
 		this.socket = socket;
@@ -70,12 +69,12 @@ public class ClientOnServerSide implements SocketClientInterface {
 	 *
 	 * @param serverSocket the server socket
 	 * @param socket the socket
-	 * @param definePath the define path
+	 * @param dataParser the data parser
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public ClientOnServerSide(SocketServerInterface serverSocket, Socket socket, String definePath) throws IOException {
+	public ClientOnServerSide(SocketServerInterface serverSocket, Socket socket, ParserInterface dataParser) throws IOException {
 		this.isConnected = false;
-		this.parser = new DataParser(definePath);
+		this.parser = dataParser;
 		this.startTime = System.currentTimeMillis();
 		this.serverSocket = serverSocket;
 		this.socket = socket;
@@ -89,14 +88,14 @@ public class ClientOnServerSide implements SocketClientInterface {
 	 *
 	 * @param serverSocket the server socket
 	 * @param socket the socket
-	 * @param definePath the define path
+	 * @param dataParser the data parser
 	 * @param timeoutListener the timeout listener
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public ClientOnServerSide(SocketServerInterface serverSocket, Socket socket, String definePath, SocketTimeoutListener timeoutListener)
-			throws IOException {
+	public ClientOnServerSide(SocketServerInterface serverSocket, Socket socket, ParserInterface dataParser, SocketTimeoutListener timeoutListener)
+	        throws IOException {
 		this.isConnected = false;
-		this.parser = new DataParser(definePath);
+		this.parser = dataParser;
 		this.startTime = System.currentTimeMillis();
 		this.serverSocket = serverSocket;
 		this.socket = socket;
@@ -109,10 +108,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see socket.Interface.SocketInterface#connect()
-	 */
-	/**
-	 * Connect.
+	 * @see logia.socket.Interface.SocketClientInterface#connect()
 	 */
 	@Override
 	public void connect() {
@@ -133,10 +129,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see socket.Interface.SocketInterface#disconnect()
-	 */
-	/**
-	 * Disconnect.
+	 * @see logia.socket.Interface.SocketClientInterface#disconnect()
 	 */
 	@Override
 	public void disconnect() {
@@ -183,13 +176,6 @@ public class ClientOnServerSide implements SocketClientInterface {
 	 * 
 	 * @see logia.socket.Interface.SocketClientInterface#echo(logia.socket.Interface.WriteDataInterface, int)
 	 */
-	/**
-	 * Echo.
-	 *
-	 * @param data the data
-	 * @param command the command
-	 * @throws Exception the exception
-	 */
 	@Override
 	public void echo(WriteDataInterface data, int command) throws Exception {
 		synchronized (this) {
@@ -201,15 +187,10 @@ public class ClientOnServerSide implements SocketClientInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see socket.Interface.SocketClientInterface#getDataParser()
-	 */
-	/**
-	 * Gets the data parser.
-	 *
-	 * @return the data parser
+	 * @see logia.socket.Interface.SocketClientInterface#getDataParser()
 	 */
 	@Override
-	public DataParser getDataParser() {
+	public ParserInterface getDataParser() {
 		return this.parser;
 	}
 
@@ -217,11 +198,6 @@ public class ClientOnServerSide implements SocketClientInterface {
 	 * (non-Javadoc)
 	 * 
 	 * @see logia.socket.Interface.SocketClientInterface#getId()
-	 */
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
 	 */
 	@Override
 	public String getId() {
@@ -231,12 +207,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see socket.Interface.SocketInterface#getInputStream()
-	 */
-	/**
-	 * Gets the input stream.
-	 *
-	 * @return the input stream
+	 * @see logia.socket.Interface.SocketClientInterface#getInputStream()
 	 */
 	@Override
 	public InputStream getInputStream() {
@@ -248,11 +219,6 @@ public class ClientOnServerSide implements SocketClientInterface {
 	 * 
 	 * @see logia.socket.Interface.SocketClientInterface#getLiveTime()
 	 */
-	/**
-	 * Gets the live time.
-	 *
-	 * @return the live time
-	 */
 	@Override
 	public long getLiveTime() {
 		return System.currentTimeMillis() - this.startTime;
@@ -261,22 +227,17 @@ public class ClientOnServerSide implements SocketClientInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see socket.Interface.SocketInterface#getOutputStream()
-	 */
-	/**
-	 * Gets the output stream.
-	 *
-	 * @return the output stream
+	 * @see logia.socket.Interface.SocketClientInterface#getOutputStream()
 	 */
 	@Override
 	public OutputStream getOutputStream() {
 		return this.outputStream;
 	}
 
-	/**
-	 * Gets the timeout listener.
-	 *
-	 * @return the timeout listener
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see logia.socket.Interface.SocketClientInterface#getTimeoutListener()
 	 */
 	@Override
 	public SocketTimeoutListener getTimeoutListener() {
@@ -286,12 +247,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see socket.Interface.SocketInterface#isConnected()
-	 */
-	/**
-	 * Checks if is connected.
-	 *
-	 * @return true, if is connected
+	 * @see logia.socket.Interface.SocketClientInterface#isConnected()
 	 */
 	@Override
 	public boolean isConnected() {
@@ -302,9 +258,6 @@ public class ClientOnServerSide implements SocketClientInterface {
 	 * (non-Javadoc)
 	 * 
 	 * @see logia.socket.Interface.SocketClientInterface#listen()
-	 */
-	/**
-	 * Listen.
 	 */
 	@Override
 	public void listen() {
@@ -341,31 +294,39 @@ public class ClientOnServerSide implements SocketClientInterface {
 	 * 
 	 * @see java.lang.Runnable#run()
 	 */
-	/**
-	 * Run.
-	 */
 	@Override
 	public void run() {
 		this.listen();
 	}
 
-	/**
-	 * Sets the timeout listener.
-	 *
-	 * @param listener the new timeout listener
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see logia.socket.Interface.SocketClientInterface#setDataParser(logia.socket.Interface.ParserInterface)
+	 */
+	@Override
+	public void setDataParser(ParserInterface dataParser) {
+		this.parser = dataParser;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see logia.socket.Interface.SocketClientInterface#setId(java.lang.String)
+	 */
+	@Override
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see logia.socket.Interface.SocketClientInterface#setTimeoutListener(logia.socket.Interface.SocketTimeoutListener)
 	 */
 	@Override
 	public void setTimeoutListener(SocketTimeoutListener listener) {
 		this.timeoutListener = listener;
-	}
-
-	/**
-	 * Sets the ID for current socket client.
-	 *
-	 * @param id the new id
-	 */
-	protected void setId(String id) {
-		this.id = id;
 	}
 
 }

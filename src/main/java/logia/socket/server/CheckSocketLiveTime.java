@@ -10,11 +10,11 @@ import logia.socket.Interface.SocketServerInterface;
  */
 public class CheckSocketLiveTime implements Runnable {
 
-	/** The server. */
-	SocketServerInterface server;
-
 	/** The max live time. */
-	long                  maxLiveTime;
+	private long                  maxLiveTime;
+
+	/** The server. */
+	private SocketServerInterface server;
 
 	/**
 	 * Instantiates a new check socket live time.

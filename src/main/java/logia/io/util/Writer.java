@@ -116,7 +116,7 @@ public class Writer {
 	 * @throws InstantiationException the instantiation exception
 	 */
 	public void writeObject(OutputStream out, Object data) throws IllegalArgumentException, IllegalAccessException, IOException,
-	InstantiationException {
+	        InstantiationException {
 		Field[] fields = data.getClass().getDeclaredFields();
 		for (Field field : fields) {
 			field.setAccessible(true);
