@@ -9,9 +9,12 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import logia.socket.Interface.ParserInterface;
+import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.SocketTimeoutListener;
 import logia.socket.Interface.WriteDataInterface;
+
+import org.apache.log4j.Logger;
 
 /**
  * The Class ClientSide.
@@ -20,6 +23,8 @@ import logia.socket.Interface.WriteDataInterface;
  */
 public class ClientSide implements SocketClientInterface {
 
+	/** The logger. */
+	private final Logger          LOGGER = Logger.getLogger("CLIENT SIDE");
 	/** The host. */
 	private String                host;
 
@@ -28,6 +33,12 @@ public class ClientSide implements SocketClientInterface {
 
 	/** The port. */
 	private int                   port;
+
+	/** The is wait for response. */
+	private boolean               isWait;
+
+	/** The returned data. */
+	private ReadDataInterface     returned;
 
 	/** The timeout listener. */
 	private SocketTimeoutListener timeoutListener;
@@ -67,6 +78,7 @@ public class ClientSide implements SocketClientInterface {
 		this.host = host;
 		this.port = port;
 		this.timeout = timeout;
+		this.isWait = false;
 	}
 
 	/**
@@ -74,7 +86,7 @@ public class ClientSide implements SocketClientInterface {
 	 *
 	 * @param host the host
 	 * @param port the port
-	 * @param timeout the timeout
+	 * @param timeout the timeout in millisecond
 	 * @param dataParser the data parser
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
@@ -85,6 +97,7 @@ public class ClientSide implements SocketClientInterface {
 		this.host = host;
 		this.port = port;
 		this.timeout = timeout;
+		this.isWait = false;
 	}
 
 	/**
@@ -105,6 +118,7 @@ public class ClientSide implements SocketClientInterface {
 		this.port = port;
 		this.timeout = timeout;
 		this.timeoutListener = timeoutListener;
+		this.isWait = false;
 	}
 
 	/*
@@ -120,19 +134,19 @@ public class ClientSide implements SocketClientInterface {
 				if (this.timeout > 0) {
 					this.socket.setSoTimeout(this.timeout);
 				}
-				this.outputStream = this.socket.getOutputStream();
 				this.inputStream = this.socket.getInputStream();
+				this.outputStream = this.socket.getOutputStream();
 				this.isConnected = true;
 				System.out.println("Yeah, connected!");
 			}
 			catch (SocketException e) {
-				e.printStackTrace();
+				this.LOGGER.error("Cannot connect to socket server", e);
 			}
 			catch (UnknownHostException e) {
-				e.printStackTrace();
+				this.LOGGER.error("Unknown socket server", e);
 			}
 			catch (IOException e) {
-				e.printStackTrace();
+				this.LOGGER.error("Cannot connect to socket server", e);
 			}
 		}
 	}
@@ -150,7 +164,6 @@ public class ClientSide implements SocketClientInterface {
 				this.outputStream.close();
 			}
 			catch (IOException e) {
-				e.printStackTrace();
 			}
 			this.outputStream = null;
 		}
@@ -159,7 +172,6 @@ public class ClientSide implements SocketClientInterface {
 				this.inputStream.close();
 			}
 			catch (IOException e) {
-				e.printStackTrace();
 			}
 			this.inputStream = null;
 		}
@@ -168,7 +180,6 @@ public class ClientSide implements SocketClientInterface {
 				this.socket.close();
 			}
 			catch (IOException e) {
-				e.printStackTrace();
 			}
 			this.socket = null;
 		}
@@ -177,12 +188,6 @@ public class ClientSide implements SocketClientInterface {
 		}
 		if (this.timeoutListener != null) {
 			this.timeoutListener = null;
-		}
-		try {
-			this.finalize();
-		}
-		catch (Throwable e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -196,6 +201,25 @@ public class ClientSide implements SocketClientInterface {
 		synchronized (this) {
 			this.connect();
 			this.parser.applyOutputStream(this.outputStream, data, command);
+		}
+	}
+
+	@Override
+	public ReadDataInterface echoAndWait(WriteDataInterface data, int command) throws Exception {
+		synchronized (this) {
+			this.isWait = true;
+			LOGGER.debug("Set wait response after echo data");
+			this.connect();
+			this.parser.applyOutputStream(this.outputStream, data, command);
+			LOGGER.debug("Send data to server");
+			while (this.returned == null) {
+				// Waiting until have return value
+				LOGGER.debug("Is waiting response...");
+				continue;
+			}
+			this.isWait = false;
+			LOGGER.debug("Received data");
+			return this.returned;
 		}
 	}
 
@@ -272,6 +296,16 @@ public class ClientSide implements SocketClientInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see logia.socket.Interface.SocketClientInterface#isWait()
+	 */
+	@Override
+	public boolean isWait() {
+		return this.isWait;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see logia.socket.Interface.SocketClientInterface#listen()
 	 */
 	@Override
@@ -287,11 +321,19 @@ public class ClientSide implements SocketClientInterface {
 				this.disconnect();
 			}
 		}
-		catch (Exception e) {
-			e.printStackTrace();
-			System.err.println(e.getMessage() + ". Disconnect");
+		catch (SocketException e) {
+			this.LOGGER.warn("Socket interrupt", e);
 			this.disconnect();
 		}
+		catch (IOException e) {
+			this.LOGGER.error("Error reading data", e);
+			this.disconnect();
+		}
+		catch (Exception e) {
+			this.LOGGER.error(e.getMessage(), e);
+			this.disconnect();
+		}
+
 	}
 
 	/*
@@ -322,6 +364,16 @@ public class ClientSide implements SocketClientInterface {
 	@Override
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see logia.socket.Interface.SocketClientInterface#setReturned(logia.socket.Interface.ReadDataInterface)
+	 */
+	@Override
+	public void setReturned(ReadDataInterface returned) {
+		this.returned = returned;
 	}
 
 	/*

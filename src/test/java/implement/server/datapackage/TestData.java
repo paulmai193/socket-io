@@ -1,21 +1,19 @@
 package implement.server.datapackage;
 
-import implement.define.Command;
 import logia.io.annotation.IOCommand;
 import logia.io.annotation.IOData;
 import logia.io.annotation.type.CommandType;
 import logia.io.annotation.type.DataType;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
-import logia.socket.Interface.WriteDataInterface;
 
 /**
  * The Class TestData. This class implements both ReadDataInterface and WriteDataInterface to read / write Test data package
  * 
  * @author Paul Mai
  */
-@IOCommand(type = { CommandType.READER, CommandType.WRITER }, value = 10)
-public class TestData implements ReadDataInterface, WriteDataInterface {
+@IOCommand(type = { CommandType.READER }, value = 10)
+public class TestData implements ReadDataInterface {
 
 	/** The message. */
 	@IOData(order = 3, type = DataType.STRING)
@@ -66,9 +64,10 @@ public class TestData implements ReadDataInterface, WriteDataInterface {
 	 */
 	@Override
 	public void executeData(SocketClientInterface clientSocket) {
-		System.out.println("Client " + this.name + " ping number " + this.number + " with message " + this.message + " to server");
+		System.out.println("Client " + this.name + " send number " + this.number + " with message " + this.message + " to server");
+		ResultData result = new ResultData("I received package " + getClass().getCanonicalName() + " from you, right ?");
 		try {
-			clientSocket.echo(new DisconnectData(), Command.DISCONNECT);
+			clientSocket.echo(result, 11);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

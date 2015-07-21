@@ -88,7 +88,7 @@ public class ServerSide implements SocketServerInterface {
 	 * Instantiates a new server side of socket.
 	 *
 	 * @param port the port
-	 * @param timeout the timeout
+	 * @param timeout the timeout in milliseconds
 	 * @param maxLiveTime the max client socket live time
 	 */
 	public ServerSide(int port, int timeout, long maxLiveTime) {
@@ -216,18 +216,9 @@ public class ServerSide implements SocketServerInterface {
 		catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		try {
-			this.finalize();
-		}
-		catch (Throwable e) {
-			e.printStackTrace();
-		}
 		if (ServerSide._threadSocket != null && ServerSide._threadSocket.isAlive()) {
 			ServerSide._threadSocket.interrupt();
 		}
-		// if (ServerSide._threadCheckSocket != null && ServerSide._threadCheckSocket.isAlive()) {
-		// ServerSide._threadCheckSocket.interrupt();
-		// }
 		if (this.executorService != null) {
 			this.executorService.shutdown();
 		}

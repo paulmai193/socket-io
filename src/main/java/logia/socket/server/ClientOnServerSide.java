@@ -8,10 +8,13 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 import logia.socket.Interface.ParserInterface;
+import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.SocketServerInterface;
 import logia.socket.Interface.SocketTimeoutListener;
 import logia.socket.Interface.WriteDataInterface;
+
+import org.apache.log4j.Logger;
 
 /**
  * The Class ClientOnServerSide.
@@ -20,6 +23,7 @@ import logia.socket.Interface.WriteDataInterface;
  */
 public class ClientOnServerSide implements SocketClientInterface {
 
+	private Logger                LOGGER = Logger.getLogger(getClass());
 	/** The id. */
 	private String                id;
 
@@ -29,11 +33,17 @@ public class ClientOnServerSide implements SocketClientInterface {
 	/** The is connected. */
 	private boolean               isConnected;
 
+	/** The is wait for response. */
+	private boolean               isWait;
+
 	/** The output stream. */
 	private OutputStream          outputStream;
 
 	/** The data parser. */
 	private ParserInterface       parser;
+
+	/** The returned data. */
+	private ReadDataInterface     returned;
 
 	/** The server socket. */
 	private SocketServerInterface serverSocket;
@@ -119,10 +129,9 @@ public class ClientOnServerSide implements SocketClientInterface {
 				this.isConnected = true;
 			}
 			catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error(e.getMessage(), e);
 			}
-
-			System.out.println("A client connected, waiting to read data from client...");
+			LOGGER.debug("A client connected, waiting to read data from client...");
 		}
 	}
 
@@ -139,7 +148,6 @@ public class ClientOnServerSide implements SocketClientInterface {
 				this.inputStream.close();
 			}
 			catch (IOException e) {
-				e.printStackTrace();
 			}
 			this.inputStream = null;
 		}
@@ -148,7 +156,6 @@ public class ClientOnServerSide implements SocketClientInterface {
 				this.outputStream.close();
 			}
 			catch (IOException e) {
-				e.printStackTrace();
 			}
 			this.outputStream = null;
 		}
@@ -157,7 +164,6 @@ public class ClientOnServerSide implements SocketClientInterface {
 				this.socket.close();
 			}
 			catch (IOException e) {
-				e.printStackTrace();
 			}
 			this.socket = null;
 		}
@@ -167,7 +173,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 		if (this.timeoutListener != null) {
 			this.timeoutListener = null;
 		}
-		System.out.println("A client disconnected");
+		LOGGER.debug("A client disconnected");
 		this.serverSocket.removeClient(this);
 	}
 
@@ -181,6 +187,21 @@ public class ClientOnServerSide implements SocketClientInterface {
 		synchronized (this) {
 			this.connect();
 			this.parser.applyOutputStream(this.outputStream, data, command);
+		}
+	}
+
+	@Override
+	public ReadDataInterface echoAndWait(WriteDataInterface data, int command) throws Exception {
+		synchronized (this) {
+			this.isWait = true;
+			this.connect();
+			this.parser.applyOutputStream(this.outputStream, data, command);
+			while (this.returned == null) {
+				// Waiting until have return value
+				continue;
+			}
+			this.isWait = false;
+			return this.returned;
 		}
 	}
 
@@ -254,6 +275,11 @@ public class ClientOnServerSide implements SocketClientInterface {
 		return this.isConnected;
 	}
 
+	@Override
+	public boolean isWait() {
+		return this.isWait;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -273,18 +299,15 @@ public class ClientOnServerSide implements SocketClientInterface {
 			}
 		}
 		catch (SocketException e) {
-			e.printStackTrace();
-			System.err.println(e.getMessage() + ". Disconnect");
+			LOGGER.warn("Socket interrupt", e);
 			this.disconnect();
 		}
 		catch (IOException e) {
-			e.printStackTrace();
-			System.err.println(e.getMessage() + ". Disconnect");
+			LOGGER.error("Error read data", e);
 			this.disconnect();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
-			System.err.println(e.getMessage() + ". Disconnect");
+			LOGGER.error(e.getMessage(), e);
 			this.disconnect();
 		}
 	}
@@ -317,6 +340,11 @@ public class ClientOnServerSide implements SocketClientInterface {
 	@Override
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	@Override
+	public void setReturned(ReadDataInterface returned) {
+		this.returned = returned;
 	}
 
 	/*

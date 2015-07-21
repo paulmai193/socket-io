@@ -11,6 +11,7 @@
 		<define-command name="disconnect" value="6">implement.server.datapackage.DisconnectData</define-command>
 		<define-command name="listnumber" value="7">implement.server.datapackage.ListNumberData</define-command>
 		<define-command name="test" value="10">implement.server.datapackage.TestData</define-command>
+		<define-command name="result" value="11">implement.server.datapackage.ResultData</define-command>
 	</define>
 
 	<command value="0"></command>

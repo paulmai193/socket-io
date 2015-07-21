@@ -4,8 +4,6 @@ import logia.io.annotation.IOCommand;
 import logia.io.annotation.IOData;
 import logia.io.annotation.type.CommandType;
 import logia.io.annotation.type.DataType;
-import logia.socket.Interface.ReadDataInterface;
-import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.WriteDataInterface;
 
 /**
@@ -13,8 +11,8 @@ import logia.socket.Interface.WriteDataInterface;
  * 
  * @author Paul Mai
  */
-@IOCommand(type = { CommandType.READER, CommandType.WRITER }, value = 10)
-public class TestData implements ReadDataInterface, WriteDataInterface {
+@IOCommand(type = { CommandType.WRITER }, value = 10)
+public class TestData implements WriteDataInterface {
 
 	/** The message. */
 	@IOData(order = 3, type = DataType.STRING)
@@ -46,26 +44,6 @@ public class TestData implements ReadDataInterface, WriteDataInterface {
 		this.number = number;
 		this.name = name;
 		this.message = message;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see socket.listener.ReadDataListener#executeData()
-	 */
-	@Override
-	public void executeData() throws Exception {
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket)
-	 */
-	@Override
-	public void executeData(SocketClientInterface clientSocket) {
-		System.out.println("Server ping number " + this.number + " to client");
 	}
 
 	/**

@@ -8,7 +8,6 @@ C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\annotation\IOData.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\annotation\type\CommandType.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\util\Writer.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\annotation\type\DataType.java
-C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\parser\DataParser.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\Interface\SocketServerInterface.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\Interface\AcceptClientListener.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\server\ServerSide.java

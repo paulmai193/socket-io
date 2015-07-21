@@ -30,6 +30,16 @@ public interface SocketClientInterface extends Runnable {
 	public void echo(WriteDataInterface data, int command) throws Exception;
 
 	/**
+	 * Echo method. Start send data through connection and waiting a response
+	 *
+	 * @param data the data
+	 * @param command the command
+	 * @return the response data
+	 * @throws Exception the exception
+	 */
+	public ReadDataInterface echoAndWait(WriteDataInterface data, int command) throws Exception;
+
+	/**
 	 * Gets the data parser.
 	 *
 	 * @return the data parser
@@ -79,6 +89,13 @@ public interface SocketClientInterface extends Runnable {
 	public boolean isConnected();
 
 	/**
+	 * Checks if is wait for response.
+	 *
+	 * @return the isWait
+	 */
+	public boolean isWait();
+
+	/**
 	 * Listen method. Start reading data send through connection
 	 */
 	public void listen();
@@ -98,9 +115,17 @@ public interface SocketClientInterface extends Runnable {
 	public void setId(String id);
 
 	/**
+	 * Sets the returned.
+	 *
+	 * @param returned the returned to set
+	 */
+	public void setReturned(ReadDataInterface returned);
+
+	/**
 	 * Sets the timeout listener.
 	 *
 	 * @param listener the new timeout listener
 	 */
 	public void setTimeoutListener(SocketTimeoutListener listener);
+
 }

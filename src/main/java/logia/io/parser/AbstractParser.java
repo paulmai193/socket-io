@@ -19,6 +19,7 @@ import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.WriteDataInterface;
 import logia.utility.readfile.XmlUtil;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -29,6 +30,9 @@ import org.w3c.dom.NodeList;
  * @author Paul Mai
  */
 public abstract class AbstractParser implements ParserInterface {
+
+	/** The logger. */
+	protected final Logger                   LOGGER          = Logger.getLogger("DATA PARSER");
 
 	/** The Constant DICTIONARY, use to get data type by input string. */
 	protected static final Map<String, Byte> DICTIONARY;
@@ -176,7 +180,12 @@ public abstract class AbstractParser implements ParserInterface {
 		do {
 			data = this.readData(clientSocket.getInputStream());
 			if (data != null) {
-				data.executeData(clientSocket);
+				if (clientSocket.isWait()) {
+					clientSocket.setReturned(data);
+				}
+				else {
+					data.executeData(clientSocket);
+				}
 			}
 			else {
 				System.err.println("Not recognize data from stream");
@@ -217,7 +226,7 @@ public abstract class AbstractParser implements ParserInterface {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			this.LOGGER.error("Could not initialized parser context", e);
 		}
 	}
 
@@ -244,7 +253,7 @@ public abstract class AbstractParser implements ParserInterface {
 				return (ReadDataInterface) clazz.newInstance();
 			}
 			catch (InstantiationException | IllegalAccessException e) {
-				e.printStackTrace();
+				this.LOGGER.error("Get instance of data error", e);
 				return null;
 			}
 		}
@@ -266,7 +275,7 @@ public abstract class AbstractParser implements ParserInterface {
 				return (WriteDataInterface) clazz.newInstance();
 			}
 			catch (InstantiationException | IllegalAccessException e) {
-				e.printStackTrace();
+				this.LOGGER.error("Get instance of data error", e);
 				return null;
 			}
 		}
@@ -341,7 +350,7 @@ public abstract class AbstractParser implements ParserInterface {
 					value = this._reader.readObject(value.getClass(), inputstream);
 				}
 				catch (Exception e) {
-					e.printStackTrace();
+					this.LOGGER.error("Read data element error", e);
 				}
 				break;
 		}

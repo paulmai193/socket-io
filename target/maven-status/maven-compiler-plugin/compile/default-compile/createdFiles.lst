@@ -1,14 +1,13 @@
 logia\socket\server\ServerSide$1.class
 logia\socket\server\ServerSide.class
 logia\socket\client\ClientSide.class
-logia\io\util\Writer.class
 logia\socket\Interface\SocketTimeoutListener.class
-logia\socket\Interface\SocketServerInterface.class
-logia\io\parser\DataParser.class
 logia\socket\Interface\AcceptClientListener.class
 logia\socket\Interface\WriteDataInterface.class
-logia\io\util\Reader.class
 logia\socket\Interface\SocketClientInterface.class
 logia\socket\Interface\ReadDataInterface.class
 logia\socket\server\ClientOnServerSide.class
 logia\socket\server\CheckSocketLiveTime.class
+logia\io\util\Writer.class
+logia\socket\Interface\SocketServerInterface.class
+logia\io\util\Reader.class

@@ -7,12 +7,16 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Class Reader read and parse data from inputstream to each data package type.
  * 
  * @author Paul Mai
  */
 public class Reader {
+
+	private final Logger LOGGER = Logger.getLogger("READER");
 
 	/**
 	 * Instantiates a new reader.
@@ -181,6 +185,7 @@ public class Reader {
 			s = new String(arr, "UTF-8");
 		}
 		catch (UnsupportedEncodingException e) {
+			this.LOGGER.warn("Unsupport UTF-8", e);
 			s = new String(arr);
 		}
 		return s;

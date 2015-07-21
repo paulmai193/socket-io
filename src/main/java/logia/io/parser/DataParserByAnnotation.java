@@ -107,7 +107,7 @@ public class DataParserByAnnotation extends AbstractParser {
 								this.setValueOf(data, field.getName(), fieldData);
 							}
 							catch (Exception e) {
-								System.err.println("Try to set value " + fieldData + " to field " + field.getName() + " in " + typeData + " type.");
+								this.LOGGER.error("Try to set value " + fieldData + " to field " + field.getName() + " in " + typeData + " type.", e);
 							}
 
 							if (checkData != null && checkData.toString().equals(fieldData.toString())) {

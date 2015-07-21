@@ -17,7 +17,7 @@ public class RunSimpleServer extends Thread {
 
 	public static void main(String[] args) {
 		final ThreadPoolFactory pool = new ThreadPoolFactory(1, 5, Thread.MAX_PRIORITY, true);
-		final ServerSide server = new ServerSide(1234, 5000, 360000);
+		final ServerSide server = new ServerSide(1234, 0, 360000);
 		final DataParserByAnnotation parser = new DataParserByAnnotation(Config.DATA_PACKAGE_PATH_SERVER);
 		server.setAcceptClientListener(new AcceptClientListener() {
 

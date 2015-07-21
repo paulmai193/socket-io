@@ -67,7 +67,7 @@ public class DataParserByXML extends AbstractParser {
 				this.setValueOf(data, nameData, fieldData);
 			}
 			catch (Exception e) {
-				System.err.println("Try to set value " + fieldData + " to field " + nameData + " in " + typeData + " type.");
+				this.LOGGER.error("Try to set value " + fieldData + " to field " + nameData + " in " + typeData + " type.", e);
 			}
 
 			if (checkData != null && checkData.toString().equals(fieldData.toString())) {
