@@ -16,12 +16,17 @@ import logia.socket.Interface.AcceptClientListener;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.SocketServerInterface;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Class ServerSide.
  * 
  * @author Paul Mai
  */
 public class ServerSide implements SocketServerInterface {
+
+	/** The logger. */
+	private Logger                             LOGGER = Logger.getLogger(this.getClass());
 
 	/** The thread socket. */
 	private static Thread                      _threadSocket;
@@ -172,7 +177,7 @@ public class ServerSide implements SocketServerInterface {
 			}
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			this.LOGGER.error(e.getMessage(), e);
 		}
 	}
 
@@ -199,7 +204,7 @@ public class ServerSide implements SocketServerInterface {
 			this.executorService = Executors.newSingleThreadScheduledExecutor();
 			this.executorService.scheduleWithFixedDelay(new CheckSocketLiveTime(this, this.maxLiveTime), 10, 10, TimeUnit.MINUTES);
 		}
-		System.out.println("Server online");
+		this.LOGGER.debug("Server online");
 	}
 
 	/*
@@ -213,8 +218,7 @@ public class ServerSide implements SocketServerInterface {
 		try {
 			this.serverSocket.close();
 		}
-		catch (IOException e1) {
-			e1.printStackTrace();
+		catch (IOException e) {
 		}
 		if (ServerSide._threadSocket != null && ServerSide._threadSocket.isAlive()) {
 			ServerSide._threadSocket.interrupt();
@@ -222,7 +226,7 @@ public class ServerSide implements SocketServerInterface {
 		if (this.executorService != null) {
 			this.executorService.shutdown();
 		}
-		System.out.println("Server offline!!!");
+		this.LOGGER.debug("Server offline!!!");
 	}
 
 }

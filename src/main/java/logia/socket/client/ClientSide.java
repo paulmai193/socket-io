@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import logia.socket.Interface.ParserInterface;
 import logia.socket.Interface.ReadDataInterface;
@@ -24,45 +26,47 @@ import org.apache.log4j.Logger;
 public class ClientSide implements SocketClientInterface {
 
 	/** The logger. */
-	private final Logger          LOGGER = Logger.getLogger("CLIENT SIDE");
+	private final Logger             LOGGER = Logger.getLogger("CLIENT SIDE");
 	/** The host. */
-	private String                host;
+	private String                   host;
 
 	/** The id. */
-	private String                id;
+	private String                   id;
 
 	/** The port. */
-	private int                   port;
+	private int                      port;
 
 	/** The is wait for response. */
-	private boolean               isWait;
+	private boolean                  isWait;
 
 	/** The returned data. */
-	private ReadDataInterface     returned;
+	// private ReadDataInterface returned;
+
+	private Queue<ReadDataInterface> returned;
 
 	/** The timeout listener. */
-	private SocketTimeoutListener timeoutListener;
+	private SocketTimeoutListener    timeoutListener;
 
 	/** The input stream. */
-	protected InputStream         inputStream;
+	protected InputStream            inputStream;
 
 	/** The is connected. */
-	protected boolean             isConnected;
+	protected boolean                isConnected;
 
 	/** The output stream. */
-	protected OutputStream        outputStream;
+	protected OutputStream           outputStream;
 
 	/** The data parser. */
-	protected ParserInterface     parser;
+	protected ParserInterface        parser;
 
 	/** The socket. */
-	protected Socket              socket;
+	protected Socket                 socket;
 
 	/** The start time. */
-	protected final long          startTime;
+	protected final long             startTime;
 
 	/** The timeout of connection. */
-	protected int                 timeout;
+	protected int                    timeout;
 
 	/**
 	 * Instantiates a new client side.
@@ -79,6 +83,7 @@ public class ClientSide implements SocketClientInterface {
 		this.port = port;
 		this.timeout = timeout;
 		this.isWait = false;
+		this.returned = new LinkedBlockingQueue<ReadDataInterface>();
 	}
 
 	/**
@@ -98,6 +103,7 @@ public class ClientSide implements SocketClientInterface {
 		this.port = port;
 		this.timeout = timeout;
 		this.isWait = false;
+		this.returned = new LinkedBlockingQueue<ReadDataInterface>();
 	}
 
 	/**
@@ -119,6 +125,7 @@ public class ClientSide implements SocketClientInterface {
 		this.timeout = timeout;
 		this.timeoutListener = timeoutListener;
 		this.isWait = false;
+		this.returned = new LinkedBlockingQueue<ReadDataInterface>();
 	}
 
 	/*
@@ -137,7 +144,7 @@ public class ClientSide implements SocketClientInterface {
 				this.inputStream = this.socket.getInputStream();
 				this.outputStream = this.socket.getOutputStream();
 				this.isConnected = true;
-				System.out.println("Yeah, connected!");
+				this.LOGGER.debug("Yeah, connected!");
 			}
 			catch (SocketException e) {
 				this.LOGGER.error("Cannot connect to socket server", e);
@@ -197,29 +204,34 @@ public class ClientSide implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#echo(logia.socket.Interface.WriteDataInterface, int)
 	 */
 	@Override
-	public void echo(WriteDataInterface data, int command) throws Exception {
+	public void echo(WriteDataInterface data, Object command) throws Exception {
 		synchronized (this) {
 			this.connect();
 			this.parser.applyOutputStream(this.outputStream, data, command);
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see logia.socket.Interface.SocketClientInterface#echoAndWait(logia.socket.Interface.WriteDataInterface, int)
+	 */
 	@Override
-	public ReadDataInterface echoAndWait(WriteDataInterface data, int command) throws Exception {
+	public ReadDataInterface echoAndWait(WriteDataInterface data, Object command) throws Exception {
 		synchronized (this) {
 			this.isWait = true;
-			LOGGER.debug("Set wait response after echo data");
+			this.LOGGER.debug("Set wait response after echo data");
 			this.connect();
 			this.parser.applyOutputStream(this.outputStream, data, command);
-			LOGGER.debug("Send data to server");
-			while (this.returned == null) {
+			this.LOGGER.debug("Send data to server");
+			while (this.returned.size() == 0) {
 				// Waiting until have return value
-				LOGGER.debug("Is waiting response...");
+				this.LOGGER.debug("Is waiting response...");
 				continue;
 			}
 			this.isWait = false;
-			LOGGER.debug("Received data");
-			return this.returned;
+			this.LOGGER.debug("Received data");
+			return this.returned.poll();
 		}
 	}
 
@@ -373,7 +385,7 @@ public class ClientSide implements SocketClientInterface {
 	 */
 	@Override
 	public void setReturned(ReadDataInterface returned) {
-		this.returned = returned;
+		this.returned.add(returned);
 	}
 
 	/*

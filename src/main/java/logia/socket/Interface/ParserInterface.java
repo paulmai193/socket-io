@@ -42,5 +42,5 @@ public interface ParserInterface {
 	 * @param command the command
 	 * @throws Exception the exception
 	 */
-	public void applyOutputStream(OutputStream outputStream, WriteDataInterface dataListener, int command) throws Exception;
+	public void applyOutputStream(OutputStream outputStream, WriteDataInterface dataListener, Object command) throws Exception;
 }

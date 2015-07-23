@@ -144,6 +144,7 @@ public class DataParserByXML extends AbstractParser {
 		WriteDataInterface writedata = this.getInstanceWriteData(command.toString());
 		if (data != null) {
 			// Write command first
+			this.LOGGER.debug("Command type: " + this._commandType);
 			this.writeDataByType(this._commandType, "", out, command);
 
 			// Write each element

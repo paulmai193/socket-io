@@ -65,7 +65,7 @@ public class TestData implements ReadDataInterface {
 	@Override
 	public void executeData(SocketClientInterface clientSocket) {
 		System.out.println("Client " + this.name + " send number " + this.number + " with message " + this.message + " to server");
-		ResultData result = new ResultData("I received package " + getClass().getCanonicalName() + " from you, right ?");
+		ResultData result = new ResultData("I received package " + this.getClass().getCanonicalName() + " from you, right ?");
 		try {
 			clientSocket.echo(result, 11);
 		}

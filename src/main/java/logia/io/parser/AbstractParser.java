@@ -201,7 +201,7 @@ public abstract class AbstractParser implements ParserInterface {
 	 * @see logia.socket.Interface.ParserInterface#applyOutputStream(java.io.OutputStream, logia.socket.Interface.WriteDataInterface, int)
 	 */
 	@Override
-	public void applyOutputStream(OutputStream outputStream, WriteDataInterface dataListener, int command) throws Exception {
+	public void applyOutputStream(OutputStream outputStream, WriteDataInterface dataListener, Object command) throws Exception {
 		this.writeData(command, outputStream, dataListener);
 	}
 

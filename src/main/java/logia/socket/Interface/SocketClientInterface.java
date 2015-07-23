@@ -27,7 +27,7 @@ public interface SocketClientInterface extends Runnable {
 	 * @param command the command
 	 * @throws Exception the exception
 	 */
-	public void echo(WriteDataInterface data, int command) throws Exception;
+	public void echo(WriteDataInterface data, Object command) throws Exception;
 
 	/**
 	 * Echo method. Start send data through connection and waiting a response
@@ -37,7 +37,7 @@ public interface SocketClientInterface extends Runnable {
 	 * @return the response data
 	 * @throws Exception the exception
 	 */
-	public ReadDataInterface echoAndWait(WriteDataInterface data, int command) throws Exception;
+	public ReadDataInterface echoAndWait(WriteDataInterface data, Object command) throws Exception;
 
 	/**
 	 * Gets the data parser.
