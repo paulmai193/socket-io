@@ -31,9 +31,6 @@ import org.w3c.dom.NodeList;
  */
 public abstract class AbstractParser implements ParserInterface {
 
-	/** The logger. */
-	protected final Logger                   LOGGER          = Logger.getLogger("DATA PARSER");
-
 	/** The Constant DICTIONARY, use to get data type by input string. */
 	protected static final Map<String, Byte> DICTIONARY;
 
@@ -124,6 +121,9 @@ public abstract class AbstractParser implements ParserInterface {
 	/** The _xml. */
 	protected XmlUtil                        _xml;
 
+	/** The logger. */
+	protected final Logger                   LOGGER          = Logger.getLogger("DATA PARSER");
+
 	/**
 	 * Instantiates a new abstract parser.
 	 */
@@ -151,27 +151,6 @@ public abstract class AbstractParser implements ParserInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see logia.socket.Interface.ParserInterface#applyInputStream(java.io.InputStream)
-	 */
-	@Override
-	public void applyInputStream(InputStream inputstream) throws IOException, Exception {
-		ReadDataInterface data = null;
-		do {
-			data = this.readData(inputstream);
-			if (data != null) {
-				data.executeData();
-			}
-			else {
-				System.err.println("Error when read data");
-				break;
-			}
-		}
-		while (true);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see logia.socket.Interface.ParserInterface#applyInputStream(logia.socket.Interface.SocketClientInterface)
 	 */
 	@Override
@@ -188,7 +167,7 @@ public abstract class AbstractParser implements ParserInterface {
 				}
 			}
 			else {
-				System.err.println("Not recognize data from stream");
+				this.LOGGER.error("Not recognize data from stream");
 				break;
 			}
 		}

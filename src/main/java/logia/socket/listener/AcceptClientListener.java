@@ -1,4 +1,4 @@
-package logia.socket.Interface;
+package logia.socket.listener;
 
 import java.io.IOException;
 import java.net.Socket;

@@ -3,6 +3,8 @@ package logia.socket.Interface;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import logia.socket.listener.SocketTimeoutListener;
+
 /**
  * The Interface SocketClientInterface.
  * 

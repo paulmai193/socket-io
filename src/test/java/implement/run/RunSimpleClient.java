@@ -1,13 +1,10 @@
 package implement.run;
 
-import implement.client.datapackage.TestData;
 import implement.define.Config;
 
 import java.io.IOException;
 
 import logia.io.parser.DataParserByAnnotation;
-import logia.socket.Interface.ReadDataInterface;
-import logia.socket.Interface.SocketClientInterface;
 import logia.socket.client.ClientSide;
 
 public class RunSimpleClient {
@@ -15,17 +12,46 @@ public class RunSimpleClient {
 	public static void main(String[] args) {
 		try {
 			DataParserByAnnotation parser = new DataParserByAnnotation(Config.DATA_PACKAGE_PATH_CLIENT);
-			SocketClientInterface client = new ClientSide("localhost", 1234, 0, parser);
-			client.connect();
 
-			new Thread(client).start();
+			new ClientSide("localhost", 1234, 0, parser).connect();
 
-			TestData testData = new TestData(19204, "Mai Bat Hu", "1 billion");
+			Thread.sleep(1000);
 
-			ReadDataInterface returnData = client.echoAndWait(testData, 10);
-			returnData.executeData(client);
+			new ClientSide("localhost", 1234, 0, parser).connect();
 
-			// client.echo(testData, 10);
+			Thread.sleep(1000);
+
+			new ClientSide("localhost", 1234, 0, parser).connect();
+
+			Thread.sleep(1000);
+
+			new ClientSide("localhost", 1234, 0, parser).connect();
+
+			Thread.sleep(1000);
+
+			new ClientSide("localhost", 1234, 0, parser).connect();
+
+			Thread.sleep(10000);
+
+			new ClientSide("localhost", 1234, 0, parser).connect();
+
+			Thread.sleep(10000);
+
+			new ClientSide("localhost", 1234, 0, parser).connect();
+
+			Thread.sleep(10000);
+
+			new ClientSide("localhost", 1234, 0, parser).connect();
+
+			Thread.sleep(10000);
+
+			new ClientSide("localhost", 1234, 0, parser).connect();
+
+			Thread.sleep(10000);
+
+			new ClientSide("localhost", 1234, 0, parser).connect();
+
+			Thread.sleep(10000);
 		}
 		catch (IOException e) {
 			e.printStackTrace();

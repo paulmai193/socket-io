@@ -2,6 +2,8 @@ package logia.socket.Interface;
 
 import java.util.Collection;
 
+import logia.socket.listener.AcceptClientListener;
+
 /**
  * The Interface SocketServerInterface.
  * 

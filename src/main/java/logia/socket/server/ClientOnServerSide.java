@@ -13,8 +13,8 @@ import logia.socket.Interface.ParserInterface;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.SocketServerInterface;
-import logia.socket.Interface.SocketTimeoutListener;
 import logia.socket.Interface.WriteDataInterface;
+import logia.socket.listener.SocketTimeoutListener;
 
 import org.apache.log4j.Logger;
 
@@ -25,40 +25,41 @@ import org.apache.log4j.Logger;
  */
 public class ClientOnServerSide implements SocketClientInterface {
 
-	/** The logger. */
-	private Logger                   LOGGER = Logger.getLogger(this.getClass());
 	/** The id. */
-	private String                   id;
+	private String                      id;
 
 	/** The input stream. */
-	private InputStream              inputStream;
+	private InputStream                 inputStream;
 
 	/** The is connected. */
-	private boolean                  isConnected;
+	private boolean                     isConnected;
 
 	/** The is wait for response. */
-	private boolean                  isWait;
+	private boolean                     isWait;
+
+	/** The logger. */
+	private final Logger                LOGGER = Logger.getLogger("REMOTE SOCKET CLIENT");
 
 	/** The output stream. */
-	private OutputStream             outputStream;
+	private OutputStream                outputStream;
 
 	/** The data parser. */
-	private ParserInterface          parser;
+	private ParserInterface             parser;
 
 	/** The returned data. */
-	private Queue<ReadDataInterface> returned;
+	private Queue<ReadDataInterface>    returned;
 
 	/** The server socket. */
-	private SocketServerInterface    serverSocket;
+	private final SocketServerInterface SERVER_SOCKET;
 
 	/** The socket. */
-	private Socket                   socket;
+	private Socket                      socket;
 
 	/** The start time. */
-	private final long               startTime;
+	private final long                  startTime;
 
 	/** The timeout listener. */
-	private SocketTimeoutListener    timeoutListener;
+	private SocketTimeoutListener       timeoutListener;
 
 	/**
 	 * Instantiates a new client socket on server side.
@@ -70,7 +71,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 	public ClientOnServerSide(SocketServerInterface serverSocket, Socket socket) throws IOException {
 		this.isConnected = false;
 		this.startTime = System.currentTimeMillis();
-		this.serverSocket = serverSocket;
+		this.SERVER_SOCKET = serverSocket;
 		this.socket = socket;
 		this.setId(socket.getRemoteSocketAddress().toString());
 		this.returned = new LinkedBlockingQueue<ReadDataInterface>();
@@ -90,7 +91,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 		this.isConnected = false;
 		this.parser = dataParser;
 		this.startTime = System.currentTimeMillis();
-		this.serverSocket = serverSocket;
+		this.SERVER_SOCKET = serverSocket;
 		this.socket = socket;
 		this.setId(socket.getRemoteSocketAddress().toString());
 		this.returned = new LinkedBlockingQueue<ReadDataInterface>();
@@ -112,7 +113,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 		this.isConnected = false;
 		this.parser = dataParser;
 		this.startTime = System.currentTimeMillis();
-		this.serverSocket = serverSocket;
+		this.SERVER_SOCKET = serverSocket;
 		this.socket = socket;
 		this.setId(socket.getRemoteSocketAddress().toString());
 		this.timeoutListener = timeoutListener;
@@ -180,7 +181,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 			this.timeoutListener = null;
 		}
 		this.LOGGER.debug("A client disconnected");
-		this.serverSocket.removeClient(this);
+		this.SERVER_SOCKET.removeClient(this);
 	}
 
 	/*
@@ -189,11 +190,8 @@ public class ClientOnServerSide implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#echo(logia.socket.Interface.WriteDataInterface, int)
 	 */
 	@Override
-	public void echo(WriteDataInterface data, Object command) throws Exception {
-		synchronized (this) {
-			this.connect();
-			this.parser.applyOutputStream(this.outputStream, data, command);
-		}
+	public synchronized void echo(WriteDataInterface data, Object command) throws Exception {
+		this.parser.applyOutputStream(this.outputStream, data, command);
 	}
 
 	/*
@@ -202,18 +200,15 @@ public class ClientOnServerSide implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#echoAndWait(logia.socket.Interface.WriteDataInterface, int)
 	 */
 	@Override
-	public ReadDataInterface echoAndWait(WriteDataInterface data, Object command) throws Exception {
-		synchronized (this) {
-			this.isWait = true;
-			this.connect();
-			this.parser.applyOutputStream(this.outputStream, data, command);
-			while (this.returned.size() == 0) {
-				// Waiting until have return value
-				continue;
-			}
-			this.isWait = false;
-			return this.returned.poll();
+	public synchronized ReadDataInterface echoAndWait(WriteDataInterface data, Object command) throws Exception {
+		this.isWait = true;
+		this.parser.applyOutputStream(this.outputStream, data, command);
+		while (this.returned.size() == 0) {
+			// Waiting until have return value
+			continue;
 		}
+		this.isWait = false;
+		return this.returned.poll();
 	}
 
 	/*
@@ -315,7 +310,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 			}
 		}
 		catch (SocketException e) {
-			this.LOGGER.warn("Socket interrupt", e);
+			this.LOGGER.warn("Socket interrupt because " + e.getMessage());
 			this.disconnect();
 		}
 		catch (IOException e) {

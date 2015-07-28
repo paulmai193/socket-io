@@ -1,4 +1,4 @@
-package logia.socket.Interface;
+package logia.socket.listener;
 
 /**
  * The listener interface for receiving socketTimeout events. The class that is interested in processing a socketTimeout event implements this
