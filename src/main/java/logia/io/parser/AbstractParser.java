@@ -82,6 +82,7 @@ public abstract class AbstractParser implements ParserInterface {
 		AbstractParser.DICTIONARY.put("java.lang.Float", AbstractParser.TYPE_FLOAT);
 
 		AbstractParser.DICTIONARY.put("int", AbstractParser.TYPE_INTERGER);
+		AbstractParser.DICTIONARY.put("integer", AbstractParser.TYPE_INTERGER);
 		AbstractParser.DICTIONARY.put("Integer", AbstractParser.TYPE_INTERGER);
 		AbstractParser.DICTIONARY.put("java.lang.Integer", AbstractParser.TYPE_INTERGER);
 
@@ -156,11 +157,14 @@ public abstract class AbstractParser implements ParserInterface {
 	@Override
 	public void applyInputStream(SocketClientInterface clientSocket) throws SocketTimeoutException, SocketException, IOException, Exception {
 		ReadDataInterface data = null;
-		do {
+		while (clientSocket.isConnected()) {
 			data = this.readData(clientSocket.getInputStream());
 			if (data != null) {
-				if (clientSocket.isWait()) {
+				if (clientSocket.isWaitForReturn()) {
 					clientSocket.setReturned(data);
+					synchronized (clientSocket) {
+						clientSocket.notify();
+					}
 				}
 				else {
 					data.executeData(clientSocket);
@@ -171,7 +175,6 @@ public abstract class AbstractParser implements ParserInterface {
 				break;
 			}
 		}
-		while (clientSocket.isConnected());
 	}
 
 	/*
@@ -502,4 +505,5 @@ public abstract class AbstractParser implements ParserInterface {
 		}
 		return returnValue;
 	}
+
 }

@@ -2,7 +2,6 @@ package implement.server.datapackage;
 
 import logia.io.annotation.IOCommand;
 import logia.io.annotation.IOData;
-import logia.io.annotation.type.CommandType;
 import logia.io.annotation.type.DataType;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
@@ -12,7 +11,7 @@ import logia.socket.Interface.SocketClientInterface;
  * 
  * @author Paul Mai
  */
-@IOCommand(type = { CommandType.READER }, value = 10)
+@IOCommand(value = 10)
 public class TestData implements ReadDataInterface {
 
 	/** The message. */
@@ -65,13 +64,19 @@ public class TestData implements ReadDataInterface {
 	@Override
 	public void executeData(SocketClientInterface clientSocket) {
 		System.out.println("Client " + this.name + " send number " + this.number + " with message " + this.message + " to server");
-		ResultData result = new ResultData("I received package " + this.getClass().getCanonicalName() + " from you, right ?");
-		try {
-			clientSocket.echo(result, 11);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+		// try {
+		// Thread.sleep(10000);
+		// }
+		// catch (InterruptedException e1) {
+		// e1.printStackTrace();
+		// }
+		// ResultData result = new ResultData("I received package " + this.getClass().getCanonicalName() + " from you, right ?");
+		// try {
+		// clientSocket.echo(result, 11);
+		// }
+		// catch (Exception e) {
+		// e.printStackTrace();
+		// }
 	}
 
 	/**

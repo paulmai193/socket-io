@@ -7,7 +7,6 @@ import java.util.List;
 
 import logia.io.annotation.IOCommand;
 import logia.io.annotation.IOData;
-import logia.io.annotation.type.CommandType;
 import logia.io.annotation.type.DataType;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
@@ -19,7 +18,7 @@ import logia.socket.server.ClientOnServerSide;
  * 
  * @author Paul Mai
  */
-@IOCommand(type = { CommandType.READER, CommandType.WRITER }, value = 4)
+@IOCommand(/* type = { CommandType.READER, CommandType.WRITER }, */value = 4)
 public class ContactData implements ReadDataInterface, WriteDataInterface {
 
 	/** The contacts. */

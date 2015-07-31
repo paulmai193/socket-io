@@ -2,7 +2,6 @@ package implement.client.datapackage;
 
 import logia.io.annotation.IOCommand;
 import logia.io.annotation.IOData;
-import logia.io.annotation.type.CommandType;
 import logia.io.annotation.type.DataType;
 import logia.socket.Interface.WriteDataInterface;
 
@@ -11,7 +10,7 @@ import logia.socket.Interface.WriteDataInterface;
  * 
  * @author Paul Mai
  */
-@IOCommand(type = { CommandType.WRITER }, value = 10)
+@IOCommand(/* type = { CommandType.WRITER }, */value = 10)
 public class TestData implements WriteDataInterface {
 
 	/** The message. */

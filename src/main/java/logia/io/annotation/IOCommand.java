@@ -5,8 +5,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import logia.io.annotation.type.CommandType;
-
 /**
  * The annotation IOCommand.
  * 
@@ -21,7 +19,7 @@ public @interface IOCommand {
 	 *
 	 * @return the command type
 	 */
-	public CommandType[] type();
+	// public CommandType[] type() default CommandType.NOT_SET;
 
 	/**
 	 * Command value.

@@ -185,7 +185,7 @@ public class Reader {
 			s = new String(arr, "UTF-8");
 		}
 		catch (UnsupportedEncodingException e) {
-			this.LOGGER.warn("Unsupport UTF-8", e);
+			this.LOGGER.warn("Unsupport UTF-8");
 			s = new String(arr);
 		}
 		return s;

@@ -1,15 +1,16 @@
+C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\Interface\ReaderInterface.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\Interface\SocketClientInterface.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\Interface\ParserInterface.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\util\Reader.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\annotation\IOCommand.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\Interface\ReadDataInterface.java
-C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\Interface\SocketTimeoutListener.java
+C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\listener\SocketTimeoutListener.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\annotation\IOData.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\annotation\type\CommandType.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\util\Writer.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\annotation\type\DataType.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\Interface\SocketServerInterface.java
-C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\Interface\AcceptClientListener.java
+C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\listener\AcceptClientListener.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\server\ServerSide.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\Interface\WriteDataInterface.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\server\CheckSocketLiveTime.java
@@ -18,3 +19,4 @@ C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\parser\DataParserByXML.ja
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\client\ClientSide.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\server\ClientOnServerSide.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\parser\AbstractParser.java
+C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\Interface\WriterInterface.java

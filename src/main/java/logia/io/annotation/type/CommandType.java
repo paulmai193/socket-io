@@ -9,6 +9,10 @@ public enum CommandType {
 
 	/** The reader. */
 	READER,
+
 	/** The writer. */
-	WRITER
+	WRITER,
+
+	/** The not set. */
+	NOT_SET
 }

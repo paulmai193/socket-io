@@ -74,7 +74,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 		this.SERVER_SOCKET = serverSocket;
 		this.socket = socket;
 		this.setId(socket.getRemoteSocketAddress().toString());
-		this.returned = new LinkedBlockingQueue<ReadDataInterface>();
+		this.returned = new LinkedBlockingQueue<ReadDataInterface>(1);
 
 		this.connect();
 	}
@@ -94,7 +94,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 		this.SERVER_SOCKET = serverSocket;
 		this.socket = socket;
 		this.setId(socket.getRemoteSocketAddress().toString());
-		this.returned = new LinkedBlockingQueue<ReadDataInterface>();
+		this.returned = new LinkedBlockingQueue<ReadDataInterface>(1);
 
 		this.connect();
 	}
@@ -117,7 +117,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 		this.socket = socket;
 		this.setId(socket.getRemoteSocketAddress().toString());
 		this.timeoutListener = timeoutListener;
-		this.returned = new LinkedBlockingQueue<ReadDataInterface>();
+		this.returned = new LinkedBlockingQueue<ReadDataInterface>(1);
 
 		this.connect();
 	}
@@ -190,8 +190,10 @@ public class ClientOnServerSide implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#echo(logia.socket.Interface.WriteDataInterface, int)
 	 */
 	@Override
-	public synchronized void echo(WriteDataInterface data, Object command) throws Exception {
-		this.parser.applyOutputStream(this.outputStream, data, command);
+	public void echo(WriteDataInterface data, Object command) throws Exception {
+		synchronized (this.outputStream) {
+			this.parser.applyOutputStream(this.outputStream, data, command);
+		}
 	}
 
 	/*
@@ -200,15 +202,24 @@ public class ClientOnServerSide implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#echoAndWait(logia.socket.Interface.WriteDataInterface, int)
 	 */
 	@Override
-	public synchronized ReadDataInterface echoAndWait(WriteDataInterface data, Object command) throws Exception {
-		this.isWait = true;
-		this.parser.applyOutputStream(this.outputStream, data, command);
-		while (this.returned.size() == 0) {
+	public ReadDataInterface echoAndWait(WriteDataInterface data, Object command) throws Exception {
+		synchronized (this.outputStream) {
+			this.isWait = true;
+			this.LOGGER.debug("Set wait response after echo data");
+			this.parser.applyOutputStream(this.outputStream, data, command);
+			this.LOGGER.debug("Send data to server");
+
 			// Waiting until have return value
-			continue;
+			this.LOGGER.debug("Is waiting response...");
+			synchronized (this) {
+				wait();
+			}
+
+			this.isWait = false;
+			this.LOGGER.debug("Received data");
+
+			return this.returned.poll();
 		}
-		this.isWait = false;
-		return this.returned.poll();
 	}
 
 	/*
@@ -287,7 +298,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#isWait()
 	 */
 	@Override
-	public boolean isWait() {
+	public boolean isWaitForReturn() {
 		return this.isWait;
 	}
 

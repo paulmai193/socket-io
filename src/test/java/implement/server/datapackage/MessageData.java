@@ -1,5 +1,8 @@
 package implement.server.datapackage;
 
+import logia.io.annotation.IOCommand;
+import logia.io.annotation.IOData;
+import logia.io.annotation.type.DataType;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.WriteDataInterface;
@@ -9,12 +12,15 @@ import logia.socket.Interface.WriteDataInterface;
  * 
  * @author Paul Mai
  */
+@IOCommand(value = 2)
 public class MessageData implements ReadDataInterface, WriteDataInterface {
 
 	/** The message. */
+	@IOData(order = 1, type = DataType.STRING)
 	private String message;
 
 	/** The recipient. */
+	@IOData(order = 2, type = DataType.INTEGER)
 	private int    user;
 
 	/**
@@ -52,7 +58,7 @@ public class MessageData implements ReadDataInterface, WriteDataInterface {
 	 */
 	@Override
 	public void executeData(SocketClientInterface clientSocket) {
-		System.out.println("Receiver message " + this.message + " from client");
+		System.out.println("Receiver message " + this.message + " from client " + user);
 
 	}
 

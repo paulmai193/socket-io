@@ -91,11 +91,11 @@ public interface SocketClientInterface extends Runnable {
 	public boolean isConnected();
 
 	/**
-	 * Checks if is wait for response.
+	 * Checks if is connection is waiting for return response.
 	 *
 	 * @return the isWait
 	 */
-	public boolean isWait();
+	public boolean isWaitForReturn();
 
 	/**
 	 * Listen method. Start reading data send through connection

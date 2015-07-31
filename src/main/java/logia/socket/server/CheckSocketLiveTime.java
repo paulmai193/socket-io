@@ -35,6 +35,13 @@ public class CheckSocketLiveTime implements Runnable {
 		this.maxLiveTime = maxLiveTime;
 	}
 
+	/**
+	 * Instantiates a new check socket live time.
+	 *
+	 * @param server the server
+	 * @param idleLiveTime the idle live time
+	 * @param maxLiveTime the max live time
+	 */
 	public CheckSocketLiveTime(SocketServerInterface server, long idleLiveTime, long maxLiveTime) {
 		this.server = server;
 		this.idleLiveTime = idleLiveTime;
@@ -50,7 +57,8 @@ public class CheckSocketLiveTime implements Runnable {
 	public void run() {
 		for (SocketClientInterface client : this.server.getListClients()) {
 			if (this.idleLiveTime > 0 && client.getLiveTime() > this.idleLiveTime) {
-				// Thinking TODO
+				// TODO Thinking how to resolve
+
 			}
 			else if (client.getLiveTime() > this.maxLiveTime) {
 				client.disconnect();

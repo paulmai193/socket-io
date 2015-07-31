@@ -1,8 +1,6 @@
 logia\socket\server\ServerSide$1.class
 logia\socket\server\ServerSide.class
 logia\socket\client\ClientSide.class
-logia\socket\Interface\SocketTimeoutListener.class
-logia\socket\Interface\AcceptClientListener.class
 logia\socket\Interface\WriteDataInterface.class
 logia\socket\Interface\SocketClientInterface.class
 logia\socket\Interface\ReadDataInterface.class
