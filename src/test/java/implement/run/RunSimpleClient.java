@@ -10,7 +10,7 @@ import java.net.SocketException;
 import logia.io.parser.DataParserByAnnotation;
 import logia.socket.Interface.ParserInterface;
 import logia.socket.Interface.SocketClientInterface;
-import logia.socket.client.ClientSide;
+import logia.socket.client.TCPClientSide;
 
 public class RunSimpleClient {
 
@@ -18,7 +18,7 @@ public class RunSimpleClient {
 		try {
 			ParserInterface parser = new DataParserByAnnotation(Config.DATA_PACKAGE_PATH_CLIENT);
 
-			final SocketClientInterface client = new ClientSide("localhost", 1234, 0, parser);
+			final SocketClientInterface client = new TCPClientSide("localhost", 1234, 0, parser);
 			// SocketTimeoutListener timeout = new SocketTimeoutListener() {
 			//
 			// @Override

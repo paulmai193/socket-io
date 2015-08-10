@@ -1,4 +1,4 @@
-package logia.socket.server;
+package logia.socket.client;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,120 +6,122 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import logia.socket.Interface.ParserInterface;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
-import logia.socket.Interface.SocketServerInterface;
 import logia.socket.Interface.WriteDataInterface;
 import logia.socket.listener.SocketTimeoutListener;
 
 import org.apache.log4j.Logger;
 
 /**
- * The Class ClientOnServerSide.
+ * The Class ClientSide.
  * 
  * @author Paul Mai
  */
-public class ClientOnServerSide implements SocketClientInterface {
+public class TCPClientSide implements SocketClientInterface {
+
+	/** The host. */
+	private final String             HOST;
 
 	/** The id. */
-	private String                      id;
-
-	/** The input stream. */
-	private InputStream                 inputStream;
-
-	/** The is connected. */
-	private boolean                     isConnected;
+	private String                   id;
 
 	/** The is wait for response. */
-	private boolean                     isWait;
+	private boolean                  isWait;
 
 	/** The logger. */
-	private final Logger                LOGGER = Logger.getLogger("REMOTE SOCKET CLIENT");
+	private final Logger             LOGGER = Logger.getLogger("TCP SOCKET CLIENT");
 
-	/** The output stream. */
-	private OutputStream                outputStream;
-
-	/** The data parser. */
-	private ParserInterface             parser;
+	/** The port. */
+	private final int                PORT;
 
 	/** The returned data. */
-	private Queue<ReadDataInterface>    returned;
-
-	/** The server socket. */
-	private final SocketServerInterface SERVER_SOCKET;
-
-	/** The socket. */
-	private Socket                      socket;
-
-	/** The start time. */
-	private final long                  startTime;
+	private Queue<ReadDataInterface> returned;
 
 	/** The timeout listener. */
-	private SocketTimeoutListener       timeoutListener;
+	private SocketTimeoutListener    timeoutListener;
+
+	/** The input stream. */
+	protected InputStream            inputStream;
+
+	/** The is connected. */
+	protected boolean                isConnected;
+
+	/** The output stream. */
+	protected OutputStream           outputStream;
+
+	/** The data parser. */
+	protected ParserInterface        parser;
+
+	/** The socket. */
+	protected Socket                 socket;
+
+	/** The start time. */
+	protected final long             START_TIME;
+
+	/** The timeout of connection. */
+	protected final int              TIME_OUT;
 
 	/**
-	 * Instantiates a new client socket on server side.
+	 * Instantiates a new client side.
 	 *
-	 * @param serverSocket the server socket
-	 * @param socket the socket
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param host the host
+	 * @param port the port
+	 * @param timeout the timeout
 	 */
-	public ClientOnServerSide(SocketServerInterface serverSocket, Socket socket) throws IOException {
+	public TCPClientSide(String host, int port, int timeout) {
 		this.isConnected = false;
-		this.startTime = System.currentTimeMillis();
-		this.SERVER_SOCKET = serverSocket;
-		this.socket = socket;
-		this.setId(socket.getRemoteSocketAddress().toString());
+		this.START_TIME = System.currentTimeMillis();
+		this.HOST = host;
+		this.PORT = port;
+		this.TIME_OUT = timeout;
+		this.isWait = false;
 		this.returned = new LinkedBlockingQueue<ReadDataInterface>(1);
-
-		this.connect();
 	}
 
 	/**
-	 * Instantiates a new client socket on server side.
+	 * Instantiates a new client side.
 	 *
-	 * @param serverSocket the server socket
-	 * @param socket the socket
+	 * @param host the host
+	 * @param port the port
+	 * @param timeout the timeout in millisecond
 	 * @param dataParser the data parser
-	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public ClientOnServerSide(SocketServerInterface serverSocket, Socket socket, ParserInterface dataParser) throws IOException {
+	public TCPClientSide(String host, int port, int timeout, ParserInterface dataParser) {
 		this.isConnected = false;
 		this.parser = dataParser;
-		this.startTime = System.currentTimeMillis();
-		this.SERVER_SOCKET = serverSocket;
-		this.socket = socket;
-		this.setId(socket.getRemoteSocketAddress().toString());
+		this.START_TIME = System.currentTimeMillis();
+		this.HOST = host;
+		this.PORT = port;
+		this.TIME_OUT = timeout;
+		this.isWait = false;
 		this.returned = new LinkedBlockingQueue<ReadDataInterface>(1);
-
-		this.connect();
 	}
 
 	/**
-	 * Instantiates a new client on server side.
+	 * Instantiates a new client side.
 	 *
-	 * @param serverSocket the server socket
-	 * @param socket the socket
+	 * @param host the host
+	 * @param port the port
+	 * @param timeout the timeout
 	 * @param dataParser the data parser
 	 * @param timeoutListener the timeout listener
-	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public ClientOnServerSide(SocketServerInterface serverSocket, Socket socket, ParserInterface dataParser, SocketTimeoutListener timeoutListener)
-	        throws IOException {
+	public TCPClientSide(String host, int port, int timeout, ParserInterface dataParser, SocketTimeoutListener timeoutListener) {
 		this.isConnected = false;
 		this.parser = dataParser;
-		this.startTime = System.currentTimeMillis();
-		this.SERVER_SOCKET = serverSocket;
-		this.socket = socket;
-		this.setId(socket.getRemoteSocketAddress().toString());
+		this.START_TIME = System.currentTimeMillis();
+		this.HOST = host;
+		this.PORT = port;
+		this.TIME_OUT = timeout;
 		this.timeoutListener = timeoutListener;
+		this.isWait = false;
 		this.returned = new LinkedBlockingQueue<ReadDataInterface>(1);
-
-		this.connect();
 	}
 
 	/*
@@ -129,16 +131,26 @@ public class ClientOnServerSide implements SocketClientInterface {
 	 */
 	@Override
 	public void connect() {
-		if (!this.isConnected()) {
+		if (!this.isConnected) {
 			try {
+				this.socket = new Socket(this.HOST, this.PORT);
+				if (this.TIME_OUT > 0) {
+					this.socket.setSoTimeout(this.TIME_OUT);
+				}
 				this.inputStream = this.socket.getInputStream();
 				this.outputStream = this.socket.getOutputStream();
 				this.isConnected = true;
+				this.LOGGER.debug("Yeah, connected!");
+			}
+			catch (SocketException e) {
+				this.LOGGER.error("Cannot connect to socket server", e);
+			}
+			catch (UnknownHostException e) {
+				this.LOGGER.error("Unknown socket server", e);
 			}
 			catch (IOException e) {
-				this.LOGGER.error(e.getMessage(), e);
+				this.LOGGER.error("Cannot connect to socket server", e);
 			}
-			this.LOGGER.debug("A client connected, waiting to read data from client...");
 		}
 	}
 
@@ -150,14 +162,6 @@ public class ClientOnServerSide implements SocketClientInterface {
 	@Override
 	public void disconnect() {
 		this.isConnected = false;
-		if (this.inputStream != null) {
-			try {
-				this.inputStream.close();
-			}
-			catch (IOException e) {
-			}
-			this.inputStream = null;
-		}
 		if (this.outputStream != null) {
 			try {
 				this.outputStream.close();
@@ -165,6 +169,14 @@ public class ClientOnServerSide implements SocketClientInterface {
 			catch (IOException e) {
 			}
 			this.outputStream = null;
+		}
+		if (this.inputStream != null) {
+			try {
+				this.inputStream.close();
+			}
+			catch (IOException e) {
+			}
+			this.inputStream = null;
 		}
 		if (this.socket != null) {
 			try {
@@ -180,8 +192,6 @@ public class ClientOnServerSide implements SocketClientInterface {
 		if (this.timeoutListener != null) {
 			this.timeoutListener = null;
 		}
-		this.LOGGER.debug("A client disconnected");
-		this.SERVER_SOCKET.removeClient(this);
 	}
 
 	/*
@@ -259,7 +269,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 	 */
 	@Override
 	public long getLiveTime() {
-		return System.currentTimeMillis() - this.startTime;
+		return System.currentTimeMillis() - this.START_TIME;
 	}
 
 	/*
@@ -325,13 +335,14 @@ public class ClientOnServerSide implements SocketClientInterface {
 			this.disconnect();
 		}
 		catch (IOException e) {
-			this.LOGGER.error("Error read data", e);
+			this.LOGGER.error("Error reading data", e);
 			this.disconnect();
 		}
 		catch (Exception e) {
 			this.LOGGER.error(e.getMessage(), e);
 			this.disconnect();
 		}
+
 	}
 
 	/*

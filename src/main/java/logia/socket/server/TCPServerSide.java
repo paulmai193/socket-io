@@ -23,13 +23,13 @@ import org.apache.log4j.Logger;
  * 
  * @author Paul Mai
  */
-public class ServerSide implements SocketServerInterface {
+public class TCPServerSide implements SocketServerInterface {
 
 	/** The thread socket. */
 	private static Thread                            _threadSocket;
 
 	/** The instance. */
-	public final ServerSide                          instance;
+	public final TCPServerSide                          instance;
 
 	/** The is running. */
 	public boolean                                   isRunning;
@@ -66,7 +66,7 @@ public class ServerSide implements SocketServerInterface {
 	 *
 	 * @param port the port
 	 */
-	public ServerSide(int port) {
+	public TCPServerSide(int port) {
 		this.PORT = port;
 		this.TIME_OUT = 0;
 		this.isRunning = false;
@@ -83,7 +83,7 @@ public class ServerSide implements SocketServerInterface {
 	 * @param port the port
 	 * @param timeout the timeout of socket when accepted
 	 */
-	public ServerSide(int port, int timeout) {
+	public TCPServerSide(int port, int timeout) {
 		this.PORT = port;
 		this.TIME_OUT = timeout;
 		this.isRunning = false;
@@ -101,7 +101,7 @@ public class ServerSide implements SocketServerInterface {
 	 * @param timeout the timeout in milliseconds
 	 * @param maxLiveTime the max client socket live time
 	 */
-	public ServerSide(int port, int timeout, long maxLiveTime) {
+	public TCPServerSide(int port, int timeout, long maxLiveTime) {
 		this.PORT = port;
 		this.TIME_OUT = timeout;
 		this.isRunning = false;
@@ -120,7 +120,7 @@ public class ServerSide implements SocketServerInterface {
 	 * @param idleLiveTime the idle client socket live time
 	 * @param maxLiveTime the max client socket live time
 	 */
-	public ServerSide(int port, int timeout, long idleLiveTime, long maxLiveTime) {
+	public TCPServerSide(int port, int timeout, long idleLiveTime, long maxLiveTime) {
 		this.PORT = port;
 		this.TIME_OUT = timeout;
 		this.isRunning = false;
@@ -192,8 +192,8 @@ public class ServerSide implements SocketServerInterface {
 
 						@Override
 						public void acceptClient(Socket socket) throws SocketTimeoutException, IOException {
-							SocketClientInterface clientSocket = new ClientOnServerSide(ServerSide.this.instance, socket);
-							ServerSide.this.addClient(clientSocket);
+							SocketClientInterface clientSocket = new TCPClientOnServerSide(TCPServerSide.this.instance, socket);
+							TCPServerSide.this.addClient(clientSocket);
 							new Thread(clientSocket).start();
 						}
 					};
@@ -223,8 +223,8 @@ public class ServerSide implements SocketServerInterface {
 	 */
 	@Override
 	public void start() {
-		ServerSide._threadSocket = new Thread(this);
-		ServerSide._threadSocket.start();
+		TCPServerSide._threadSocket = new Thread(this);
+		TCPServerSide._threadSocket.start();
 		if (this.maxLiveTime > 0) {
 			this.checkRemoteSocketLiveTime = Executors.newSingleThreadScheduledExecutor();
 			if (this.idleLiveTime > 0) {
@@ -252,8 +252,8 @@ public class ServerSide implements SocketServerInterface {
 		}
 		catch (IOException e) {
 		}
-		if (ServerSide._threadSocket != null && ServerSide._threadSocket.isAlive()) {
-			ServerSide._threadSocket.interrupt();
+		if (TCPServerSide._threadSocket != null && TCPServerSide._threadSocket.isAlive()) {
+			TCPServerSide._threadSocket.interrupt();
 		}
 		if (this.checkRemoteSocketLiveTime != null) {
 			this.checkRemoteSocketLiveTime.shutdown();

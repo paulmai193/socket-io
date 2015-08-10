@@ -10,8 +10,8 @@ import java.util.Arrays;
 import logia.io.parser.DataParserByAnnotation;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.listener.AcceptClientListener;
-import logia.socket.server.ClientOnServerSide;
-import logia.socket.server.ServerSide;
+import logia.socket.server.TCPClientOnServerSide;
+import logia.socket.server.TCPServerSide;
 import logia.utility.pool.ThreadPoolFactory;
 
 public class RunSimpleServer extends Thread {
@@ -23,13 +23,13 @@ public class RunSimpleServer extends Thread {
 		long freeMemory = runtime.freeMemory();
 
 		final ThreadPoolFactory pool = new ThreadPoolFactory(10, 10, Thread.MAX_PRIORITY, true);
-		final ServerSide server = new ServerSide(1234, 0, 5 * 60000);
+		final TCPServerSide server = new TCPServerSide(1234, 0, 5 * 60000);
 		final DataParserByAnnotation parser = new DataParserByAnnotation(Config.DATA_PACKAGE_PATH_SERVER);
 		server.setAcceptClientListener(new AcceptClientListener() {
 
 			@Override
 			public void acceptClient(Socket socket) throws SocketTimeoutException, IOException {
-				SocketClientInterface clientSocket = new ClientOnServerSide(server, socket, parser);
+				SocketClientInterface clientSocket = new TCPClientOnServerSide(server, socket, parser);
 				server.addClient(clientSocket);
 				pool.start(clientSocket);
 			}
