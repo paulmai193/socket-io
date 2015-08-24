@@ -2,7 +2,12 @@ package logia.socket.Interface;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
+import logia.io.exception.ConnectionErrorException;
+import logia.io.exception.ReadDataException;
+import logia.io.exception.WriteDataException;
 import logia.socket.listener.SocketTimeoutListener;
 
 /**
@@ -14,8 +19,10 @@ public interface SocketClientInterface extends Runnable {
 
 	/**
 	 * Socket connect.
+	 * 
+	 * @throws ConnectionErrorException
 	 */
-	public void connect();
+	public void connect() throws ConnectionErrorException;
 
 	/**
 	 * Socket disconnect.
@@ -27,9 +34,9 @@ public interface SocketClientInterface extends Runnable {
 	 *
 	 * @param data the data
 	 * @param command the command
-	 * @throws Exception the exception
+	 * @throws WriteDataException the write data exception
 	 */
-	public void echo(WriteDataInterface data, Object command) throws Exception;
+	public void echo(WriteDataInterface data, Object command) throws WriteDataException;
 
 	/**
 	 * Echo method. Start send data through connection and waiting a response
@@ -39,7 +46,7 @@ public interface SocketClientInterface extends Runnable {
 	 * @return the response data
 	 * @throws Exception the exception
 	 */
-	public ReadDataInterface echoAndWait(WriteDataInterface data, Object command) throws Exception;
+	public ReadDataInterface echoAndWait(WriteDataInterface data, Object command) throws WriteDataException, InterruptedException;
 
 	/**
 	 * Gets the data parser.
@@ -99,8 +106,12 @@ public interface SocketClientInterface extends Runnable {
 
 	/**
 	 * Listen method. Start reading data send through connection
+	 * 
+	 * @throws ReadDataException
+	 * @throws SocketException
+	 * @throws SocketTimeoutException
 	 */
-	public void listen();
+	public void listen() throws ReadDataException, SocketTimeoutException, SocketException;
 
 	/**
 	 * Sets the data parser.

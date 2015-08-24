@@ -11,15 +11,15 @@ import logia.io.annotation.type.DataType;
 public class Contact {
 
 	/** The email. */
-	@IOData(order = 3, type = DataType.STRING)
+	@IOData(order = 3, type = DataType.STRING, breakValue = "n/a")
 	String email;
 
 	/** The name. */
-	@IOData(order = 1, type = DataType.STRING)
+	@IOData(order = 1, type = DataType.STRING, breakValue = "n/a")
 	String name;
 
 	/** The phone. */
-	@IOData(order = 2, type = DataType.STRING)
+	@IOData(order = 2, type = DataType.STRING, breakValue = "n/a")
 	String phone;
 
 	/**

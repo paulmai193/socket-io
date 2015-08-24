@@ -16,7 +16,7 @@ import logia.io.annotation.type.DataType;
 @Target(value = { ElementType.FIELD })
 public @interface IOData {
 
-	public String breakValue() default "";
+	public String breakValue();
 
 	/**
 	 * The data order.

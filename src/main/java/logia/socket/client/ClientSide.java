@@ -10,6 +10,9 @@ import java.net.UnknownHostException;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import logia.io.exception.ConnectionErrorException;
+import logia.io.exception.ReadDataException;
+import logia.io.exception.WriteDataException;
 import logia.socket.Interface.ParserInterface;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
@@ -23,7 +26,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Paul Mai
  */
-public class TCPClientSide implements SocketClientInterface {
+public class ClientSide implements SocketClientInterface {
 
 	/** The host. */
 	private final String             HOST;
@@ -35,7 +38,7 @@ public class TCPClientSide implements SocketClientInterface {
 	private boolean                  isWait;
 
 	/** The logger. */
-	private final Logger             LOGGER = Logger.getLogger("TCP SOCKET CLIENT");
+	private final Logger             LOGGER = Logger.getLogger(getClass());
 
 	/** The port. */
 	private final int                PORT;
@@ -74,7 +77,7 @@ public class TCPClientSide implements SocketClientInterface {
 	 * @param port the port
 	 * @param timeout the timeout
 	 */
-	public TCPClientSide(String host, int port, int timeout) {
+	public ClientSide(String host, int port, int timeout) {
 		this.isConnected = false;
 		this.START_TIME = System.currentTimeMillis();
 		this.HOST = host;
@@ -92,7 +95,7 @@ public class TCPClientSide implements SocketClientInterface {
 	 * @param timeout the timeout in millisecond
 	 * @param dataParser the data parser
 	 */
-	public TCPClientSide(String host, int port, int timeout, ParserInterface dataParser) {
+	public ClientSide(String host, int port, int timeout, ParserInterface dataParser) {
 		this.isConnected = false;
 		this.parser = dataParser;
 		this.START_TIME = System.currentTimeMillis();
@@ -112,7 +115,7 @@ public class TCPClientSide implements SocketClientInterface {
 	 * @param dataParser the data parser
 	 * @param timeoutListener the timeout listener
 	 */
-	public TCPClientSide(String host, int port, int timeout, ParserInterface dataParser, SocketTimeoutListener timeoutListener) {
+	public ClientSide(String host, int port, int timeout, ParserInterface dataParser, SocketTimeoutListener timeoutListener) {
 		this.isConnected = false;
 		this.parser = dataParser;
 		this.START_TIME = System.currentTimeMillis();
@@ -130,7 +133,7 @@ public class TCPClientSide implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#connect()
 	 */
 	@Override
-	public void connect() {
+	public void connect() throws ConnectionErrorException {
 		if (!this.isConnected) {
 			try {
 				this.socket = new Socket(this.HOST, this.PORT);
@@ -144,12 +147,15 @@ public class TCPClientSide implements SocketClientInterface {
 			}
 			catch (SocketException e) {
 				this.LOGGER.error("Cannot connect to socket server", e);
+				throw new ConnectionErrorException(e);
 			}
 			catch (UnknownHostException e) {
 				this.LOGGER.error("Unknown socket server", e);
+				throw new ConnectionErrorException(e);
 			}
 			catch (IOException e) {
 				this.LOGGER.error("Cannot connect to socket server", e);
+				throw new ConnectionErrorException(e);
 			}
 		}
 	}
@@ -200,9 +206,16 @@ public class TCPClientSide implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#echo(logia.socket.Interface.WriteDataInterface, int)
 	 */
 	@Override
-	public void echo(WriteDataInterface data, Object command) throws Exception {
+	public void echo(WriteDataInterface data, Object command) throws WriteDataException {
 		synchronized (this.outputStream) {
-			this.parser.applyOutputStream(this.outputStream, data, command);
+			try {
+				this.parser.applyOutputStream(this.outputStream, data, command);
+			}
+			catch (Exception e) {
+				LOGGER.error("Send data error", e);
+				throw new WriteDataException(e);
+			}
+
 		}
 	}
 
@@ -212,11 +225,17 @@ public class TCPClientSide implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#echoAndWait(logia.socket.Interface.WriteDataInterface, int)
 	 */
 	@Override
-	public ReadDataInterface echoAndWait(WriteDataInterface data, Object command) throws Exception {
+	public ReadDataInterface echoAndWait(WriteDataInterface data, Object command) throws WriteDataException, InterruptedException {
 		synchronized (this.outputStream) {
 			this.isWait = true;
 			this.LOGGER.debug("Set wait response after echo data");
-			this.parser.applyOutputStream(this.outputStream, data, command);
+			try {
+				this.parser.applyOutputStream(this.outputStream, data, command);
+			}
+			catch (Exception e) {
+				LOGGER.error("Send data error", e);
+				throw new WriteDataException(e);
+			}
 			this.LOGGER.debug("Send data to server");
 
 			// Waiting until have return value
@@ -318,7 +337,7 @@ public class TCPClientSide implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#listen()
 	 */
 	@Override
-	public void listen() {
+	public void listen() throws ReadDataException, SocketTimeoutException, SocketException {
 		try {
 			this.parser.applyInputStream(this);
 		}
@@ -327,20 +346,17 @@ public class TCPClientSide implements SocketClientInterface {
 				this.timeoutListener.solveTimeout();
 			}
 			else {
-				this.disconnect();
+				throw e;
 			}
 		}
 		catch (SocketException e) {
-			this.LOGGER.warn("Socket interrupt because " + e.getMessage());
-			this.disconnect();
+			throw e;
 		}
 		catch (IOException e) {
-			this.LOGGER.error("Error reading data", e);
-			this.disconnect();
+			throw new ReadDataException(e);
 		}
 		catch (Exception e) {
-			this.LOGGER.error(e.getMessage(), e);
-			this.disconnect();
+			throw new ReadDataException(e);
 		}
 
 	}
@@ -352,7 +368,21 @@ public class TCPClientSide implements SocketClientInterface {
 	 */
 	@Override
 	public void run() {
-		this.listen();
+		try {
+			this.listen();
+		}
+		catch (ReadDataException e) {
+			this.LOGGER.error(e);
+		}
+		catch (SocketTimeoutException e) {
+			this.LOGGER.warn("Connection timeout");
+		}
+		catch (SocketException e) {
+			this.LOGGER.warn("Socket interrupt because " + e.getMessage());
+		}
+		finally {
+			this.disconnect();
+		}
 	}
 
 	/*

@@ -19,7 +19,7 @@ import logia.socket.Interface.WriteDataInterface;
 public class ContactData implements ReadDataInterface, WriteDataInterface {
 
 	/** The contacts. */
-	@IOData(order = 1, type = DataType.LIST)
+	@IOData(order = 1, type = DataType.LIST, breakValue = "n/a")
 	private List<Contact> contacts;
 
 	/**

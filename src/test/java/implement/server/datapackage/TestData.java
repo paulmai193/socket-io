@@ -15,15 +15,15 @@ import logia.socket.Interface.SocketClientInterface;
 public class TestData implements ReadDataInterface {
 
 	/** The message. */
-	@IOData(order = 3, type = DataType.STRING)
+	@IOData(order = 3, type = DataType.STRING, breakValue = "n/a")
 	String message;
 
 	/** The name. */
-	@IOData(order = 2, type = DataType.STRING)
+	@IOData(order = 2, type = DataType.STRING, breakValue = "n/a")
 	String name;
 
 	/** The number. */
-	@IOData(order = 1, type = DataType.LONG)
+	@IOData(order = 1, type = DataType.LONG, breakValue = "n/a")
 	long   number;
 
 	/**

@@ -16,11 +16,11 @@ import logia.socket.Interface.WriteDataInterface;
 public class MessageData implements ReadDataInterface, WriteDataInterface {
 
 	/** The message. */
-	@IOData(order = 1, type = DataType.STRING)
+	@IOData(order = 1, type = DataType.STRING, breakValue = "n/a")
 	private String message;
 
 	/** The recipient. */
-	@IOData(order = 2, type = DataType.INTEGER)
+	@IOData(order = 2, type = DataType.INTEGER, breakValue = "n/a")
 	private int    user;
 
 	/**

@@ -1,23 +1,54 @@
 package implement.client.datapackage;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.File;
 
-import logia.socket.Interface.ReadDataInterface;
-import logia.socket.Interface.SocketClientInterface;
+import logia.io.annotation.IOCommand;
+import logia.io.annotation.IOData;
+import logia.io.annotation.type.DataType;
 import logia.socket.Interface.WriteDataInterface;
 
 /**
- * The Class FileData. This class implements both ReadDataListener and WriteDataListener to read write file data package
+ * The Class FileData. This class implements WriteDataListener to read write file data package
  * 
  * @author Paul Mai
  */
-public class FileData implements ReadDataInterface, WriteDataInterface {
+@IOCommand(value = 5)
+public class FileData implements WriteDataInterface {
 
 	/** The picture. */
-	byte[] file;
+
+	byte[] bytes;
+
+	/**
+	 * Gets the bytes.
+	 *
+	 * @return the bytes
+	 */
+	public byte[] getBytes() {
+		return bytes;
+	}
+
+	/**
+	 * Sets the bytes.
+	 *
+	 * @param bytes the bytes to set
+	 */
+	public void setBytes(byte[] bytes) {
+		this.bytes = bytes;
+	}
+
+	/** The file. */
+	@IOData(order = 1, type = DataType.FILE, breakValue = "n/a")
+	File file;
+
+	/**
+	 * Sets the file.
+	 *
+	 * @param file the file to set
+	 */
+	public void setFile(File file) {
+		this.file = file;
+	}
 
 	/**
 	 * Instantiates a new file data.
@@ -26,56 +57,21 @@ public class FileData implements ReadDataInterface, WriteDataInterface {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see socket.listener.ReadDataListener#executeData()
+	/**
+	 * Instantiates a new file data.
+	 *
+	 * @param bytes the bytes
 	 */
-	@Override
-	public void executeData() throws Exception {
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see datapackage.ReadDataListener#executeData(socket.ClientBoundSocket)
-	 */
-	@Override
-	public void executeData(SocketClientInterface clientSocket) {
-		System.out.println("Receive file from server");
-		try {
-			OutputStream out = new FileOutputStream("C:/Users/Paul Mai/Desktop/Candy.jpg");
-			for (byte element : this.file) {
-				out.write(element);
-			}
-			out.close();
-			System.out.println("Write file finish");
-		}
-		catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-
+	public FileData(byte[] bytes) {
+		this.bytes = bytes;
 	}
 
 	/**
-	 * Gets the file.
-	 * 
-	 * @return the file
+	 * Instantiates a new file data.
+	 *
+	 * @param file the file
 	 */
-	public byte[] getFile() {
-		return this.file;
-	}
-
-	/**
-	 * Sets the file.
-	 * 
-	 * @param picture the new file
-	 */
-	public void setFile(byte[] file) {
+	public FileData(File file) {
 		this.file = file;
 	}
 

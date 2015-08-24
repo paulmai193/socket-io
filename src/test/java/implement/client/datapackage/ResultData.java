@@ -9,7 +9,7 @@ import logia.socket.Interface.SocketClientInterface;
 @IOCommand(/* type = { CommandType.READER }, */value = 11)
 public class ResultData implements ReadDataInterface {
 
-	@IOData(order = 1, type = DataType.STRING)
+	@IOData(order = 1, type = DataType.STRING, breakValue = "n/a")
 	private String message;
 
 	@Override

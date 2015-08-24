@@ -15,6 +15,8 @@ public enum DataType {
 	DOUBLE,
 	/** The float. */
 	FLOAT,
+	/** The file. */
+	FILE,
 	/** The integer. */
 	INTEGER,
 	/** The list. */

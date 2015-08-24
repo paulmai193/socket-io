@@ -19,12 +19,12 @@ import logia.socket.Interface.WriteDataInterface;
  * 
  * @author Paul Mai
  */
-public class DataParserByAnnotation extends AbstractParser {
+public class TCPDataParserByAnnotation extends AbstractTCPParser {
 
 	/**
 	 * Instantiates a new data parser by annotation.
 	 */
-	public DataParserByAnnotation() {
+	public TCPDataParserByAnnotation() {
 		super();
 	}
 
@@ -33,7 +33,7 @@ public class DataParserByAnnotation extends AbstractParser {
 	 *
 	 * @param definePath the define path
 	 */
-	public DataParserByAnnotation(String definePath) {
+	public TCPDataParserByAnnotation(String definePath) {
 		super(definePath);
 	}
 

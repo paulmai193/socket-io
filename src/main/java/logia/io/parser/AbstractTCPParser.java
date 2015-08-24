@@ -1,5 +1,6 @@
 package logia.io.parser;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,7 +30,7 @@ import org.w3c.dom.NodeList;
  * 
  * @author Paul Mai
  */
-public abstract class AbstractParser implements ParserInterface {
+public abstract class AbstractTCPParser implements ParserInterface {
 
 	/** The Constant DICTIONARY, use to get data type by input string. */
 	protected static final Map<String, Byte> DICTIONARY;
@@ -45,6 +46,9 @@ public abstract class AbstractParser implements ParserInterface {
 
 	/** The Constant TYPE_FLOAT. */
 	protected static final byte              TYPE_FLOAT      = 5;
+
+	/** The Constant TYPE_FILE. */
+	protected static final byte              TYPE_FILE       = 3;
 
 	/** The Constant TYPE_INTERGER. */
 	protected static final byte              TYPE_INTERGER   = 6;
@@ -64,44 +68,49 @@ public abstract class AbstractParser implements ParserInterface {
 	static {
 		DICTIONARY = new HashMap<String, Byte>();
 
-		AbstractParser.DICTIONARY.put("byte", AbstractParser.TYPE_BYTE);
-		AbstractParser.DICTIONARY.put("Byte", AbstractParser.TYPE_BYTE);
-		AbstractParser.DICTIONARY.put("java.lang.Byte", AbstractParser.TYPE_BYTE);
+		AbstractTCPParser.DICTIONARY.put("byte", AbstractTCPParser.TYPE_BYTE);
+		AbstractTCPParser.DICTIONARY.put("Byte", AbstractTCPParser.TYPE_BYTE);
+		AbstractTCPParser.DICTIONARY.put("java.lang.Byte", AbstractTCPParser.TYPE_BYTE);
 
-		AbstractParser.DICTIONARY.put("byte[]", AbstractParser.TYPE_BYTE_ARRAY);
-		AbstractParser.DICTIONARY.put("bytearray", AbstractParser.TYPE_BYTE_ARRAY);
-		AbstractParser.DICTIONARY.put("Bytearray", AbstractParser.TYPE_BYTE_ARRAY);
-		AbstractParser.DICTIONARY.put("ByteArray", AbstractParser.TYPE_BYTE_ARRAY);
+		AbstractTCPParser.DICTIONARY.put("byte[]", AbstractTCPParser.TYPE_BYTE_ARRAY);
+		AbstractTCPParser.DICTIONARY.put("bytearray", AbstractTCPParser.TYPE_BYTE_ARRAY);
+		AbstractTCPParser.DICTIONARY.put("byte_array", AbstractTCPParser.TYPE_BYTE_ARRAY);
+		AbstractTCPParser.DICTIONARY.put("Bytearray", AbstractTCPParser.TYPE_BYTE_ARRAY);
+		AbstractTCPParser.DICTIONARY.put("ByteArray", AbstractTCPParser.TYPE_BYTE_ARRAY);
 
-		AbstractParser.DICTIONARY.put("double", AbstractParser.TYPE_DOUBLE);
-		AbstractParser.DICTIONARY.put("Double", AbstractParser.TYPE_DOUBLE);
-		AbstractParser.DICTIONARY.put("java.lang.Double", AbstractParser.TYPE_DOUBLE);
+		AbstractTCPParser.DICTIONARY.put("double", AbstractTCPParser.TYPE_DOUBLE);
+		AbstractTCPParser.DICTIONARY.put("Double", AbstractTCPParser.TYPE_DOUBLE);
+		AbstractTCPParser.DICTIONARY.put("java.lang.Double", AbstractTCPParser.TYPE_DOUBLE);
 
-		AbstractParser.DICTIONARY.put("float", AbstractParser.TYPE_FLOAT);
-		AbstractParser.DICTIONARY.put("Float", AbstractParser.TYPE_FLOAT);
-		AbstractParser.DICTIONARY.put("java.lang.Float", AbstractParser.TYPE_FLOAT);
+		AbstractTCPParser.DICTIONARY.put("float", AbstractTCPParser.TYPE_FLOAT);
+		AbstractTCPParser.DICTIONARY.put("Float", AbstractTCPParser.TYPE_FLOAT);
+		AbstractTCPParser.DICTIONARY.put("java.lang.Float", AbstractTCPParser.TYPE_FLOAT);
 
-		AbstractParser.DICTIONARY.put("int", AbstractParser.TYPE_INTERGER);
-		AbstractParser.DICTIONARY.put("integer", AbstractParser.TYPE_INTERGER);
-		AbstractParser.DICTIONARY.put("Integer", AbstractParser.TYPE_INTERGER);
-		AbstractParser.DICTIONARY.put("java.lang.Integer", AbstractParser.TYPE_INTERGER);
+		AbstractTCPParser.DICTIONARY.put("java.io.File", AbstractTCPParser.TYPE_FILE);
+		AbstractTCPParser.DICTIONARY.put("File", AbstractTCPParser.TYPE_FILE);
+		AbstractTCPParser.DICTIONARY.put("file", AbstractTCPParser.TYPE_FILE);
 
-		AbstractParser.DICTIONARY.put("long", AbstractParser.TYPE_LONG);
-		AbstractParser.DICTIONARY.put("Long", AbstractParser.TYPE_LONG);
-		AbstractParser.DICTIONARY.put("java.lang.Long", AbstractParser.TYPE_LONG);
+		AbstractTCPParser.DICTIONARY.put("int", AbstractTCPParser.TYPE_INTERGER);
+		AbstractTCPParser.DICTIONARY.put("integer", AbstractTCPParser.TYPE_INTERGER);
+		AbstractTCPParser.DICTIONARY.put("Integer", AbstractTCPParser.TYPE_INTERGER);
+		AbstractTCPParser.DICTIONARY.put("java.lang.Integer", AbstractTCPParser.TYPE_INTERGER);
 
-		AbstractParser.DICTIONARY.put("arraylist", AbstractParser.TYPE_LIST);
-		AbstractParser.DICTIONARY.put("ArrayList", AbstractParser.TYPE_LIST);
-		AbstractParser.DICTIONARY.put("list", AbstractParser.TYPE_LIST);
-		AbstractParser.DICTIONARY.put("List", AbstractParser.TYPE_LIST);
+		AbstractTCPParser.DICTIONARY.put("long", AbstractTCPParser.TYPE_LONG);
+		AbstractTCPParser.DICTIONARY.put("Long", AbstractTCPParser.TYPE_LONG);
+		AbstractTCPParser.DICTIONARY.put("java.lang.Long", AbstractTCPParser.TYPE_LONG);
 
-		AbstractParser.DICTIONARY.put("short", AbstractParser.TYPE_SHORT);
-		AbstractParser.DICTIONARY.put("Short", AbstractParser.TYPE_SHORT);
-		AbstractParser.DICTIONARY.put("java.lang.Short", AbstractParser.TYPE_SHORT);
+		AbstractTCPParser.DICTIONARY.put("arraylist", AbstractTCPParser.TYPE_LIST);
+		AbstractTCPParser.DICTIONARY.put("ArrayList", AbstractTCPParser.TYPE_LIST);
+		AbstractTCPParser.DICTIONARY.put("list", AbstractTCPParser.TYPE_LIST);
+		AbstractTCPParser.DICTIONARY.put("List", AbstractTCPParser.TYPE_LIST);
 
-		AbstractParser.DICTIONARY.put("string", AbstractParser.TYPE_STRING);
-		AbstractParser.DICTIONARY.put("String", AbstractParser.TYPE_STRING);
-		AbstractParser.DICTIONARY.put("java.lang.String", AbstractParser.TYPE_STRING);
+		AbstractTCPParser.DICTIONARY.put("short", AbstractTCPParser.TYPE_SHORT);
+		AbstractTCPParser.DICTIONARY.put("Short", AbstractTCPParser.TYPE_SHORT);
+		AbstractTCPParser.DICTIONARY.put("java.lang.Short", AbstractTCPParser.TYPE_SHORT);
+
+		AbstractTCPParser.DICTIONARY.put("string", AbstractTCPParser.TYPE_STRING);
+		AbstractTCPParser.DICTIONARY.put("String", AbstractTCPParser.TYPE_STRING);
+		AbstractTCPParser.DICTIONARY.put("java.lang.String", AbstractTCPParser.TYPE_STRING);
 	}
 
 	/** The _command type. */
@@ -123,15 +132,15 @@ public abstract class AbstractParser implements ParserInterface {
 	protected XmlUtil                        _xml;
 
 	/** The logger. */
-	protected final Logger                   LOGGER          = Logger.getLogger("DATA PARSER");
+	protected final Logger                   LOGGER          = Logger.getLogger(getClass());
 
 	/**
 	 * Instantiates a new abstract parser.
 	 */
-	public AbstractParser() {
+	public AbstractTCPParser() {
 		this._reader = new Reader();
 		this._writer = new Writer();
-		this._definePath = AbstractParser.class.getClassLoader().getResource("data-package.xml").getPath();
+		this._definePath = AbstractTCPParser.class.getClassLoader().getResource("data-package.xml").getPath();
 		this._xml = new XmlUtil(this._definePath);
 		this.contextInitialized();
 	}
@@ -141,7 +150,7 @@ public abstract class AbstractParser implements ParserInterface {
 	 *
 	 * @param definePath the define path
 	 */
-	public AbstractParser(String definePath) {
+	public AbstractTCPParser(String definePath) {
 		this._reader = new Reader();
 		this._writer = new Writer();
 		this._definePath = definePath;
@@ -158,7 +167,10 @@ public abstract class AbstractParser implements ParserInterface {
 	public void applyInputStream(SocketClientInterface clientSocket) throws SocketTimeoutException, SocketException, IOException, Exception {
 		ReadDataInterface data = null;
 		while (clientSocket.isConnected()) {
+			long a = System.currentTimeMillis();
 			data = this.readData(clientSocket.getInputStream());
+			long b = System.currentTimeMillis();
+			this.LOGGER.debug("Finish read data after " + (b - a) / 1000 + "s");
 			if (data != null) {
 				if (clientSocket.isWaitForReturn()) {
 					clientSocket.setReturned(data);
@@ -171,8 +183,7 @@ public abstract class AbstractParser implements ParserInterface {
 				}
 			}
 			else {
-				this.LOGGER.error("Not recognize data from stream");
-				break;
+				this.LOGGER.warn("Not recognize data from inputstream");
 			}
 		}
 	}
@@ -184,7 +195,10 @@ public abstract class AbstractParser implements ParserInterface {
 	 */
 	@Override
 	public void applyOutputStream(OutputStream outputStream, WriteDataInterface dataListener, Object command) throws Exception {
+		long a = System.currentTimeMillis();
 		this.writeData(command, outputStream, dataListener);
+		long b = System.currentTimeMillis();
+		this.LOGGER.debug("Finish send data after " + (b - a) / 1000 + "s");
 	}
 
 	/**
@@ -219,7 +233,7 @@ public abstract class AbstractParser implements ParserInterface {
 	 * @return the data type
 	 */
 	protected Byte getDataType(String type) {
-		return AbstractParser.DICTIONARY.get(type);
+		return AbstractTCPParser.DICTIONARY.get(type);
 	}
 
 	/**
@@ -304,6 +318,10 @@ public abstract class AbstractParser implements ParserInterface {
 
 			case TYPE_FLOAT:
 				value = this._reader.readFloat(inputstream);
+				break;
+
+			case TYPE_FILE:
+				value = this._reader.readFile(inputstream);
 				break;
 
 			case TYPE_INTERGER:
@@ -430,6 +448,19 @@ public abstract class AbstractParser implements ParserInterface {
 					field = data.getClass().getDeclaredField(nameData);
 					field.setAccessible(true);
 					this._writer.writeFloat(out, field.getFloat(data));
+					returnValue = field.get(data).toString();
+				}
+				break;
+
+			case TYPE_FILE:
+				if (nameData.equals("")) {
+					this._writer.writeFile(out, (File) data);
+					returnValue = data.toString();
+				}
+				else {
+					field = data.getClass().getDeclaredField(nameData);
+					field.setAccessible(true);
+					this._writer.writeFile(out, (File) field.get(data));
 					returnValue = field.get(data).toString();
 				}
 				break;

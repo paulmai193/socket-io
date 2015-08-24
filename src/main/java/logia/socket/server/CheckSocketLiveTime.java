@@ -15,7 +15,7 @@ public class CheckSocketLiveTime implements Runnable {
 	/** The idle live time. */
 	private long                  idleLiveTime;
 
-	private final Logger          LOGGER = Logger.getLogger("CHECK REMOTE SOCKET CLIENT LIVE TIME");
+	private final Logger          LOGGER = Logger.getLogger(getClass());
 
 	/** The max live time. */
 	private long                  maxLiveTime;

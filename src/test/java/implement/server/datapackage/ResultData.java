@@ -8,7 +8,7 @@ import logia.socket.Interface.WriteDataInterface;
 @IOCommand(/* type = { CommandType.WRITER }, */value = 11)
 public class ResultData implements WriteDataInterface {
 
-	@IOData(order = 1, type = DataType.STRING)
+	@IOData(order = 1, type = DataType.STRING, breakValue = "n/a")
 	private String message;
 
 	public ResultData() {

@@ -1,9 +1,13 @@
 package logia.io.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
+
+import org.apache.log4j.Logger;
 
 /**
  * The Class Writer write data from package into outputstream.
@@ -11,6 +15,12 @@ import java.nio.ByteBuffer;
  * @author Paul Mai
  */
 public class Writer {
+
+	/** The logger. */
+	private final Logger LOGGER          = Logger.getLogger(getClass());
+
+	/** The max size buffer. */
+	private final int    MAX_SIZE_BUFFER = 10 * 1024 * 1024;
 
 	/**
 	 * Instantiates a new writer.
@@ -28,6 +38,13 @@ public class Writer {
 	 */
 	public void writeByte(OutputStream out, byte data) throws IOException {
 		out.write(data);
+		// if (current_size_buffer == MAX_SIZE_BUFFER) {
+		// out.flush();
+		// current_size_buffer = 0;
+		// }
+		// else {
+		// current_size_buffer++;
+		// }
 	}
 
 	/**
@@ -40,9 +57,7 @@ public class Writer {
 	public void writeByteArray(OutputStream out, byte[] data) throws IOException {
 		int length = data.length;
 		this.writeInt(out, length);
-		for (int i = 0; i < length; i++) {
-			this.writeByte(out, data[i]);
-		}
+		out.write(data);
 	}
 
 	/**
@@ -55,9 +70,7 @@ public class Writer {
 	public void writeDouble(OutputStream out, double data) throws IOException {
 		byte[] bytes = new byte[8];
 		ByteBuffer.wrap(bytes).putDouble(data);
-		for (byte b : bytes) {
-			out.write(b);
-		}
+		out.write(bytes);
 	}
 
 	/**
@@ -70,24 +83,20 @@ public class Writer {
 	public void writeFloat(OutputStream out, float data) throws IOException {
 		byte[] bytes = new byte[4];
 		ByteBuffer.wrap(bytes).putFloat(data);
-		for (byte b : bytes) {
-			out.write(b);
-		}
+		out.write(bytes);
 	}
 
 	/**
 	 * Write int.
-	 * 
-	 * @param dataOutputStream the data output stream
+	 *
+	 * @param out the out
 	 * @param data the data
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void writeInt(OutputStream out, int data) throws IOException {
 		byte[] bytes = new byte[4];
 		ByteBuffer.wrap(bytes).putInt(data);
-		for (byte b : bytes) {
-			out.write(b);
-		}
+		out.write(bytes);
 	}
 
 	/**
@@ -100,9 +109,7 @@ public class Writer {
 	public void writeLong(OutputStream out, long data) throws IOException {
 		byte[] bytes = new byte[8];
 		ByteBuffer.wrap(bytes).putLong(data);
-		for (byte b : bytes) {
-			out.write(b);
-		}
+		out.write(bytes);
 	}
 
 	/**
@@ -116,7 +123,7 @@ public class Writer {
 	 * @throws InstantiationException the instantiation exception
 	 */
 	public void writeObject(OutputStream out, Object data) throws IllegalArgumentException, IllegalAccessException, IOException,
-	InstantiationException {
+	        InstantiationException {
 		Field[] fields = data.getClass().getDeclaredFields();
 		for (Field field : fields) {
 			field.setAccessible(true);
@@ -158,9 +165,7 @@ public class Writer {
 	public void writeShort(OutputStream out, short data) throws IOException {
 		byte[] bytes = new byte[2];
 		ByteBuffer.wrap(bytes).putShort(data);
-		for (byte b : bytes) {
-			out.write(b);
-		}
+		out.write(bytes);
 	}
 
 	/**
@@ -173,6 +178,25 @@ public class Writer {
 	public void writeString(OutputStream out, String data) throws IOException {
 		byte[] bytes = data.getBytes("UTF-8");
 		this.writeByteArray(out, bytes);
+	}
+
+	/**
+	 * Write file.
+	 *
+	 * @param out the out
+	 * @param data the data
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public void writeFile(OutputStream out, File data) throws IOException {
+		long length = data.length();
+		this.writeLong(out, length);
+		try (FileInputStream f = new FileInputStream(data)) {
+			byte[] barray = new byte[this.MAX_SIZE_BUFFER];
+			while ((f.read(barray, 0, this.MAX_SIZE_BUFFER)) != -1) {
+				out.write(barray);
+				out.flush();
+			}
+		}
 	}
 
 }

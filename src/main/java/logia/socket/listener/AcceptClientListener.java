@@ -1,8 +1,8 @@
 package logia.socket.listener;
 
-import java.io.IOException;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
+
+import logia.io.exception.ConnectionErrorException;
 
 /**
  * The listener interface for receiving acceptClient events. The class that is interested in processing a acceptClient event implements this
@@ -20,8 +20,7 @@ public interface AcceptClientListener {
 	 * Accept socket connection and create new instance of Client on Server side.
 	 *
 	 * @param socket the socket
-	 * @throws SocketTimeoutException the socket timeout exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ConnectionErrorException the connection error exception
 	 */
-	public void acceptClient(Socket socket) throws SocketTimeoutException, IOException;
+	public void acceptClient(Socket socket) throws ConnectionErrorException;
 }
