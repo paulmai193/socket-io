@@ -24,37 +24,9 @@ public class FileData implements ReadDataInterface {
 
 	byte[] bytes;
 
-	/**
-	 * @return the bytes
-	 */
-	public byte[] getBytes() {
-		return bytes;
-	}
-
-	/**
-	 * @param bytes the bytes to set
-	 */
-	public void setBytes(byte[] bytes) {
-		this.bytes = bytes;
-	}
-
-	/**
-	 * @return the file
-	 */
-	public File getFile() {
-		return file;
-	}
-
-	/**
-	 * @param file the file to set
-	 */
-	public void setFile(File file) {
-		this.file = file;
-	}
-
 	/** The file. */
 	@IOData(order = 1, type = DataType.FILE, breakValue = "n/a")
-	File file;
+	File   file;
 
 	/**
 	 * Instantiates a new file data.
@@ -84,7 +56,7 @@ public class FileData implements ReadDataInterface {
 		try {
 			long a = System.currentTimeMillis();
 			// FileUtils.writeByteArrayToFile(new File("C:/Users/Paul Mai/Desktop/Candy.jpg"), this.bytes);
-			FileUtils.moveFile(file, new File("C:/Users/Paul Mai/Desktop/Candy.mp4"));
+			FileUtils.moveFile(this.file, new File("C:/Users/Paul Mai/Desktop/Candy.mp4"));
 			long b = System.currentTimeMillis();
 			System.out.println("FINISH WRITE A BUFFER TO FILE AFTER " + (b - a) / 1000 + " s");
 
@@ -102,6 +74,34 @@ public class FileData implements ReadDataInterface {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * @return the bytes
+	 */
+	public byte[] getBytes() {
+		return this.bytes;
+	}
+
+	/**
+	 * @return the file
+	 */
+	public File getFile() {
+		return this.file;
+	}
+
+	/**
+	 * @param bytes the bytes to set
+	 */
+	public void setBytes(byte[] bytes) {
+		this.bytes = bytes;
+	}
+
+	/**
+	 * @param file the file to set
+	 */
+	public void setFile(File file) {
+		this.file = file;
 	}
 
 }

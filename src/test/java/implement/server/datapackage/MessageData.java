@@ -58,7 +58,7 @@ public class MessageData implements ReadDataInterface, WriteDataInterface {
 	 */
 	@Override
 	public void executeData(SocketClientInterface clientSocket) {
-		System.out.println("Receiver message " + this.message + " from client " + user);
+		System.out.println("Receiver message " + this.message + " from client " + this.user);
 
 	}
 

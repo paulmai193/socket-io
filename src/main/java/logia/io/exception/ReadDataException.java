@@ -7,17 +7,17 @@ package logia.io.exception;
  */
 public class ReadDataException extends Exception {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 1L;
-
 	/** The message. */
 	private static String     message          = "Receive data error";
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Instantiates a new read data exception.
 	 */
 	public ReadDataException() {
-		super(message);
+		super(ReadDataException.message);
 	}
 
 	/**
@@ -26,7 +26,7 @@ public class ReadDataException extends Exception {
 	 * @param cause the cause
 	 */
 	public ReadDataException(Throwable cause) {
-		super(message, cause);
+		super(ReadDataException.message, cause);
 	}
 
 }

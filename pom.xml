@@ -39,7 +39,7 @@
 		<dependency>
 			<groupId>logia</groupId>
 			<artifactId>logia-utility</artifactId>
-			<version>0.1.0</version>
+			<version>${logia.utility.version}</version>
 		</dependency>
 		<!-- Logging -->
 		<dependency>
@@ -49,4 +49,7 @@
 		</dependency>
 		<!-- end Logging -->
 	</dependencies>
+	<properties>
+		<logia.utility.version>0.1.1</logia.utility.version>
+	</properties>
 </project>

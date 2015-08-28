@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.SocketException;
 
-import logia.io.parser.TCPDataParserByAnnotation;
+import logia.io.parser.DataParserByAnnotation;
 import logia.socket.Interface.ParserInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.client.ClientSide;
@@ -15,7 +15,7 @@ import logia.socket.client.ClientSide;
 public class RunSimpleClient {
 
 	public static void main(String[] args) {
-		File testFile = new File("D:/Video/[Yumei-Anime]Doraemon_Stand_By_Me_Ver2.mp4");
+		new File("D:/Video/[Yumei-Anime]Doraemon_Stand_By_Me_Ver2.mp4");
 		try {
 			// Writes to this byte array output stream
 			// long a = System.currentTimeMillis();
@@ -23,7 +23,7 @@ public class RunSimpleClient {
 			// long b = System.currentTimeMillis();
 			// System.out.println("FINISH BUFFER A FILE AFTER " + (b - a) / 1000 + " s");
 
-			ParserInterface parser = new TCPDataParserByAnnotation(Config.DATA_PACKAGE_PATH_CLIENT);
+			ParserInterface parser = new DataParserByAnnotation(Config.DATA_PACKAGE_PATH_CLIENT);
 
 			final SocketClientInterface client = new ClientSide("localhost", 1234, 0, parser);
 			client.connect();

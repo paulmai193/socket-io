@@ -47,7 +47,7 @@ public class ServerSide implements SocketServerInterface {
 	private final long                               idleLiveTime;
 
 	/** The logger. */
-	private final Logger                             LOGGER = Logger.getLogger(getClass());
+	private final Logger                             LOGGER = Logger.getLogger(this.getClass());
 
 	/** The max socket live time. */
 	private final long                               maxLiveTime;
@@ -234,11 +234,11 @@ public class ServerSide implements SocketServerInterface {
 			this.checkRemoteSocketLiveTime = Executors.newSingleThreadScheduledExecutor();
 			if (this.idleLiveTime > 0) {
 				this.checkRemoteSocketLiveTime.scheduleWithFixedDelay(new CheckSocketLiveTime(this, this.idleLiveTime, this.maxLiveTime),
-				        this.maxLiveTime, this.maxLiveTime, TimeUnit.MINUTES);
+						this.maxLiveTime, this.maxLiveTime, TimeUnit.MINUTES);
 			}
 			else {
 				this.checkRemoteSocketLiveTime.scheduleWithFixedDelay(new CheckSocketLiveTime(this, this.maxLiveTime), this.maxLiveTime,
-				        this.maxLiveTime, TimeUnit.MINUTES);
+						this.maxLiveTime, TimeUnit.MINUTES);
 			}
 		}
 		this.LOGGER.debug("Server online");

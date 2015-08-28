@@ -7,17 +7,17 @@ package logia.io.exception;
  */
 public class WriteDataException extends Exception {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 1L;
-
 	/** The message. */
 	private static String     message          = "Send data error";
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Instantiates a new write data exception.
 	 */
 	public WriteDataException() {
-		super(message);
+		super(WriteDataException.message);
 	}
 
 	/**
@@ -26,7 +26,7 @@ public class WriteDataException extends Exception {
 	 * @param cause the cause
 	 */
 	public WriteDataException(Throwable cause) {
-		super(message, cause);
+		super(WriteDataException.message, cause);
 	}
 
 }

@@ -41,7 +41,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 	private boolean                     isWait;
 
 	/** The logger. */
-	private final Logger                LOGGER = Logger.getLogger(getClass());
+	private final Logger                LOGGER = Logger.getLogger(this.getClass());
 
 	/** The output stream. */
 	private OutputStream                outputStream;
@@ -112,7 +112,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 	 * @throws ConnectionErrorException
 	 */
 	public ClientOnServerSide(SocketServerInterface serverSocket, Socket socket, ParserInterface dataParser, SocketTimeoutListener timeoutListener)
-	        throws ConnectionErrorException {
+			throws ConnectionErrorException {
 		this.isConnected = false;
 		this.parser = dataParser;
 		this.startTime = System.currentTimeMillis();
@@ -201,7 +201,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 				this.parser.applyOutputStream(this.outputStream, data, command);
 			}
 			catch (Exception e) {
-				LOGGER.error("Send data error", e);
+				this.LOGGER.error("Send data error", e);
 				throw new WriteDataException(e);
 			}
 		}
@@ -221,7 +221,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 				this.parser.applyOutputStream(this.outputStream, data, command);
 			}
 			catch (Exception e) {
-				LOGGER.error("Send data error", e);
+				this.LOGGER.error("Send data error", e);
 				throw new WriteDataException(e);
 			}
 			this.LOGGER.debug("Send data to server");
@@ -229,7 +229,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 			// Waiting until have return value
 			this.LOGGER.debug("Is waiting response...");
 			synchronized (this) {
-				wait();
+				this.wait();
 			}
 
 			this.isWait = false;

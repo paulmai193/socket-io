@@ -38,7 +38,7 @@ public class ClientSide implements SocketClientInterface {
 	private boolean                  isWait;
 
 	/** The logger. */
-	private final Logger             LOGGER = Logger.getLogger(getClass());
+	private final Logger             LOGGER = Logger.getLogger(this.getClass());
 
 	/** The port. */
 	private final int                PORT;
@@ -212,7 +212,7 @@ public class ClientSide implements SocketClientInterface {
 				this.parser.applyOutputStream(this.outputStream, data, command);
 			}
 			catch (Exception e) {
-				LOGGER.error("Send data error", e);
+				this.LOGGER.error("Send data error", e);
 				throw new WriteDataException(e);
 			}
 
@@ -233,7 +233,7 @@ public class ClientSide implements SocketClientInterface {
 				this.parser.applyOutputStream(this.outputStream, data, command);
 			}
 			catch (Exception e) {
-				LOGGER.error("Send data error", e);
+				this.LOGGER.error("Send data error", e);
 				throw new WriteDataException(e);
 			}
 			this.LOGGER.debug("Send data to server");
@@ -241,7 +241,7 @@ public class ClientSide implements SocketClientInterface {
 			// Waiting until have return value
 			this.LOGGER.debug("Is waiting response...");
 			synchronized (this) {
-				wait();
+				this.wait();
 			}
 
 			this.isWait = false;

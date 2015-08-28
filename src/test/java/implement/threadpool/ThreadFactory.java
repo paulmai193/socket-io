@@ -36,6 +36,15 @@ public class ThreadFactory {
 	private static ThreadPoolExecutor  pool;
 
 	/**
+	 * Gets the single instance of ThreadFactory.
+	 * 
+	 * @return single instance of ThreadFactory
+	 */
+	public final static ThreadFactory getInstance() {
+		return ThreadFactory.instance;
+	}
+
+	/**
 	 * Inits the pool.
 	 * 
 	 * @param poolSize the pool size
@@ -83,14 +92,5 @@ public class ThreadFactory {
 	 */
 	public void start(Runnable runnable) {
 		ThreadFactory.pool.execute(runnable);
-	}
-
-	/**
-	 * Gets the single instance of ThreadFactory.
-	 * 
-	 * @return single instance of ThreadFactory
-	 */
-	public final static ThreadFactory getInstance() {
-		return ThreadFactory.instance;
 	}
 }

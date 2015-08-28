@@ -1,4 +1,3 @@
-C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\Interface\ReaderInterface.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\Interface\SocketClientInterface.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\Interface\ParserInterface.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\util\Reader.java
@@ -13,10 +12,12 @@ C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\Interface\SocketServe
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\listener\AcceptClientListener.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\server\ServerSide.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\Interface\WriteDataInterface.java
+C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\exception\ReadDataException.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\server\CheckSocketLiveTime.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\parser\DataParserByAnnotation.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\parser\DataParserByXML.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\client\ClientSide.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\server\ClientOnServerSide.java
+C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\exception\WriteDataException.java
+C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\exception\ConnectionErrorException.java
 C:\Users\Paul Mai\git\socket-io\src\main\java\logia\io\parser\AbstractParser.java
-C:\Users\Paul Mai\git\socket-io\src\main\java\logia\socket\Interface\WriterInterface.java

@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 public class Writer {
 
 	/** The logger. */
-	private final Logger LOGGER          = Logger.getLogger(getClass());
+	private final Logger LOGGER          = Logger.getLogger(this.getClass());
 
 	/** The max size buffer. */
 	private final int    MAX_SIZE_BUFFER = 10 * 1024 * 1024;
@@ -38,13 +38,6 @@ public class Writer {
 	 */
 	public void writeByte(OutputStream out, byte data) throws IOException {
 		out.write(data);
-		// if (current_size_buffer == MAX_SIZE_BUFFER) {
-		// out.flush();
-		// current_size_buffer = 0;
-		// }
-		// else {
-		// current_size_buffer++;
-		// }
 	}
 
 	/**
@@ -71,6 +64,25 @@ public class Writer {
 		byte[] bytes = new byte[8];
 		ByteBuffer.wrap(bytes).putDouble(data);
 		out.write(bytes);
+	}
+
+	/**
+	 * Write file.
+	 *
+	 * @param out the out
+	 * @param data the data
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public void writeFile(OutputStream out, File data) throws IOException {
+		long length = data.length();
+		this.writeLong(out, length);
+		try (FileInputStream f = new FileInputStream(data)) {
+			byte[] barray = new byte[this.MAX_SIZE_BUFFER];
+			while (f.read(barray, 0, this.MAX_SIZE_BUFFER) != -1) {
+				out.write(barray);
+				out.flush();
+			}
+		}
 	}
 
 	/**
@@ -123,7 +135,7 @@ public class Writer {
 	 * @throws InstantiationException the instantiation exception
 	 */
 	public void writeObject(OutputStream out, Object data) throws IllegalArgumentException, IllegalAccessException, IOException,
-	        InstantiationException {
+	InstantiationException {
 		Field[] fields = data.getClass().getDeclaredFields();
 		for (Field field : fields) {
 			field.setAccessible(true);
@@ -178,25 +190,6 @@ public class Writer {
 	public void writeString(OutputStream out, String data) throws IOException {
 		byte[] bytes = data.getBytes("UTF-8");
 		this.writeByteArray(out, bytes);
-	}
-
-	/**
-	 * Write file.
-	 *
-	 * @param out the out
-	 * @param data the data
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public void writeFile(OutputStream out, File data) throws IOException {
-		long length = data.length();
-		this.writeLong(out, length);
-		try (FileInputStream f = new FileInputStream(data)) {
-			byte[] barray = new byte[this.MAX_SIZE_BUFFER];
-			while ((f.read(barray, 0, this.MAX_SIZE_BUFFER)) != -1) {
-				out.write(barray);
-				out.flush();
-			}
-		}
 	}
 
 }

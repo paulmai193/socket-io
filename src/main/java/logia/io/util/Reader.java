@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 public class Reader {
 
 	/** The logger. */
-	private final Logger LOGGER          = Logger.getLogger(getClass());
+	private final Logger LOGGER          = Logger.getLogger(this.getClass());
 
 	/** The max size buffer. */
 	private final int    MAX_SIZE_BUFFER = 10 * 1024 * 1024;
@@ -73,6 +73,31 @@ public class Reader {
 			arr.write(this.readByte(in));
 		}
 		return ByteBuffer.wrap(arr.toByteArray()).getDouble();
+	}
+
+	/**
+	 * Read file.
+	 *
+	 * @param in the in
+	 * @return the file
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public File readFile(InputStream in) throws IOException {
+		long length = this.readLong(in);
+		File tempFile = File.createTempFile("sockettempfile", "tmp");
+		this.LOGGER.debug("TempFile: " + tempFile.getAbsolutePath());
+		ByteArrayOutputStream arr = new ByteArrayOutputStream(this.MAX_SIZE_BUFFER);
+		for (long i = 1; i <= length; i++) {
+			arr.write(this.readByte(in));
+			if (i % this.MAX_SIZE_BUFFER == 0) {
+				FileUtils.writeByteArrayToFile(tempFile, arr.toByteArray(), true);
+				arr.reset();
+			}
+		}
+		if (arr.size() > 0) {
+			FileUtils.writeByteArrayToFile(tempFile, arr.toByteArray(), true);
+		}
+		return tempFile;
 	}
 
 	/**
@@ -198,30 +223,5 @@ public class Reader {
 			s = new String(arr);
 		}
 		return s;
-	}
-
-	/**
-	 * Read file.
-	 *
-	 * @param in the in
-	 * @return the file
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public File readFile(InputStream in) throws IOException {
-		long length = this.readLong(in);
-		File tempFile = File.createTempFile("sockettempfile", "tmp");
-		this.LOGGER.debug("TempFile: " + tempFile.getAbsolutePath());
-		ByteArrayOutputStream arr = new ByteArrayOutputStream(this.MAX_SIZE_BUFFER);
-		for (long i = 1; i <= length; i++) {
-			arr.write(this.readByte(in));
-			if (i % this.MAX_SIZE_BUFFER == 0) {
-				FileUtils.writeByteArrayToFile(tempFile, arr.toByteArray(), true);
-				arr.reset();
-			}
-		}
-		if (arr.size() > 0) {
-			FileUtils.writeByteArrayToFile(tempFile, arr.toByteArray(), true);
-		}
-		return tempFile;
 	}
 }

@@ -13,10 +13,10 @@ public enum DataType {
 	BYTE_ARRAY,
 	/** The double. */
 	DOUBLE,
-	/** The float. */
-	FLOAT,
 	/** The file. */
 	FILE,
+	/** The float. */
+	FLOAT,
 	/** The integer. */
 	INTEGER,
 	/** The list. */

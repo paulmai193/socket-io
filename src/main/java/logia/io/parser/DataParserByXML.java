@@ -18,12 +18,12 @@ import org.w3c.dom.NodeList;
  * 
  * @author Paul Mai
  */
-public class TCPDataParserByXML extends AbstractTCPParser {
+public class DataParserByXML extends AbstractParser {
 
 	/**
 	 * Instantiates a new data parser with default define package reader is data-package.xml file.
 	 */
-	public TCPDataParserByXML() {
+	public DataParserByXML() {
 		super();
 	}
 
@@ -32,7 +32,7 @@ public class TCPDataParserByXML extends AbstractTCPParser {
 	 *
 	 * @param definePath the define path
 	 */
-	public TCPDataParserByXML(String definePath) {
+	public DataParserByXML(String definePath) {
 		super(definePath);
 	}
 

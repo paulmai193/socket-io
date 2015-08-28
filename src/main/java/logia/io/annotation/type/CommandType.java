@@ -7,12 +7,12 @@ package logia.io.annotation.type;
  */
 public enum CommandType {
 
+	/** The not set. */
+	NOT_SET,
+
 	/** The reader. */
 	READER,
 
 	/** The writer. */
-	WRITER,
-
-	/** The not set. */
-	NOT_SET
+	WRITER
 }

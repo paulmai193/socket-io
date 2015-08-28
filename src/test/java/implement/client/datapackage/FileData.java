@@ -19,36 +19,9 @@ public class FileData implements WriteDataInterface {
 
 	byte[] bytes;
 
-	/**
-	 * Gets the bytes.
-	 *
-	 * @return the bytes
-	 */
-	public byte[] getBytes() {
-		return bytes;
-	}
-
-	/**
-	 * Sets the bytes.
-	 *
-	 * @param bytes the bytes to set
-	 */
-	public void setBytes(byte[] bytes) {
-		this.bytes = bytes;
-	}
-
 	/** The file. */
 	@IOData(order = 1, type = DataType.FILE, breakValue = "n/a")
-	File file;
-
-	/**
-	 * Sets the file.
-	 *
-	 * @param file the file to set
-	 */
-	public void setFile(File file) {
-		this.file = file;
-	}
+	File   file;
 
 	/**
 	 * Instantiates a new file data.
@@ -72,6 +45,33 @@ public class FileData implements WriteDataInterface {
 	 * @param file the file
 	 */
 	public FileData(File file) {
+		this.file = file;
+	}
+
+	/**
+	 * Gets the bytes.
+	 *
+	 * @return the bytes
+	 */
+	public byte[] getBytes() {
+		return this.bytes;
+	}
+
+	/**
+	 * Sets the bytes.
+	 *
+	 * @param bytes the bytes to set
+	 */
+	public void setBytes(byte[] bytes) {
+		this.bytes = bytes;
+	}
+
+	/**
+	 * Sets the file.
+	 *
+	 * @param file the file to set
+	 */
+	public void setFile(File file) {
 		this.file = file;
 	}
 
