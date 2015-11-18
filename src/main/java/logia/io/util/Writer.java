@@ -76,12 +76,23 @@ public class Writer {
 	public void writeFile(OutputStream out, File data) throws IOException {
 		long length = data.length();
 		this.writeLong(out, length);
+		int n = (int) (length / this.MAX_SIZE_BUFFER);
 		try (FileInputStream f = new FileInputStream(data)) {
-			byte[] barray = new byte[this.MAX_SIZE_BUFFER];
-			while (f.read(barray, 0, this.MAX_SIZE_BUFFER) != -1) {
+
+			// OLD
+			for (int i = 0; i < n; i++) {
+				byte[] barray = new byte[this.MAX_SIZE_BUFFER];
+				f.read(barray, 0, this.MAX_SIZE_BUFFER);
 				out.write(barray);
 				out.flush();
 			}
+			byte[] barray = new byte[(int) (length - (this.MAX_SIZE_BUFFER * n))];
+			f.read(barray, 0, (int) (length - (this.MAX_SIZE_BUFFER * n)));
+			out.write(barray);
+			out.flush();
+
+			// NEW
+			// out.write(IOUtils.toByteArray(f));
 		}
 	}
 
@@ -135,7 +146,7 @@ public class Writer {
 	 * @throws InstantiationException the instantiation exception
 	 */
 	public void writeObject(OutputStream out, Object data) throws IllegalArgumentException, IllegalAccessException, IOException,
-	InstantiationException {
+	        InstantiationException {
 		Field[] fields = data.getClass().getDeclaredFields();
 		for (Field field : fields) {
 			field.setAccessible(true);

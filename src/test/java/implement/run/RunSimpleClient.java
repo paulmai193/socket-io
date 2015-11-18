@@ -1,13 +1,14 @@
 package implement.run;
 
-import implement.client.datapackage.MessageData;
+import implement.client.datapackage.FileData;
+import implement.client.datapackage.ResultData;
 import implement.define.Config;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.SocketException;
 
-import logia.io.parser.DataParserByAnnotation;
+import logia.io.parser.DataParserByXML;
 import logia.socket.Interface.ParserInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.client.ClientSide;
@@ -15,28 +16,20 @@ import logia.socket.client.ClientSide;
 public class RunSimpleClient {
 
 	public static void main(String[] args) {
-		new File("D:/Video/[Yumei-Anime]Doraemon_Stand_By_Me_Ver2.mp4");
+		File testFile = new File("C:/Users/Paul Mai/Desktop/pirate.mp4");
 		try {
-			// Writes to this byte array output stream
-			// long a = System.currentTimeMillis();
-			// byte[] data = FileUtils.readFileToByteArray(testFile);
-			// long b = System.currentTimeMillis();
-			// System.out.println("FINISH BUFFER A FILE AFTER " + (b - a) / 1000 + " s");
 
-			ParserInterface parser = new DataParserByAnnotation(Config.DATA_PACKAGE_PATH_CLIENT);
+			ParserInterface parser = new DataParserByXML(Config.DATA_PACKAGE_PATH_CLIENT);
 
-			final SocketClientInterface client = new ClientSide("localhost", 1234, 0, parser);
+			final SocketClientInterface client = new ClientSide("localhost", 1234, 0, parser, null, 10 * 1024 * 1024);
 			client.connect();
 			if (client.isConnected()) {
 				new Thread(client).start();
 				long c = System.currentTimeMillis();
-				// FileData sendFileData = new FileData(testFile);
-				// ResultData result = (ResultData) client.echoAndWait(sendFileData, 5);
-				// result.executeData();
+				FileData sendFileData = new FileData(testFile);
+				ResultData result = (ResultData) client.echoAndWait(sendFileData, 5);
+				result.executeData();
 
-				MessageData data = new MessageData(100, "");
-				client.echo(data, 2);
-				Thread.sleep(1000);
 				long d = System.currentTimeMillis();
 				System.out.println("FINISH SEND FILE AFTER " + (d - c) / 1000 + " s");
 			}

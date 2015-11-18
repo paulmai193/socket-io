@@ -7,6 +7,7 @@ import java.io.IOException;
 import logia.io.annotation.IOCommand;
 import logia.io.annotation.IOData;
 import logia.io.annotation.type.DataType;
+import logia.io.exception.WriteDataException;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
 
@@ -20,13 +21,9 @@ import org.apache.commons.io.FileUtils;
 @IOCommand(value = 5)
 public class FileData implements ReadDataInterface {
 
-	/** The picture. */
-
-	byte[] bytes;
-
 	/** The file. */
 	@IOData(order = 1, type = DataType.FILE, breakValue = "n/a")
-	File   file;
+	File file;
 
 	/**
 	 * Instantiates a new file data.
@@ -56,13 +53,12 @@ public class FileData implements ReadDataInterface {
 		try {
 			long a = System.currentTimeMillis();
 			// FileUtils.writeByteArrayToFile(new File("C:/Users/Paul Mai/Desktop/Candy.jpg"), this.bytes);
-			FileUtils.moveFile(this.file, new File("C:/Users/Paul Mai/Desktop/Candy.mp4"));
+			FileUtils.copyFile(this.file, new File("C:/Users/Paul Mai/Desktop/Candy.mp4"));
 			long b = System.currentTimeMillis();
 			System.out.println("FINISH WRITE A BUFFER TO FILE AFTER " + (b - a) / 1000 + " s");
 
 			System.out.println("Write file finish");
-			ResultData resultData = new ResultData("Send file success");
-			clientSocket.echo(resultData, 11);
+
 		}
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -73,14 +69,17 @@ public class FileData implements ReadDataInterface {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		finally {
+			this.file.delete();
+			ResultData resultData = new ResultData("Send file success");
+			try {
+				clientSocket.echo(resultData, 11);
+			}
+			catch (WriteDataException e) {
+				e.printStackTrace();
+			}
+		}
 
-	}
-
-	/**
-	 * @return the bytes
-	 */
-	public byte[] getBytes() {
-		return this.bytes;
 	}
 
 	/**
@@ -88,13 +87,6 @@ public class FileData implements ReadDataInterface {
 	 */
 	public File getFile() {
 		return this.file;
-	}
-
-	/**
-	 * @param bytes the bytes to set
-	 */
-	public void setBytes(byte[] bytes) {
-		this.bytes = bytes;
 	}
 
 	/**

@@ -15,13 +15,16 @@ import logia.socket.Interface.WriteDataInterface;
 @IOCommand(value = 5)
 public class FileData implements WriteDataInterface {
 
-	/** The picture. */
-
-	byte[] bytes;
-
 	/** The file. */
 	@IOData(order = 1, type = DataType.FILE, breakValue = "n/a")
-	File   file;
+	File file;
+
+	/**
+	 * @return the file
+	 */
+	public File getFile() {
+		return file;
+	}
 
 	/**
 	 * Instantiates a new file data.
@@ -33,37 +36,10 @@ public class FileData implements WriteDataInterface {
 	/**
 	 * Instantiates a new file data.
 	 *
-	 * @param bytes the bytes
-	 */
-	public FileData(byte[] bytes) {
-		this.bytes = bytes;
-	}
-
-	/**
-	 * Instantiates a new file data.
-	 *
 	 * @param file the file
 	 */
 	public FileData(File file) {
 		this.file = file;
-	}
-
-	/**
-	 * Gets the bytes.
-	 *
-	 * @return the bytes
-	 */
-	public byte[] getBytes() {
-		return this.bytes;
-	}
-
-	/**
-	 * Sets the bytes.
-	 *
-	 * @param bytes the bytes to set
-	 */
-	public void setBytes(byte[] bytes) {
-		this.bytes = bytes;
 	}
 
 	/**

@@ -61,6 +61,9 @@ public class ServerSide implements SocketServerInterface {
 	/** The timeout in milliseconds. */
 	protected final int                              TIME_OUT;
 
+	/** The data buffer size. */
+	protected final int                              DATA_BUFFER_SIZE;
+
 	/**
 	 * Instantiates a new server side of socket.
 	 *
@@ -73,6 +76,7 @@ public class ServerSide implements SocketServerInterface {
 		this.idleLiveTime = 0;
 		this.maxLiveTime = 0;
 		this.CLIENTS = Collections.synchronizedSortedMap(new TreeMap<String, SocketClientInterface>());
+		this.DATA_BUFFER_SIZE = 65536;
 
 		this.instance = this;
 	}
@@ -90,6 +94,7 @@ public class ServerSide implements SocketServerInterface {
 		this.idleLiveTime = 0;
 		this.maxLiveTime = 0;
 		this.CLIENTS = Collections.synchronizedSortedMap(new TreeMap<String, SocketClientInterface>());
+		this.DATA_BUFFER_SIZE = 65536;
 
 		this.instance = this;
 	}
@@ -108,6 +113,7 @@ public class ServerSide implements SocketServerInterface {
 		this.idleLiveTime = 0;
 		this.maxLiveTime = maxLiveTime;
 		this.CLIENTS = Collections.synchronizedSortedMap(new TreeMap<String, SocketClientInterface>());
+		this.DATA_BUFFER_SIZE = 65536;
 
 		this.instance = this;
 	}
@@ -127,6 +133,28 @@ public class ServerSide implements SocketServerInterface {
 		this.idleLiveTime = idleLiveTime;
 		this.maxLiveTime = maxLiveTime;
 		this.CLIENTS = Collections.synchronizedSortedMap(new TreeMap<String, SocketClientInterface>());
+		this.DATA_BUFFER_SIZE = 65536;
+
+		this.instance = this;
+	}
+
+	/**
+	 * Instantiates a new server side.
+	 *
+	 * @param port the port
+	 * @param timeout the timeout
+	 * @param idleLiveTime the idle live time
+	 * @param maxLiveTime the max live time
+	 * @param dataBufferSize the receive buffer size
+	 */
+	public ServerSide(int port, int timeout, long idleLiveTime, long maxLiveTime, int dataBufferSize) {
+		this.PORT = port;
+		this.TIME_OUT = timeout;
+		this.isRunning = false;
+		this.idleLiveTime = idleLiveTime;
+		this.maxLiveTime = maxLiveTime;
+		this.CLIENTS = Collections.synchronizedSortedMap(new TreeMap<String, SocketClientInterface>());
+		this.DATA_BUFFER_SIZE = dataBufferSize;
 
 		this.instance = this;
 	}
@@ -182,6 +210,7 @@ public class ServerSide implements SocketServerInterface {
 		this.isRunning = true;
 		try {
 			this.serverSocket = new ServerSocket(this.PORT);
+			this.serverSocket.setReceiveBufferSize(this.DATA_BUFFER_SIZE);
 			while (this.isRunning) {
 				final Socket socket = this.serverSocket.accept();
 				if (this.TIME_OUT > 0) {
@@ -234,11 +263,11 @@ public class ServerSide implements SocketServerInterface {
 			this.checkRemoteSocketLiveTime = Executors.newSingleThreadScheduledExecutor();
 			if (this.idleLiveTime > 0) {
 				this.checkRemoteSocketLiveTime.scheduleWithFixedDelay(new CheckSocketLiveTime(this, this.idleLiveTime, this.maxLiveTime),
-						this.maxLiveTime, this.maxLiveTime, TimeUnit.MINUTES);
+				        this.maxLiveTime, this.maxLiveTime, TimeUnit.MINUTES);
 			}
 			else {
 				this.checkRemoteSocketLiveTime.scheduleWithFixedDelay(new CheckSocketLiveTime(this, this.maxLiveTime), this.maxLiveTime,
-						this.maxLiveTime, TimeUnit.MINUTES);
+				        this.maxLiveTime, TimeUnit.MINUTES);
 			}
 		}
 		this.LOGGER.debug("Server online");

@@ -5,7 +5,8 @@ import implement.define.Config;
 import java.net.Socket;
 
 import logia.io.exception.ConnectionErrorException;
-import logia.io.parser.DataParserByAnnotation;
+import logia.io.parser.DataParserByXML;
+import logia.socket.Interface.ParserInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.listener.AcceptClientListener;
 import logia.socket.server.ClientOnServerSide;
@@ -15,8 +16,8 @@ public class RunSimpleServer extends Thread {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		final ServerSide server = new ServerSide(1234, 0, 5 * 60000);
-		final DataParserByAnnotation parser = new DataParserByAnnotation(Config.DATA_PACKAGE_PATH_SERVER);
+		final ServerSide server = new ServerSide(1234, 0, 5 * 60000, 0, 10 * 1024 * 1024);
+		final ParserInterface parser = new DataParserByXML(Config.DATA_PACKAGE_PATH_SERVER);
 		server.setAcceptClientListener(new AcceptClientListener() {
 
 			@Override

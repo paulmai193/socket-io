@@ -37,7 +37,7 @@
 	</command>
 
 	<command value="5">
-		<data name="file" type="bytearray"></data>
+		<data name="file" type="file"></data>
 	</command>
 
 	<command value="6">

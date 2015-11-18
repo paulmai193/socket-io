@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datapackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="jar:file:/C:/Users/Paul Mai/.m2/repository/logia/logia-socketio/0.0.4/logia-socketio-0.0.4-sources.jar!/logia/io/define/datapackage.xsd">
+	xsi:noNamespaceSchemaLocation="datapackage.xsd">
 	<define type="int">
 		<define-command name="pong" value="0">implement.client.datapackage.PongData</define-command>
 		<define-command name="ping" value="1">implement.client.datapackage.PingData</define-command>
@@ -37,7 +37,7 @@
 	</command>
 
 	<command value="5">
-		<data name="file" type="bytearray"></data>
+		<data name="file" type="file"></data>
 	</command>
 
 	<command value="6">
