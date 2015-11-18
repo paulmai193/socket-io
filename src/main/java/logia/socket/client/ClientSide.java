@@ -70,9 +70,6 @@ public class ClientSide implements SocketClientInterface {
 	/** The timeout of connection. */
 	protected final int              TIME_OUT;
 
-	/** The data buffer size. */
-	protected final int              DATA_BUFFER_SIZE;
-
 	/**
 	 * Instantiates a new client side.
 	 *
@@ -88,7 +85,6 @@ public class ClientSide implements SocketClientInterface {
 		this.TIME_OUT = timeout;
 		this.isWait = false;
 		this.returned = new LinkedBlockingQueue<ReadDataInterface>(1);
-		this.DATA_BUFFER_SIZE = 65536;
 	}
 
 	/**
@@ -108,7 +104,6 @@ public class ClientSide implements SocketClientInterface {
 		this.TIME_OUT = timeout;
 		this.isWait = false;
 		this.returned = new LinkedBlockingQueue<ReadDataInterface>(1);
-		this.DATA_BUFFER_SIZE = 65536;
 	}
 
 	/**
@@ -130,20 +125,6 @@ public class ClientSide implements SocketClientInterface {
 		this.timeoutListener = timeoutListener;
 		this.isWait = false;
 		this.returned = new LinkedBlockingQueue<ReadDataInterface>(1);
-		this.DATA_BUFFER_SIZE = 65536;
-	}
-
-	public ClientSide(String host, int port, int timeout, ParserInterface dataParser, SocketTimeoutListener timeoutListener, int dataBufferSize) {
-		this.isConnected = false;
-		this.parser = dataParser;
-		this.START_TIME = System.currentTimeMillis();
-		this.HOST = host;
-		this.PORT = port;
-		this.TIME_OUT = timeout;
-		this.timeoutListener = timeoutListener;
-		this.isWait = false;
-		this.returned = new LinkedBlockingQueue<ReadDataInterface>(1);
-		this.DATA_BUFFER_SIZE = dataBufferSize;
 	}
 
 	/*
@@ -156,8 +137,8 @@ public class ClientSide implements SocketClientInterface {
 		if (!this.isConnected) {
 			try {
 				this.socket = new Socket(this.HOST, this.PORT);
-				this.socket.setSendBufferSize(this.DATA_BUFFER_SIZE);
-				this.socket.setReceiveBufferSize(this.DATA_BUFFER_SIZE);
+				this.LOGGER.debug("Send data buffer size: " + this.socket.getSendBufferSize());
+				this.LOGGER.debug("Receive data buffer size: " + this.socket.getReceiveBufferSize());
 				if (this.TIME_OUT > 0) {
 					this.socket.setSoTimeout(this.TIME_OUT);
 				}

@@ -16,12 +16,12 @@ import logia.socket.client.ClientSide;
 public class RunSimpleClient {
 
 	public static void main(String[] args) {
-		File testFile = new File("C:/Users/Paul Mai/Desktop/pirate.mp4");
+		File testFile = new File("C:/Users/Paul Mai/Desktop/fm.mp4");
 		try {
 
 			ParserInterface parser = new DataParserByXML(Config.DATA_PACKAGE_PATH_CLIENT);
 
-			final SocketClientInterface client = new ClientSide("localhost", 1234, 0, parser, null, 10 * 1024 * 1024);
+			final SocketClientInterface client = new ClientSide("localhost", 1234, 0, parser);
 			client.connect();
 			if (client.isConnected()) {
 				new Thread(client).start();

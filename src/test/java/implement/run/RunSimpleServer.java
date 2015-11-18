@@ -16,7 +16,7 @@ public class RunSimpleServer extends Thread {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		final ServerSide server = new ServerSide(1234, 0, 5 * 60000, 0, 10 * 1024 * 1024);
+		final ServerSide server = new ServerSide(1234, 0, 5 * 60000);
 		final ParserInterface parser = new DataParserByXML(Config.DATA_PACKAGE_PATH_SERVER);
 		server.setAcceptClientListener(new AcceptClientListener() {
 

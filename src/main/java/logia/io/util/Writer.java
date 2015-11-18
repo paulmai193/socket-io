@@ -20,7 +20,7 @@ public class Writer {
 	private final Logger LOGGER          = Logger.getLogger(this.getClass());
 
 	/** The max size buffer. */
-	private final int    MAX_SIZE_BUFFER = 10 * 1024 * 1024;
+	private final int    MAX_SIZE_BUFFER = 64 * 1024;
 
 	/**
 	 * Instantiates a new writer.
