@@ -89,7 +89,6 @@ public class Writer {
 			byte[] barray = new byte[(int) (length - (this.MAX_SIZE_BUFFER * n))];
 			f.read(barray, 0, (int) (length - (this.MAX_SIZE_BUFFER * n)));
 			out.write(barray);
-			out.flush();
 
 			// NEW
 			// out.write(IOUtils.toByteArray(f));

@@ -182,7 +182,6 @@ public class ServerSide implements SocketServerInterface {
 		this.isRunning = true;
 		try {
 			this.serverSocket = new ServerSocket(this.PORT);
-			this.LOGGER.debug("Receive data buffer size: " + this.serverSocket.getReceiveBufferSize());
 			while (this.isRunning) {
 				final Socket socket = this.serverSocket.accept();
 				if (this.TIME_OUT > 0) {

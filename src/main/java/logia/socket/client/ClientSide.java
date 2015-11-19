@@ -137,8 +137,6 @@ public class ClientSide implements SocketClientInterface {
 		if (!this.isConnected) {
 			try {
 				this.socket = new Socket(this.HOST, this.PORT);
-				this.LOGGER.debug("Send data buffer size: " + this.socket.getSendBufferSize());
-				this.LOGGER.debug("Receive data buffer size: " + this.socket.getReceiveBufferSize());
 				if (this.TIME_OUT > 0) {
 					this.socket.setSoTimeout(this.TIME_OUT);
 				}
