@@ -56,27 +56,27 @@ public class Reader {
 		ByteArrayOutputStream arr = new ByteArrayOutputStream();
 
 		// OLD
-		// for (int i = 0; i < length; i++) {
-		// arr.write(this.readByte(in));
-		// }
+		for (int i = 0; i < length; i++) {
+			arr.write(this.readByte(in));
+		}
 
 		// NEW
-		if (length < this.MAX_SIZE_BUFFER) {
-			byte[] barray = new byte[(int) (length)];
-			in.read(barray, 0, (int) (length));
-			arr.write(barray);
-		}
-		else {
-			int n = (int) (length / this.MAX_SIZE_BUFFER);
-			for (int i = 0; i < n; i++) {
-				byte[] barray = new byte[this.MAX_SIZE_BUFFER];
-				in.read(barray, 0, this.MAX_SIZE_BUFFER);
-				arr.write(barray);
-			}
-			byte[] barray = new byte[(int) (length - (this.MAX_SIZE_BUFFER * n))];
-			in.read(barray, 0, (int) (length - (this.MAX_SIZE_BUFFER * n)));
-			arr.write(barray);
-		}
+		// if (length < this.MAX_SIZE_BUFFER) {
+		// byte[] barray = new byte[(int) (length)];
+		// in.read(barray, 0, (int) (length));
+		// arr.write(barray);
+		// }
+		// else {
+		// int n = (int) (length / this.MAX_SIZE_BUFFER);
+		// for (int i = 0; i < n; i++) {
+		// byte[] barray = new byte[this.MAX_SIZE_BUFFER];
+		// in.read(barray, 0, this.MAX_SIZE_BUFFER);
+		// arr.write(barray);
+		// }
+		// byte[] barray = new byte[(int) (length - (this.MAX_SIZE_BUFFER * n))];
+		// in.read(barray, 0, (int) (length - (this.MAX_SIZE_BUFFER * n)));
+		// arr.write(barray);
+		// }
 
 		return arr.toByteArray();
 	}
@@ -91,15 +91,15 @@ public class Reader {
 	public double readDouble(InputStream in) throws IOException {
 
 		// OLD
-		// ByteArrayOutputStream arr = new ByteArrayOutputStream();
-		// for (int i = 0; i < 8; i++) {
-		// arr.write(this.readByte(in));
-		// }
+		ByteArrayOutputStream arr = new ByteArrayOutputStream();
+		for (int i = 0; i < 8; i++) {
+			arr.write(this.readByte(in));
+		}
 
 		// NEW
-		byte[] barray = new byte[8];
-		in.read(barray, 0, 8);
-		return ByteBuffer.wrap(barray).getDouble();
+		// byte[] barray = new byte[8];
+		// in.read(barray, 0, 8);
+		return ByteBuffer.wrap(arr.toByteArray()).getDouble();
 	}
 
 	/**
@@ -144,15 +144,15 @@ public class Reader {
 	public float readFloat(InputStream in) throws IOException {
 
 		// OLD
-		// ByteArrayOutputStream arr = new ByteArrayOutputStream();
-		// for (int i = 0; i < 4; i++) {
-		// arr.write(this.readByte(in));
-		// }
+		ByteArrayOutputStream arr = new ByteArrayOutputStream();
+		for (int i = 0; i < 4; i++) {
+			arr.write(this.readByte(in));
+		}
 
 		// NEW
-		byte[] barray = new byte[4];
-		in.read(barray, 0, 4);
-		return ByteBuffer.wrap(barray).getFloat();
+		// byte[] barray = new byte[4];
+		// in.read(barray, 0, 4);
+		return ByteBuffer.wrap(arr.toByteArray()).getFloat();
 	}
 
 	/**
@@ -165,15 +165,15 @@ public class Reader {
 	public int readInt(InputStream in) throws IOException {
 
 		// OLD
-		// ByteArrayOutputStream arr = new ByteArrayOutputStream();
-		// for (int i = 0; i < 4; i++) {
-		// arr.write(this.readByte(in));
-		// }
+		ByteArrayOutputStream arr = new ByteArrayOutputStream();
+		for (int i = 0; i < 4; i++) {
+			arr.write(this.readByte(in));
+		}
 
 		// NEW
-		byte[] barray = new byte[4];
-		in.read(barray, 0, 4);
-		return ByteBuffer.wrap(barray).getInt();
+		// byte[] barray = new byte[4];
+		// in.read(barray, 0, 4);
+		return ByteBuffer.wrap(arr.toByteArray()).getInt();
 	}
 
 	/**
@@ -185,16 +185,16 @@ public class Reader {
 	 */
 	public long readLong(InputStream in) throws IOException {
 		// OLD
-		// ByteArrayOutputStream arr = new ByteArrayOutputStream();
-		// for (int i = 0; i < 8; i++) {
-		// arr.write(this.readByte(in));
-		// }
-		// return ByteBuffer.wrap(arr.toByteArray()).getLong();
+		ByteArrayOutputStream arr = new ByteArrayOutputStream();
+		for (int i = 0; i < 8; i++) {
+			arr.write(this.readByte(in));
+		}
+		return ByteBuffer.wrap(arr.toByteArray()).getLong();
 
 		// NEW
-		byte[] barray = new byte[8];
-		in.read(barray, 0, 8);
-		return ByteBuffer.wrap(barray).getLong();
+		// byte[] barray = new byte[8];
+		// in.read(barray, 0, 8);
+		// return ByteBuffer.wrap(barray).getLong();
 	}
 
 	/**
@@ -252,15 +252,15 @@ public class Reader {
 	public short readShort(InputStream in) throws IOException {
 
 		// OLD
-		// ByteArrayOutputStream arr = new ByteArrayOutputStream();
-		// for (int i = 0; i < 2; i++) {
-		// arr.write(this.readByte(in));
-		// }
+		ByteArrayOutputStream arr = new ByteArrayOutputStream();
+		for (int i = 0; i < 2; i++) {
+			arr.write(this.readByte(in));
+		}
 
 		// NEW
-		byte[] barray = new byte[2];
-		in.read(barray, 0, 2);
-		return ByteBuffer.wrap(barray).getShort();
+		// byte[] barray = new byte[2];
+		// in.read(barray, 0, 2);
+		return ByteBuffer.wrap(arr.toByteArray()).getShort();
 	}
 
 	/**
