@@ -25,6 +25,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.google.gson.JsonObject;
+
 /**
  * The Class AbstractParser.
  * 
@@ -65,52 +67,46 @@ public abstract class AbstractParser implements ParserInterface {
 	/** The Constant TYPE_STRING. */
 	protected static final byte              TYPE_STRING     = 9;
 
+	/** The Constant TYPE_JSON. */
+	protected static final byte              TYPE_JSON       = 11;
+
 	static {
 		DICTIONARY = new HashMap<String, Byte>();
 
 		AbstractParser.DICTIONARY.put("byte", AbstractParser.TYPE_BYTE);
-		AbstractParser.DICTIONARY.put("Byte", AbstractParser.TYPE_BYTE);
-		AbstractParser.DICTIONARY.put("java.lang.Byte", AbstractParser.TYPE_BYTE);
+		AbstractParser.DICTIONARY.put("java.lang.byte", AbstractParser.TYPE_BYTE);
 
 		AbstractParser.DICTIONARY.put("byte[]", AbstractParser.TYPE_BYTE_ARRAY);
 		AbstractParser.DICTIONARY.put("bytearray", AbstractParser.TYPE_BYTE_ARRAY);
 		AbstractParser.DICTIONARY.put("byte_array", AbstractParser.TYPE_BYTE_ARRAY);
-		AbstractParser.DICTIONARY.put("Bytearray", AbstractParser.TYPE_BYTE_ARRAY);
-		AbstractParser.DICTIONARY.put("ByteArray", AbstractParser.TYPE_BYTE_ARRAY);
 
 		AbstractParser.DICTIONARY.put("double", AbstractParser.TYPE_DOUBLE);
-		AbstractParser.DICTIONARY.put("Double", AbstractParser.TYPE_DOUBLE);
-		AbstractParser.DICTIONARY.put("java.lang.Double", AbstractParser.TYPE_DOUBLE);
+		AbstractParser.DICTIONARY.put("java.lang.double", AbstractParser.TYPE_DOUBLE);
 
 		AbstractParser.DICTIONARY.put("float", AbstractParser.TYPE_FLOAT);
-		AbstractParser.DICTIONARY.put("Float", AbstractParser.TYPE_FLOAT);
-		AbstractParser.DICTIONARY.put("java.lang.Float", AbstractParser.TYPE_FLOAT);
+		AbstractParser.DICTIONARY.put("java.lang.float", AbstractParser.TYPE_FLOAT);
 
-		AbstractParser.DICTIONARY.put("java.io.File", AbstractParser.TYPE_FILE);
-		AbstractParser.DICTIONARY.put("File", AbstractParser.TYPE_FILE);
+		AbstractParser.DICTIONARY.put("java.io.file", AbstractParser.TYPE_FILE);
 		AbstractParser.DICTIONARY.put("file", AbstractParser.TYPE_FILE);
 
 		AbstractParser.DICTIONARY.put("int", AbstractParser.TYPE_INTERGER);
 		AbstractParser.DICTIONARY.put("integer", AbstractParser.TYPE_INTERGER);
-		AbstractParser.DICTIONARY.put("Integer", AbstractParser.TYPE_INTERGER);
-		AbstractParser.DICTIONARY.put("java.lang.Integer", AbstractParser.TYPE_INTERGER);
+		AbstractParser.DICTIONARY.put("java.lang.integer", AbstractParser.TYPE_INTERGER);
+
+		AbstractParser.DICTIONARY.put("json", AbstractParser.TYPE_JSON);
+		AbstractParser.DICTIONARY.put("jsonobject", AbstractParser.TYPE_JSON);
 
 		AbstractParser.DICTIONARY.put("long", AbstractParser.TYPE_LONG);
-		AbstractParser.DICTIONARY.put("Long", AbstractParser.TYPE_LONG);
-		AbstractParser.DICTIONARY.put("java.lang.Long", AbstractParser.TYPE_LONG);
+		AbstractParser.DICTIONARY.put("java.lang.long", AbstractParser.TYPE_LONG);
 
 		AbstractParser.DICTIONARY.put("arraylist", AbstractParser.TYPE_LIST);
-		AbstractParser.DICTIONARY.put("ArrayList", AbstractParser.TYPE_LIST);
 		AbstractParser.DICTIONARY.put("list", AbstractParser.TYPE_LIST);
-		AbstractParser.DICTIONARY.put("List", AbstractParser.TYPE_LIST);
 
 		AbstractParser.DICTIONARY.put("short", AbstractParser.TYPE_SHORT);
-		AbstractParser.DICTIONARY.put("Short", AbstractParser.TYPE_SHORT);
-		AbstractParser.DICTIONARY.put("java.lang.Short", AbstractParser.TYPE_SHORT);
+		AbstractParser.DICTIONARY.put("java.lang.short", AbstractParser.TYPE_SHORT);
 
 		AbstractParser.DICTIONARY.put("string", AbstractParser.TYPE_STRING);
-		AbstractParser.DICTIONARY.put("String", AbstractParser.TYPE_STRING);
-		AbstractParser.DICTIONARY.put("java.lang.String", AbstractParser.TYPE_STRING);
+		AbstractParser.DICTIONARY.put("java.lang.string", AbstractParser.TYPE_STRING);
 	}
 
 	/** The _command type. */
@@ -145,6 +141,14 @@ public abstract class AbstractParser implements ParserInterface {
 		this.contextInitialized();
 	}
 
+	public AbstractParser(int bufferSize) {
+		this._reader = new Reader(bufferSize);
+		this._writer = new Writer(bufferSize);
+		this._definePath = AbstractParser.class.getClassLoader().getResource("data-package.xml").getPath();
+		this._xml = new XmlUtil(this._definePath);
+		this.contextInitialized();
+	}
+
 	/**
 	 * Instantiates a new abstract parser.
 	 *
@@ -153,6 +157,20 @@ public abstract class AbstractParser implements ParserInterface {
 	public AbstractParser(String definePath) {
 		this._reader = new Reader();
 		this._writer = new Writer();
+		this._definePath = definePath;
+		this._xml = new XmlUtil(this._definePath);
+		this.contextInitialized();
+	}
+
+	/**
+	 * Instantiates a new abstract parser.
+	 *
+	 * @param definePath the define path
+	 * @param bufferSize the buffer size
+	 */
+	public AbstractParser(String definePath, int bufferSize) {
+		this._reader = new Reader(bufferSize);
+		this._writer = new Writer(bufferSize);
 		this._definePath = definePath;
 		this._xml = new XmlUtil(this._definePath);
 		this.contextInitialized();
@@ -233,7 +251,7 @@ public abstract class AbstractParser implements ParserInterface {
 	 * @return the data type
 	 */
 	protected Byte getDataType(String type) {
-		return AbstractParser.DICTIONARY.get(type);
+		return AbstractParser.DICTIONARY.get(type.toLowerCase());
 	}
 
 	/**
@@ -326,6 +344,10 @@ public abstract class AbstractParser implements ParserInterface {
 
 			case TYPE_INTERGER:
 				value = this._reader.readInt(inputstream);
+				break;
+
+			case TYPE_JSON:
+				value = this._reader.readJson(inputstream);
 				break;
 
 			case TYPE_LONG:
@@ -474,6 +496,19 @@ public abstract class AbstractParser implements ParserInterface {
 					field = data.getClass().getDeclaredField(nameData);
 					field.setAccessible(true);
 					this._writer.writeInt(out, field.getInt(data));
+					returnValue = field.get(data).toString();
+				}
+				break;
+
+			case TYPE_JSON:
+				if (nameData.equals("")) {
+					this._writer.writeJson(out, (JsonObject) data);
+					returnValue = data.toString();
+				}
+				else {
+					field = data.getClass().getDeclaredField(nameData);
+					field.setAccessible(true);
+					this._writer.writeJson(out, (JsonObject) (field.get(data)));
 					returnValue = field.get(data).toString();
 				}
 				break;

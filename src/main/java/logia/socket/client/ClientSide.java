@@ -241,7 +241,7 @@ public class ClientSide implements SocketClientInterface {
 			// Waiting until have return value
 			this.LOGGER.debug("Is waiting response...");
 			synchronized (this) {
-				this.wait();
+				this.wait(60000);
 			}
 
 			this.isWait = false;
@@ -350,6 +350,9 @@ public class ClientSide implements SocketClientInterface {
 			}
 		}
 		catch (SocketException e) {
+			throw e;
+		}
+		catch (ReadDataException e) {
 			throw e;
 		}
 		catch (IOException e) {

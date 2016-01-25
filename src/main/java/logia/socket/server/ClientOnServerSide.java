@@ -112,7 +112,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 	 * @throws ConnectionErrorException
 	 */
 	public ClientOnServerSide(SocketServerInterface serverSocket, Socket socket, ParserInterface dataParser, SocketTimeoutListener timeoutListener)
-			throws ConnectionErrorException {
+	        throws ConnectionErrorException {
 		this.isConnected = false;
 		this.parser = dataParser;
 		this.startTime = System.currentTimeMillis();
@@ -229,7 +229,7 @@ public class ClientOnServerSide implements SocketClientInterface {
 			// Waiting until have return value
 			this.LOGGER.debug("Is waiting response...");
 			synchronized (this) {
-				this.wait();
+				this.wait(60000);
 			}
 
 			this.isWait = false;
@@ -340,10 +340,15 @@ public class ClientOnServerSide implements SocketClientInterface {
 		catch (SocketException e) {
 			throw e;
 		}
+		catch (ReadDataException e) {
+			throw e;
+		}
 		catch (IOException e) {
+			this.LOGGER.debug(e.getMessage(), e);
 			throw new ReadDataException(e);
 		}
 		catch (Exception e) {
+			this.LOGGER.debug(e.getMessage(), e);
 			throw new ReadDataException(e);
 		}
 	}

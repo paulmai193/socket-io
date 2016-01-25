@@ -9,6 +9,8 @@ import java.nio.ByteBuffer;
 
 import org.apache.log4j.Logger;
 
+import com.google.gson.JsonObject;
+
 /**
  * The Class Writer write data from package into outputstream.
  * 
@@ -17,16 +19,25 @@ import org.apache.log4j.Logger;
 public class Writer {
 
 	/** The logger. */
-	private final Logger LOGGER          = Logger.getLogger(this.getClass());
+	private final Logger LOGGER = Logger.getLogger(this.getClass());
 
 	/** The max size buffer. */
-	private final int    MAX_SIZE_BUFFER = 64 * 1024;
+	private final int    MAX_SIZE_BUFFER;
 
 	/**
 	 * Instantiates a new writer.
 	 */
 	public Writer() {
+		this.MAX_SIZE_BUFFER = 20 * 1024;
+	}
 
+	/**
+	 * Instantiates a new writer.
+	 *
+	 * @param bufferSize the buffer size
+	 */
+	public Writer(int bufferSize) {
+		this.MAX_SIZE_BUFFER = bufferSize;
 	}
 
 	/**
@@ -74,25 +85,39 @@ public class Writer {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void writeFile(OutputStream out, File data) throws IOException {
+		// OLD
 		long length = data.length();
 		this.writeLong(out, length);
-		int n = (int) (length / this.MAX_SIZE_BUFFER);
 		try (FileInputStream f = new FileInputStream(data)) {
-
-			// OLD
-			for (int i = 0; i < n; i++) {
-				byte[] barray = new byte[this.MAX_SIZE_BUFFER];
-				f.read(barray, 0, this.MAX_SIZE_BUFFER);
+			byte[] barray = new byte[this.MAX_SIZE_BUFFER];
+			while (f.read(barray, 0, this.MAX_SIZE_BUFFER) != -1) {
 				out.write(barray);
 				out.flush();
 			}
-			byte[] barray = new byte[(int) (length - (this.MAX_SIZE_BUFFER * n))];
-			f.read(barray, 0, (int) (length - (this.MAX_SIZE_BUFFER * n)));
-			out.write(barray);
-
-			// NEW
-			// out.write(IOUtils.toByteArray(f));
 		}
+
+		// NEW
+		// long length = data.length();
+		// this.writeLong(out, length);
+		// int n = (int) (length / this.MAX_SIZE_BUFFER);
+		// try (FileInputStream f = new FileInputStream(data)) {
+		//
+		// // OLD
+		// for (int i = 0; i < n; i++) {
+		// byte[] barray = new byte[this.MAX_SIZE_BUFFER];
+		// int buf = f.read(barray, 0, this.MAX_SIZE_BUFFER);
+		// this.LOGGER.debug("Write " + buf + " bytes");
+		// out.write(barray);
+		// out.flush();
+		// }
+		// byte[] barray = new byte[(int) (length - (this.MAX_SIZE_BUFFER * n))];
+		// int buf = f.read(barray, 0, (int) (length - (this.MAX_SIZE_BUFFER * n)));
+		// this.LOGGER.debug("Write " + buf + " bytes");
+		// out.write(barray);
+		//
+		// // NEW
+		// // out.write(IOUtils.toByteArray(f));
+		// }
 	}
 
 	/**
@@ -200,6 +225,17 @@ public class Writer {
 	public void writeString(OutputStream out, String data) throws IOException {
 		byte[] bytes = data.getBytes("UTF-8");
 		this.writeByteArray(out, bytes);
+	}
+
+	/**
+	 * Write json.
+	 *
+	 * @param out the out
+	 * @param data the data
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public void writeJson(OutputStream out, JsonObject data) throws IOException {
+		this.writeString(out, data.toString());
 	}
 
 }

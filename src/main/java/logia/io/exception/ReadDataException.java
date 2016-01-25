@@ -26,7 +26,16 @@ public class ReadDataException extends Exception {
 	 * @param cause the cause
 	 */
 	public ReadDataException(Throwable cause) {
-		super(ReadDataException.message, cause);
+		super(cause.getMessage(), cause);
+	}
+
+	/**
+	 * Instantiates a new read data exception.
+	 *
+	 * @param message the message
+	 */
+	public ReadDataException(String message) {
+		super(message);
 	}
 
 }

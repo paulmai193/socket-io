@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.net.SocketException;
 import java.util.ArrayList;
 
+import logia.io.exception.ReadDataException;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.WriteDataInterface;
 import logia.utility.readfile.XmlUtil;
@@ -28,12 +29,31 @@ public class DataParserByXML extends AbstractParser {
 	}
 
 	/**
+	 * Instantiates a new data parser by xml.
+	 *
+	 * @param bufferSize the buffer size
+	 */
+	public DataParserByXML(int bufferSize) {
+		super(bufferSize);
+	}
+
+	/**
 	 * Instantiates a new abstract parser.
 	 *
 	 * @param definePath the define path
 	 */
 	public DataParserByXML(String definePath) {
 		super(definePath);
+	}
+
+	/**
+	 * Instantiates a new data parser by xml.
+	 *
+	 * @param definePath the define path
+	 * @param bufferSize the buffer size
+	 */
+	public DataParserByXML(String definePath, int bufferSize) {
+		super(definePath, bufferSize);
 	}
 
 	/**
@@ -122,12 +142,23 @@ public class DataParserByXML extends AbstractParser {
 						String valueCommand = this._xml.getAttribute(nodeCommand, "value");
 						if (valueCommand.equals(command.toString())) {
 							this.readDataInstance(this._xml, (Element) nodeCommand, data, inputstream);
-							break;
+							return data;
+							// break;
+						}
+						else {
+							continue;
 						}
 					}
+					throw new ReadDataException("Not recogize data from command " + command.toString());
 				}
+				else {
+					throw new ReadDataException("Commands document is empty");
+				}
+				// return data;
 			}
-			return data;
+			else {
+				throw new ReadDataException("Not recogize data from command " + command.toString());
+			}
 		}
 		else {
 			throw new SocketException();

@@ -11,6 +11,9 @@ import java.nio.ByteBuffer;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 /**
  * The Class Reader read and parse data from inputstream to each data package type.
  * 
@@ -19,10 +22,10 @@ import org.apache.log4j.Logger;
 public class Reader {
 
 	/** The logger. */
-	private final Logger LOGGER          = Logger.getLogger(this.getClass());
+	private final Logger LOGGER = Logger.getLogger(this.getClass());
 
 	/** The max size buffer. */
-	private final int    MAX_SIZE_BUFFER = 64 * 1024;
+	private final int    MAX_SIZE_BUFFER;
 
 	/**
 	 * Instantiates a new reader.
@@ -30,7 +33,16 @@ public class Reader {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public Reader() {
+		this.MAX_SIZE_BUFFER = 4 * 1024;
+	}
 
+	/**
+	 * Instantiates a new reader.
+	 *
+	 * @param bufferSize the buffer size
+	 */
+	public Reader(int bufferSize) {
+		this.MAX_SIZE_BUFFER = bufferSize;
 	}
 
 	/**
@@ -41,7 +53,11 @@ public class Reader {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public byte readByte(InputStream in) throws IOException {
-		return (byte) in.read();
+		byte b = (byte) in.read();
+		// if (b == -1) {
+		// throw new IOException();
+		// }
+		return b;
 	}
 
 	/**
@@ -53,31 +69,12 @@ public class Reader {
 	 */
 	public byte[] readByteArray(InputStream in) throws IOException {
 		int length = this.readInt(in);
-		ByteArrayOutputStream arr = new ByteArrayOutputStream();
+		this.LOGGER.debug("Array Size: " + length);
 
-		// OLD
+		ByteArrayOutputStream arr = new ByteArrayOutputStream();
 		for (int i = 0; i < length; i++) {
 			arr.write(this.readByte(in));
 		}
-
-		// NEW
-		// if (length < this.MAX_SIZE_BUFFER) {
-		// byte[] barray = new byte[(int) (length)];
-		// in.read(barray, 0, (int) (length));
-		// arr.write(barray);
-		// }
-		// else {
-		// int n = (int) (length / this.MAX_SIZE_BUFFER);
-		// for (int i = 0; i < n; i++) {
-		// byte[] barray = new byte[this.MAX_SIZE_BUFFER];
-		// in.read(barray, 0, this.MAX_SIZE_BUFFER);
-		// arr.write(barray);
-		// }
-		// byte[] barray = new byte[(int) (length - (this.MAX_SIZE_BUFFER * n))];
-		// in.read(barray, 0, (int) (length - (this.MAX_SIZE_BUFFER * n)));
-		// arr.write(barray);
-		// }
-
 		return arr.toByteArray();
 	}
 
@@ -96,9 +93,6 @@ public class Reader {
 			arr.write(this.readByte(in));
 		}
 
-		// NEW
-		// byte[] barray = new byte[8];
-		// in.read(barray, 0, 8);
 		return ByteBuffer.wrap(arr.toByteArray()).getDouble();
 	}
 
@@ -112,24 +106,117 @@ public class Reader {
 	public File readFile(InputStream in) throws IOException {
 		long length = this.readLong(in);
 		File tempFile = File.createTempFile("sockettempfile", "tmp");
-		this.LOGGER.debug("TempFile: " + tempFile.getAbsolutePath());
+		this.LOGGER.debug("TempFile: " + tempFile.getAbsolutePath() + " - length: " + length);
 
-		if (length < this.MAX_SIZE_BUFFER) {
-			byte[] barray = new byte[(int) (length)];
-			in.read(barray, 0, (int) (length));
-			FileUtils.writeByteArrayToFile(tempFile, barray, true);
-		}
-		else {
-			int n = (int) (length / this.MAX_SIZE_BUFFER);
-			for (int i = 0; i < n; i++) {
-				byte[] barray = new byte[this.MAX_SIZE_BUFFER];
-				in.read(barray, 0, this.MAX_SIZE_BUFFER);
-				FileUtils.writeByteArrayToFile(tempFile, barray, true);
+		// OLD
+		ByteArrayOutputStream arr = new ByteArrayOutputStream(this.MAX_SIZE_BUFFER);
+		for (long i = 1; i <= length; i++) {
+			arr.write(this.readByte(in));
+			if (i % this.MAX_SIZE_BUFFER == 0) {
+				FileUtils.writeByteArrayToFile(tempFile, arr.toByteArray(), true);
+				arr.reset();
 			}
-			byte[] barray = new byte[(int) (length - (this.MAX_SIZE_BUFFER * n))];
-			in.read(barray, 0, (int) (length - (this.MAX_SIZE_BUFFER * n)));
-			FileUtils.writeByteArrayToFile(tempFile, barray, true);
 		}
+		if (arr.size() > 0) {
+			FileUtils.writeByteArrayToFile(tempFile, arr.toByteArray(), true);
+		}
+
+		// NEW
+		// if (length < this.MAX_SIZE_BUFFER) {
+		// ByteArrayBuffer buffer = new ByteArrayBuffer(MAX_SIZE_BUFFER);
+		// int buf = 0;
+		// while (buf < length) {
+		// int c = 16 * 1024;
+		// if ((length - buf) < c) {
+		// c = (int) (length - buf);
+		// }
+		//
+		// byte[] barray = new byte[c];
+		// int b = in.read(barray);
+		// if (b == -1) {
+		// throw new IOException();
+		// }
+		// buf = buf + b;
+		// buffer.append(barray, 0, barray.length);
+		// this.LOGGER.debug("1. Read " + b + " bytes");
+		// this.LOGGER.debug("2. Read total " + buf + " bytes");
+		// }
+		// // read last bytes of array
+		// byte[] barray = new byte[(int) (length - buf)];
+		// int b = in.read(barray);
+		// if (b == -1) {
+		// throw new IOException();
+		// }
+		// buf = buf + b;
+		// buffer.append(barray, 0, barray.length);
+		// this.LOGGER.debug("1. Read " + b + " bytes");
+		// this.LOGGER.debug("2. Read total " + buf + " bytes");
+		// FileUtils.writeByteArrayToFile(tempFile, buffer.toByteArray(), true);
+		// buffer.clear();
+		// }
+		// else {
+		// // int n = (int) (length / this.MAX_SIZE_BUFFER);
+		// // for (int i = 0; i < n; i++) {
+		// // byte[] barray = new byte[this.MAX_SIZE_BUFFER];
+		// // int buf = in.read(barray, 0, this.MAX_SIZE_BUFFER);
+		// // this.LOGGER.debug("Read " + buf + " bytes");
+		// // FileUtils.writeByteArrayToFile(tempFile, barray, true);
+		// // }
+		// // byte[] barray = new byte[(int) (length - (this.MAX_SIZE_BUFFER * n))];
+		// // int buf = in.read(barray, 0, (int) (length - (this.MAX_SIZE_BUFFER * n)));
+		// // this.LOGGER.debug("Read " + buf + " bytes");
+		// // FileUtils.writeByteArrayToFile(tempFile, barray, true);
+		//
+		// int buf = 0;
+		// int j = 1;
+		// ByteArrayBuffer buffer = new ByteArrayBuffer(MAX_SIZE_BUFFER);
+		// while (buf < length) {
+		// int c = 16 * 1024;
+		// if ((length - buf) < c) {
+		// c = (int) (length - buf);
+		// }
+		//
+		// byte[] barray = new byte[c];
+		// int b = in.read(barray);
+		// if (b == -1) {
+		// throw new IOException();
+		// }
+		// buf = buf + b;
+		// buffer.append(barray, 0, barray.length);
+		// this.LOGGER.debug("1. Read " + b + " bytes");
+		// this.LOGGER.debug("2. Read total " + buf + " bytes");
+		// // if (c < (1024)) {
+		// // FileUtils.writeByteArrayToFile(tempFile, buffer.toByteArray(), true);
+		// // this.LOGGER.debug("3. Current tempFile length: " + tempFile.length());
+		// // }
+		// // else if (buf <= (this.MAX_SIZE_BUFFER * j)) {
+		// // continue;
+		// // }
+		// // else {
+		// // FileUtils.writeByteArrayToFile(tempFile, buffer.toByteArray(), true);
+		// // buffer.clear();
+		// // this.LOGGER.debug("3. Current tempFile length: " + tempFile.length());
+		// // j++;
+		// // }
+		// if (buffer.length() >= this.MAX_SIZE_BUFFER) {
+		// FileUtils.writeByteArrayToFile(tempFile, buffer.toByteArray(), true);
+		// buffer.clear();
+		// this.LOGGER.debug("3. Current tempFile length: " + tempFile.length());
+		// }
+		// }
+		// // read last bytes of array
+		// byte[] barray = new byte[(int) (length - buf)];
+		// int b = in.read(barray);
+		// if (b == -1) {
+		// throw new IOException();
+		// }
+		// buf = buf + b;
+		// buffer.append(barray, 0, barray.length);
+		// this.LOGGER.debug("1. Read " + b + " bytes");
+		// this.LOGGER.debug("2. Read total " + buf + " bytes");
+		// FileUtils.writeByteArrayToFile(tempFile, buffer.toByteArray(), true);
+		// this.LOGGER.debug("3. Current tempFile length: " + tempFile.length());
+		// }
 
 		return tempFile;
 	}
@@ -148,10 +235,6 @@ public class Reader {
 		for (int i = 0; i < 4; i++) {
 			arr.write(this.readByte(in));
 		}
-
-		// NEW
-		// byte[] barray = new byte[4];
-		// in.read(barray, 0, 4);
 		return ByteBuffer.wrap(arr.toByteArray()).getFloat();
 	}
 
@@ -169,10 +252,6 @@ public class Reader {
 		for (int i = 0; i < 4; i++) {
 			arr.write(this.readByte(in));
 		}
-
-		// NEW
-		// byte[] barray = new byte[4];
-		// in.read(barray, 0, 4);
 		return ByteBuffer.wrap(arr.toByteArray()).getInt();
 	}
 
@@ -190,11 +269,6 @@ public class Reader {
 			arr.write(this.readByte(in));
 		}
 		return ByteBuffer.wrap(arr.toByteArray()).getLong();
-
-		// NEW
-		// byte[] barray = new byte[8];
-		// in.read(barray, 0, 8);
-		// return ByteBuffer.wrap(barray).getLong();
 	}
 
 	/**
@@ -256,10 +330,6 @@ public class Reader {
 		for (int i = 0; i < 2; i++) {
 			arr.write(this.readByte(in));
 		}
-
-		// NEW
-		// byte[] barray = new byte[2];
-		// in.read(barray, 0, 2);
 		return ByteBuffer.wrap(arr.toByteArray()).getShort();
 	}
 
@@ -281,5 +351,17 @@ public class Reader {
 			s = new String(arr);
 		}
 		return s;
+	}
+
+	/**
+	 * Read json.
+	 *
+	 * @param in the in
+	 * @return the json object
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public JsonObject readJson(InputStream in) throws IOException {
+		String s = this.readString(in);
+		return (JsonObject) new JsonParser().parse(s);
 	}
 }

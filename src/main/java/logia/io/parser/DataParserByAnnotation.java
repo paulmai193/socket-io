@@ -11,6 +11,7 @@ import java.util.Comparator;
 
 import logia.io.annotation.IOCommand;
 import logia.io.annotation.IOData;
+import logia.io.exception.ReadDataException;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.WriteDataInterface;
 
@@ -31,10 +32,29 @@ public class DataParserByAnnotation extends AbstractParser {
 	/**
 	 * Instantiates a new data parser by annotation.
 	 *
+	 * @param bufferSize the buffer size
+	 */
+	public DataParserByAnnotation(int bufferSize) {
+		super(bufferSize);
+	}
+
+	/**
+	 * Instantiates a new data parser by annotation.
+	 *
 	 * @param definePath the define path
 	 */
 	public DataParserByAnnotation(String definePath) {
 		super(definePath);
+	}
+
+	/**
+	 * Instantiates a new data parser by annotation.
+	 *
+	 * @param definePath the define path
+	 * @param bufferSize the buffer size
+	 */
+	public DataParserByAnnotation(String definePath, int bufferSize) {
+		super(definePath, bufferSize);
 	}
 
 	/**
@@ -115,9 +135,16 @@ public class DataParserByAnnotation extends AbstractParser {
 							}
 						}
 					}
+					return data;
+				}
+				else {
+					throw new ReadDataException("Commands document is empty");
 				}
 			}
-			return data;
+			else {
+				throw new ReadDataException("Not recogize data from command " + command.toString());
+			}
+			// return data;
 		}
 		else {
 			throw new SocketException();
