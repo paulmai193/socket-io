@@ -38,37 +38,37 @@ public abstract class AbstractParser implements ParserInterface {
 	protected static final Map<String, Byte> DICTIONARY;
 
 	/** The Constant TYPE_BYTE. */
-	protected static final byte              TYPE_BYTE       = 1;
+	protected static final byte              TYPE_BYTE          = 1;
 
 	/** The Constant TYPE_BYTE_ARRAY. */
-	protected static final byte              TYPE_BYTE_ARRAY = 2;
+	protected static final byte              TYPE_BYTE_ARRAY    = 2;
 
 	/** The Constant TYPE_DOUBLE. */
-	protected static final byte              TYPE_DOUBLE     = 4;
+	protected static final byte              TYPE_DOUBLE        = 4;
 
 	/** The Constant TYPE_FILE. */
-	protected static final byte              TYPE_FILE       = 3;
+	protected static final byte              TYPE_FILE          = 3;
 
 	/** The Constant TYPE_FLOAT. */
-	protected static final byte              TYPE_FLOAT      = 5;
+	protected static final byte              TYPE_FLOAT         = 5;
 
 	/** The Constant TYPE_INTERGER. */
-	protected static final byte              TYPE_INTERGER   = 6;
+	protected static final byte              TYPE_INTERGER      = 6;
 
 	/** The Constant TYPE_LIST. */
-	protected static final byte              TYPE_LIST       = 10;
+	protected static final byte              TYPE_LIST          = 10;
 
 	/** The Constant TYPE_LONG. */
-	protected static final byte              TYPE_LONG       = 7;
+	protected static final byte              TYPE_LONG          = 7;
 
 	/** The Constant TYPE_SHORT. */
-	protected static final byte              TYPE_SHORT      = 8;
+	protected static final byte              TYPE_SHORT         = 8;
 
 	/** The Constant TYPE_STRING. */
-	protected static final byte              TYPE_STRING     = 9;
+	protected static final byte              TYPE_STRING        = 9;
 
 	/** The Constant TYPE_JSON. */
-	protected static final byte              TYPE_JSON       = 11;
+	protected static final byte              TYPE_JSON          = 11;
 
 	static {
 		DICTIONARY = new HashMap<String, Byte>();
@@ -115,8 +115,11 @@ public abstract class AbstractParser implements ParserInterface {
 	/** The path to xml define data parser file . */
 	protected String                         _definePath;
 
-	/** The _command. */
-	protected Map<String, Class<?>>          _mapCommand     = new HashMap<String, Class<?>>();
+	/** The _map send command. */
+	protected Map<String, Class<?>>          _mapSendCommand    = new HashMap<String, Class<?>>();
+
+	/** The _map receive command. */
+	protected Map<String, Class<?>>          _mapReceiveCommand = new HashMap<String, Class<?>>();
 
 	/** The reader. */
 	protected Reader                         _reader;
@@ -128,7 +131,7 @@ public abstract class AbstractParser implements ParserInterface {
 	protected XmlUtil                        _xml;
 
 	/** The logger. */
-	protected final Logger                   LOGGER          = Logger.getLogger(this.getClass());
+	protected final Logger                   LOGGER             = Logger.getLogger(this.getClass());
 
 	/**
 	 * Instantiates a new abstract parser.
@@ -235,8 +238,15 @@ public abstract class AbstractParser implements ParserInterface {
 				// Get command type
 				String valueCommand = this._xml.getAttribute(nodeCommand, "value");
 				String className = this._xml.getValue(nodeCommand);
+				String typePackage = this._xml.getAttribute(nodeCommand, "type");
 
-				this._mapCommand.put(valueCommand, Class.forName(className));
+				if (typePackage.equalsIgnoreCase("send")) {
+					this._mapSendCommand.put(valueCommand, Class.forName(className));
+				}
+				else if (typePackage.equalsIgnoreCase("receive")) {
+					this._mapReceiveCommand.put(valueCommand, Class.forName(className));
+				}
+
 			}
 		}
 		catch (Exception e) {
@@ -261,7 +271,7 @@ public abstract class AbstractParser implements ParserInterface {
 	 * @return the instance read data
 	 */
 	protected ReadDataInterface getInstanceReadData(String idCommand) {
-		Class<?> clazz = this._mapCommand.get(idCommand);
+		Class<?> clazz = this._mapReceiveCommand.get(idCommand);
 		if (clazz != null) {
 			try {
 				return (ReadDataInterface) clazz.newInstance();
@@ -283,7 +293,7 @@ public abstract class AbstractParser implements ParserInterface {
 	 * @return the instance write data
 	 */
 	protected WriteDataInterface getInstanceWriteData(String idCommand) {
-		Class<?> clazz = this._mapCommand.get(idCommand);
+		Class<?> clazz = this._mapSendCommand.get(idCommand);
 		if (clazz != null) {
 			try {
 				return (WriteDataInterface) clazz.newInstance();
