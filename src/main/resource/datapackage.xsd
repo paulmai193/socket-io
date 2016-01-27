@@ -10,13 +10,14 @@
 				<xs:element name="define">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="define-command" maxOccurs="unbounded" minOccurs="1">
+							<xs:element name="define-command" maxOccurs="unbounded"
+								minOccurs="1">
 								<xs:complexType>
 									<xs:simpleContent>
 										<xs:extension base="xs:string">
 											<xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
 											<xs:attribute name="value" type="xs:string" use="required"></xs:attribute>
-											<xs:attribute name="type" type="xs:string" use="required"></xs:attribute>											
+											<xs:attribute name="type" type="xs:string" use="required"></xs:attribute>
 										</xs:extension>
 									</xs:simpleContent>
 								</xs:complexType>
@@ -25,7 +26,8 @@
 						<xs:attribute name="type" type="xs:string" use="required"></xs:attribute>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="command" maxOccurs="unbounded" minOccurs="0">
+				<xs:element name="command" maxOccurs="unbounded"
+					minOccurs="0">
 					<xs:complexType>
 						<xs:sequence>
 							<xs:element name="data" minOccurs="0" maxOccurs="unbounded">
@@ -41,6 +43,8 @@
 									<xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
 									<xs:attribute name="type" type="xs:string" use="required"></xs:attribute>
 									<xs:attribute name="breakvalue" type="xs:string"
+										use="optional"></xs:attribute>
+									<xs:attribute name="continuevalue" type="xs:string"
 										use="optional"></xs:attribute>
 									<xs:attribute name="elementtype" type="xs:string"
 										use="optional"></xs:attribute>

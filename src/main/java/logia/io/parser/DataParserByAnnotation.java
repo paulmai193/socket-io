@@ -110,7 +110,8 @@ public class DataParserByAnnotation extends AbstractParser {
 						IOData fieldAnnotation = field.getAnnotation(IOData.class);
 						if (fieldAnnotation != null) {
 							String typeData = fieldAnnotation.type().toString().toLowerCase();
-							String checkData = fieldAnnotation.breakValue();
+							String breakData = fieldAnnotation.breakValue();
+							String continueData = fieldAnnotation.continueValue();
 							Object fieldData = this.readDataByType(typeData, inputstream);
 							if (field.getGenericType() instanceof ParameterizedType) {
 								ParameterizedType pt = (ParameterizedType) field.getGenericType();
@@ -130,7 +131,11 @@ public class DataParserByAnnotation extends AbstractParser {
 								this.LOGGER.error("Try to set value " + fieldData + " to field " + field.getName() + " in " + typeData + " type.", e);
 							}
 
-							if (checkData != null && checkData.toString().equals(fieldData.toString())) {
+							if (breakData.equals(fieldData.toString())) {
+								break;
+							}
+
+							if (!continueData.equals(fieldData.toString())) {
 								break;
 							}
 						}

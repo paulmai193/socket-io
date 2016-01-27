@@ -72,7 +72,8 @@ public class DataParserByXML extends AbstractParser {
 			Node nodeData = listData.item(j);
 			String nameData = xml.getAttribute(nodeData, "name");
 			String typeData = xml.getAttribute(nodeData, "type");
-			String checkData = xml.getAttribute(nodeData, "breakvalue");
+			String breakData = xml.getAttribute(nodeData, "breakvalue");
+			String continueData = xml.getAttribute(nodeData, "continuevalue");
 			Object fieldData = this.readDataByType(typeData, inputstream);
 			if (fieldData instanceof ArrayList) {
 				int size = this._reader.readInt(inputstream);
@@ -90,7 +91,11 @@ public class DataParserByXML extends AbstractParser {
 				this.LOGGER.error("Try to set value " + fieldData + " to field " + nameData + " in " + typeData + " type.", e);
 			}
 
-			if (checkData != null && checkData.toString().equals(fieldData.toString())) {
+			if (breakData != null && breakData.equals(fieldData.toString())) {
+				break;
+			}
+
+			if (continueData != null && !continueData.equals(fieldData.toString())) {
 				break;
 			}
 		}
@@ -143,7 +148,6 @@ public class DataParserByXML extends AbstractParser {
 						if (valueCommand.equals(command.toString())) {
 							this.readDataInstance(this._xml, (Element) nodeCommand, data, inputstream);
 							return data;
-							// break;
 						}
 						else {
 							continue;
@@ -154,7 +158,6 @@ public class DataParserByXML extends AbstractParser {
 				else {
 					throw new ReadDataException("Commands document is empty");
 				}
-				// return data;
 			}
 			else {
 				throw new ReadDataException("Not recogize data from command " + command.toString());
