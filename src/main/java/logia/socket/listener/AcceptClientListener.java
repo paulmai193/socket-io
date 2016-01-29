@@ -11,16 +11,17 @@ import logia.io.exception.ConnectionErrorException;
  * the acceptClient event occurs, that object's appropriate
  * method is invoked.
  *
- * @see AcceptClientEvent
  * @author Paul Mai
+ * @see AcceptClientEvent
  */
 public interface AcceptClientListener {
 
 	/**
 	 * Accept socket connection and create new instance of Client on Server side.
 	 *
-	 * @param socket the socket
+	 * @param __socket the socket
 	 * @throws ConnectionErrorException the connection error exception
+	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public void acceptClient(Socket socket) throws ConnectionErrorException;
+	public void acceptClient(Socket __socket) throws ConnectionErrorException, ClassNotFoundException;
 }

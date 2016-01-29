@@ -23,10 +23,10 @@ public class WriteDataException extends Exception {
 	/**
 	 * Instantiates a new write data exception.
 	 *
-	 * @param cause the cause
+	 * @param __cause the cause
 	 */
-	public WriteDataException(Throwable cause) {
-		super(WriteDataException.message, cause);
+	public WriteDataException(Throwable __cause) {
+		super(WriteDataException.message, __cause);
 	}
 
 }

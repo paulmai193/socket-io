@@ -17,8 +17,8 @@ public interface ReadDataInterface {
 	/**
 	 * Execute data when read data from stream finish.
 	 *
-	 * @param clientSocket the client socket
+	 * @param __clientSocket the client socket
 	 * @throws Exception the exception
 	 */
-	public void executeData(SocketClientInterface clientSocket) throws Exception;
+	public void executeData(SocketClientInterface __clientSocket) throws Exception;
 }

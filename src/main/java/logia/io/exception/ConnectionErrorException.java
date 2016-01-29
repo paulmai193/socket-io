@@ -22,10 +22,10 @@ public class ConnectionErrorException extends Exception {
 	/**
 	 * Instantiates a new connection error exception.
 	 *
-	 * @param cause the cause
+	 * @param __cause the cause
 	 */
-	public ConnectionErrorException(Throwable cause) {
-		super(ConnectionErrorException.message, cause);
+	public ConnectionErrorException(Throwable __cause) {
+		super(ConnectionErrorException.message, __cause);
 	}
 
 }

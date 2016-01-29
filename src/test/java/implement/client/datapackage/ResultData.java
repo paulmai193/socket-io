@@ -21,7 +21,6 @@ public class ResultData implements ReadDataInterface {
 	@Override
 	public void executeData(SocketClientInterface clientSocket) throws Exception {
 		System.out.println("Receive result from server with message: " + this.message);
-		clientSocket.disconnect();
 	}
 
 }

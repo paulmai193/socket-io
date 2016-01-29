@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 
 import org.apache.log4j.Logger;
@@ -19,10 +18,10 @@ import com.google.gson.JsonObject;
 public class Writer {
 
 	/** The logger. */
-	private final Logger LOGGER = Logger.getLogger(this.getClass());
+	private static final Logger LOGGER = Logger.getLogger(Writer.class);
 
 	/** The max size buffer. */
-	private final int    MAX_SIZE_BUFFER;
+	private final int           MAX_SIZE_BUFFER;
 
 	/**
 	 * Instantiates a new writer.
@@ -34,65 +33,65 @@ public class Writer {
 	/**
 	 * Instantiates a new writer.
 	 *
-	 * @param bufferSize the buffer size
+	 * @param __bufferSize the buffer size
 	 */
-	public Writer(int bufferSize) {
-		this.MAX_SIZE_BUFFER = bufferSize;
+	public Writer(int __bufferSize) {
+		this.MAX_SIZE_BUFFER = __bufferSize;
 	}
 
 	/**
 	 * Write byte.
 	 * 
-	 * @param out the data output stream
-	 * @param data the data
+	 * @param __out the data output stream
+	 * @param __data the data
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public void writeByte(OutputStream out, byte data) throws IOException {
-		out.write(data);
+	public void writeByte(OutputStream __out, byte __data) throws IOException {
+		__out.write(__data);
 	}
 
 	/**
 	 * Write byte array.
 	 * 
-	 * @param out the data output stream
-	 * @param data the data
+	 * @param __out the data output stream
+	 * @param __data the data
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public void writeByteArray(OutputStream out, byte[] data) throws IOException {
-		int length = data.length;
-		this.writeInt(out, length);
-		out.write(data);
+	public void writeByteArray(OutputStream __out, byte[] __data) throws IOException {
+		int _length = __data.length;
+		this.writeInt(__out, _length);
+		__out.write(__data);
 	}
 
 	/**
 	 * Write double.
 	 * 
-	 * @param out the data output stream
-	 * @param data the data
+	 * @param __out the data output stream
+	 * @param __data the data
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public void writeDouble(OutputStream out, double data) throws IOException {
-		byte[] bytes = new byte[8];
-		ByteBuffer.wrap(bytes).putDouble(data);
-		out.write(bytes);
+	public void writeDouble(OutputStream __out, double __data) throws IOException {
+		byte[] _bytes = new byte[8];
+		ByteBuffer.wrap(_bytes).putDouble(__data);
+		__out.write(_bytes);
 	}
 
 	/**
 	 * Write file.
 	 *
-	 * @param out the out
-	 * @param data the data
+	 * @param __out the out
+	 * @param __data the data
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public void writeFile(OutputStream out, File data) throws IOException {
+	public void writeFile(OutputStream __out, File __data) throws IOException {
 		// OLD
-		long length = data.length();
-		this.writeLong(out, length);
-		try (FileInputStream f = new FileInputStream(data)) {
-			byte[] barray = new byte[this.MAX_SIZE_BUFFER];
-			while (f.read(barray, 0, this.MAX_SIZE_BUFFER) != -1) {
-				out.write(barray);
-				out.flush();
+		long length = __data.length();
+		this.writeLong(__out, length);
+		try (FileInputStream _f = new FileInputStream(__data)) {
+			byte[] _barray = new byte[this.MAX_SIZE_BUFFER];
+			while (_f.read(_barray, 0, this.MAX_SIZE_BUFFER) != -1) {
+				__out.write(_barray);
+				__out.flush();
 			}
 		}
 
@@ -123,119 +122,76 @@ public class Writer {
 	/**
 	 * Write float.
 	 * 
-	 * @param out the data output stream
-	 * @param data the data
+	 * @param __out the data output stream
+	 * @param __data the data
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public void writeFloat(OutputStream out, float data) throws IOException {
-		byte[] bytes = new byte[4];
-		ByteBuffer.wrap(bytes).putFloat(data);
-		out.write(bytes);
+	public void writeFloat(OutputStream __out, float __data) throws IOException {
+		byte[] _bytes = new byte[4];
+		ByteBuffer.wrap(_bytes).putFloat(__data);
+		__out.write(_bytes);
 	}
 
 	/**
 	 * Write int.
 	 *
-	 * @param out the out
-	 * @param data the data
+	 * @param __out the out
+	 * @param __data the data
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public void writeInt(OutputStream out, int data) throws IOException {
-		byte[] bytes = new byte[4];
-		ByteBuffer.wrap(bytes).putInt(data);
-		out.write(bytes);
+	public void writeInt(OutputStream __out, int __data) throws IOException {
+		byte[] _bytes = new byte[4];
+		ByteBuffer.wrap(_bytes).putInt(__data);
+		__out.write(_bytes);
 	}
 
 	/**
 	 * Write long.
 	 * 
-	 * @param out the data output stream
-	 * @param data the data
+	 * @param __out the data output stream
+	 * @param __data the data
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public void writeLong(OutputStream out, long data) throws IOException {
-		byte[] bytes = new byte[8];
-		ByteBuffer.wrap(bytes).putLong(data);
-		out.write(bytes);
-	}
-
-	/**
-	 * Write object.
-	 * 
-	 * @param out the data output stream
-	 * @param data the data
-	 * @throws IllegalArgumentException the illegal argument exception
-	 * @throws IllegalAccessException the illegal access exception
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws InstantiationException the instantiation exception
-	 */
-	public void writeObject(OutputStream out, Object data) throws IllegalArgumentException, IllegalAccessException, IOException,
-	        InstantiationException {
-		Field[] fields = data.getClass().getDeclaredFields();
-		for (Field field : fields) {
-			field.setAccessible(true);
-			Object fieldType = field.getType().newInstance();
-			if (fieldType instanceof Byte) {
-				this.writeByte(out, field.getByte(data));
-			}
-			else if (fieldType instanceof Byte[]) {
-				this.writeByteArray(out, (byte[]) field.get(data));
-			}
-			else if (fieldType instanceof Double) {
-				this.writeDouble(out, field.getDouble(data));
-			}
-			else if (fieldType instanceof Float) {
-				this.writeFloat(out, field.getFloat(data));
-			}
-			else if (fieldType instanceof Integer) {
-				this.writeInt(out, field.getInt(data));
-			}
-			else if (fieldType instanceof Long) {
-				this.writeLong(out, field.getLong(data));
-			}
-			else if (fieldType instanceof Short) {
-				this.writeShort(out, field.getShort(data));
-			}
-			else if (fieldType instanceof String) {
-				this.writeString(out, (String) field.get(data));
-			}
-		}
+	public void writeLong(OutputStream __out, long __data) throws IOException {
+		byte[] _bytes = new byte[8];
+		ByteBuffer.wrap(_bytes).putLong(__data);
+		__out.write(_bytes);
 	}
 
 	/**
 	 * Write short.
 	 * 
-	 * @param out the data output stream
-	 * @param data the data
+	 * @param __out the data output stream
+	 * @param __data the data
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public void writeShort(OutputStream out, short data) throws IOException {
-		byte[] bytes = new byte[2];
-		ByteBuffer.wrap(bytes).putShort(data);
-		out.write(bytes);
+	public void writeShort(OutputStream __out, short __data) throws IOException {
+		byte[] _bytes = new byte[2];
+		ByteBuffer.wrap(_bytes).putShort(__data);
+		__out.write(_bytes);
 	}
 
 	/**
 	 * Write string.
 	 * 
-	 * @param out the data output stream
-	 * @param data the data
+	 * @param __out the data output stream
+	 * @param __data the data
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public void writeString(OutputStream out, String data) throws IOException {
-		byte[] bytes = data.getBytes("UTF-8");
-		this.writeByteArray(out, bytes);
+	public void writeString(OutputStream __out, String __data) throws IOException {
+		byte[] _bytes = __data.getBytes("UTF-8");
+		this.writeByteArray(__out, _bytes);
 	}
 
 	/**
 	 * Write json.
 	 *
-	 * @param out the out
-	 * @param data the data
+	 * @param __out the out
+	 * @param __data the data
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public void writeJson(OutputStream out, JsonObject data) throws IOException {
-		this.writeString(out, data.toString());
+	public void writeJson(OutputStream __out, JsonObject __data) throws IOException {
+		this.writeString(__out, __data.toString());
 	}
 
 }

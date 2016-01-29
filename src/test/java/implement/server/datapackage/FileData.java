@@ -53,7 +53,7 @@ public class FileData implements ReadDataInterface {
 		try {
 			long a = System.currentTimeMillis();
 			// FileUtils.writeByteArrayToFile(new File("C:/Users/Paul Mai/Desktop/Candy.jpg"), this.bytes);
-			FileUtils.copyFile(this.file, new File("C:/Users/Paul Mai/Desktop/Candy.mp4"));
+			FileUtils.copyFile(this.file, new File("C:/Users/Paul Mai/Desktop/Candy_1.mp4"));
 			long b = System.currentTimeMillis();
 			System.out.println("FINISH WRITE A BUFFER TO FILE AFTER " + (b - a) / 1000 + " s");
 

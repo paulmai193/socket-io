@@ -45,7 +45,7 @@
 									<xs:attribute name="breakvalue" type="xs:string"
 										use="optional"></xs:attribute>
 									<xs:attribute name="continuevalue" type="xs:string"
-										use="optional"></xs:attribute>
+										use="optional" default="n/a"></xs:attribute>
 									<xs:attribute name="elementtype" type="xs:string"
 										use="optional"></xs:attribute>
 								</xs:complexType>

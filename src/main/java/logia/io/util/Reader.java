@@ -22,10 +22,10 @@ import com.google.gson.JsonParser;
 public class Reader {
 
 	/** The logger. */
-	private final Logger LOGGER = Logger.getLogger(this.getClass());
+	private static final Logger LOGGER = Logger.getLogger(Reader.class);
 
 	/** The max size buffer. */
-	private final int    MAX_SIZE_BUFFER;
+	private final int           MAX_SIZE_BUFFER;
 
 	/**
 	 * Instantiates a new reader.
@@ -39,86 +39,86 @@ public class Reader {
 	/**
 	 * Instantiates a new reader.
 	 *
-	 * @param bufferSize the buffer size
+	 * @param __bufferSize the buffer size
 	 */
-	public Reader(int bufferSize) {
-		this.MAX_SIZE_BUFFER = bufferSize;
+	public Reader(int __bufferSize) {
+		this.MAX_SIZE_BUFFER = __bufferSize;
 	}
 
 	/**
 	 * Read byte.
 	 *
-	 * @param in the in
+	 * @param __in the in
 	 * @return the byte
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public byte readByte(InputStream in) throws IOException {
-		byte b = (byte) in.read();
+	public byte readByte(InputStream __in) throws IOException {
+		byte _b = (byte) __in.read();
 		// if (b == -1) {
 		// throw new IOException();
 		// }
-		return b;
+		return _b;
 	}
 
 	/**
 	 * Read byte array.
 	 *
-	 * @param in the in
+	 * @param __in the in
 	 * @return the byte[]
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public byte[] readByteArray(InputStream in) throws IOException {
-		int length = this.readInt(in);
-		this.LOGGER.debug("Array Size: " + length);
+	public byte[] readByteArray(InputStream __in) throws IOException {
+		int _length = this.readInt(__in);
+		Reader.LOGGER.debug("Array Size: " + _length);
 
-		ByteArrayOutputStream arr = new ByteArrayOutputStream();
-		for (int i = 0; i < length; i++) {
-			arr.write(this.readByte(in));
+		ByteArrayOutputStream _arr = new ByteArrayOutputStream();
+		for (int _i = 0; _i < _length; _i++) {
+			_arr.write(this.readByte(__in));
 		}
-		return arr.toByteArray();
+		return _arr.toByteArray();
 	}
 
 	/**
 	 * Read double.
 	 *
-	 * @param in the in
+	 * @param __in the in
 	 * @return the double
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public double readDouble(InputStream in) throws IOException {
+	public double readDouble(InputStream __in) throws IOException {
 
 		// OLD
-		ByteArrayOutputStream arr = new ByteArrayOutputStream();
-		for (int i = 0; i < 8; i++) {
-			arr.write(this.readByte(in));
+		ByteArrayOutputStream _arr = new ByteArrayOutputStream();
+		for (int _i = 0; _i < 8; _i++) {
+			_arr.write(this.readByte(__in));
 		}
 
-		return ByteBuffer.wrap(arr.toByteArray()).getDouble();
+		return ByteBuffer.wrap(_arr.toByteArray()).getDouble();
 	}
 
 	/**
 	 * Read file.
 	 *
-	 * @param in the in
+	 * @param __in the in
 	 * @return the file
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public File readFile(InputStream in) throws IOException {
-		long length = this.readLong(in);
-		File tempFile = File.createTempFile("sockettempfile", "tmp");
-		this.LOGGER.debug("TempFile: " + tempFile.getAbsolutePath() + " - length: " + length);
+	public File readFile(InputStream __in) throws IOException {
+		long _length = this.readLong(__in);
+		File _tempFile = File.createTempFile("sockettempfile", "tmp");
+		Reader.LOGGER.debug("TempFile: " + _tempFile.getAbsolutePath() + " - length: " + _length);
 
 		// OLD
-		ByteArrayOutputStream arr = new ByteArrayOutputStream(this.MAX_SIZE_BUFFER);
-		for (long i = 1; i <= length; i++) {
-			arr.write(this.readByte(in));
-			if (i % this.MAX_SIZE_BUFFER == 0) {
-				FileUtils.writeByteArrayToFile(tempFile, arr.toByteArray(), true);
-				arr.reset();
+		ByteArrayOutputStream _arr = new ByteArrayOutputStream(this.MAX_SIZE_BUFFER);
+		for (long _i = 1; _i <= _length; _i++) {
+			_arr.write(this.readByte(__in));
+			if (_i % this.MAX_SIZE_BUFFER == 0) {
+				FileUtils.writeByteArrayToFile(_tempFile, _arr.toByteArray(), true);
+				_arr.reset();
 			}
 		}
-		if (arr.size() > 0) {
-			FileUtils.writeByteArrayToFile(tempFile, arr.toByteArray(), true);
+		if (_arr.size() > 0) {
+			FileUtils.writeByteArrayToFile(_tempFile, _arr.toByteArray(), true);
 		}
 
 		// NEW
@@ -218,150 +218,150 @@ public class Reader {
 		// this.LOGGER.debug("3. Current tempFile length: " + tempFile.length());
 		// }
 
-		return tempFile;
+		return _tempFile;
 	}
 
 	/**
 	 * Read float.
 	 *
-	 * @param in the in
+	 * @param __in the in
 	 * @return the float
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public float readFloat(InputStream in) throws IOException {
+	public float readFloat(InputStream __in) throws IOException {
 
 		// OLD
-		ByteArrayOutputStream arr = new ByteArrayOutputStream();
-		for (int i = 0; i < 4; i++) {
-			arr.write(this.readByte(in));
+		ByteArrayOutputStream _arr = new ByteArrayOutputStream();
+		for (int _i = 0; _i < 4; _i++) {
+			_arr.write(this.readByte(__in));
 		}
-		return ByteBuffer.wrap(arr.toByteArray()).getFloat();
+		return ByteBuffer.wrap(_arr.toByteArray()).getFloat();
 	}
 
 	/**
 	 * Read int.
 	 *
-	 * @param in the in
+	 * @param __in the in
 	 * @return the int
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public int readInt(InputStream in) throws IOException {
+	public int readInt(InputStream __in) throws IOException {
 
 		// OLD
-		ByteArrayOutputStream arr = new ByteArrayOutputStream();
-		for (int i = 0; i < 4; i++) {
-			arr.write(this.readByte(in));
+		ByteArrayOutputStream _arr = new ByteArrayOutputStream();
+		for (int _i = 0; _i < 4; _i++) {
+			_arr.write(this.readByte(__in));
 		}
-		return ByteBuffer.wrap(arr.toByteArray()).getInt();
+		return ByteBuffer.wrap(_arr.toByteArray()).getInt();
 	}
 
 	/**
 	 * Read long.
 	 *
-	 * @param in the in
+	 * @param __in the in
 	 * @return the long
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public long readLong(InputStream in) throws IOException {
+	public long readLong(InputStream __in) throws IOException {
 		// OLD
-		ByteArrayOutputStream arr = new ByteArrayOutputStream();
-		for (int i = 0; i < 8; i++) {
-			arr.write(this.readByte(in));
+		ByteArrayOutputStream _arr = new ByteArrayOutputStream();
+		for (int _i = 0; _i < 8; _i++) {
+			_arr.write(this.readByte(__in));
 		}
-		return ByteBuffer.wrap(arr.toByteArray()).getLong();
+		return ByteBuffer.wrap(_arr.toByteArray()).getLong();
 	}
 
 	/**
 	 * Read object.
 	 *
-	 * @param clazz the class of object
-	 * @param in the in
+	 * @param __clazz the class of object
+	 * @param __in the in
 	 * @return the object
 	 * @throws Exception the exception
 	 */
-	public Object readObject(@SuppressWarnings("rawtypes") Class clazz, InputStream in) throws Exception {
-		Object object = clazz.newInstance();
-		Field[] fields = clazz.getDeclaredFields();
-		for (Field field : fields) {
-			field.setAccessible(true);
-			Object fieldType = field.getType().newInstance();
-			if (fieldType instanceof Byte) {
-				field.set(object, this.readByte(in));
+	public Object readObject(@SuppressWarnings("rawtypes") Class __clazz, InputStream __in) throws Exception {
+		Object _object = __clazz.newInstance();
+		Field[] _fields = __clazz.getDeclaredFields();
+		for (Field _field : _fields) {
+			_field.setAccessible(true);
+			Object _fieldType = _field.getType().newInstance();
+			if (_fieldType instanceof Byte) {
+				_field.set(_object, this.readByte(__in));
 			}
-			else if (fieldType instanceof Byte[]) {
-				field.set(object, this.readByteArray(in));
+			else if (_fieldType instanceof Byte[]) {
+				_field.set(_object, this.readByteArray(__in));
 			}
-			else if (fieldType instanceof Double) {
-				field.set(object, this.readDouble(in));
+			else if (_fieldType instanceof Double) {
+				_field.set(_object, this.readDouble(__in));
 			}
-			else if (fieldType instanceof Float) {
-				field.set(object, this.readFloat(in));
+			else if (_fieldType instanceof Float) {
+				_field.set(_object, this.readFloat(__in));
 			}
-			else if (fieldType instanceof File) {
-				field.set(object, this.readFile(in));
+			else if (_fieldType instanceof File) {
+				_field.set(_object, this.readFile(__in));
 			}
-			else if (fieldType instanceof Integer) {
-				field.set(object, this.readInt(in));
+			else if (_fieldType instanceof Integer) {
+				_field.set(_object, this.readInt(__in));
 			}
-			else if (fieldType instanceof Long) {
-				field.set(object, this.readLong(in));
+			else if (_fieldType instanceof Long) {
+				_field.set(_object, this.readLong(__in));
 			}
-			else if (fieldType instanceof Short) {
-				field.set(object, this.readShort(in));
+			else if (_fieldType instanceof Short) {
+				_field.set(_object, this.readShort(__in));
 			}
-			else if (fieldType instanceof String) {
-				field.set(object, this.readString(in));
+			else if (_fieldType instanceof String) {
+				_field.set(_object, this.readString(__in));
 			}
 		}
-		return object;
+		return _object;
 	}
 
 	/**
 	 * Read short.
 	 *
-	 * @param in the in
+	 * @param __in the in
 	 * @return the short
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public short readShort(InputStream in) throws IOException {
+	public short readShort(InputStream __in) throws IOException {
 
 		// OLD
-		ByteArrayOutputStream arr = new ByteArrayOutputStream();
-		for (int i = 0; i < 2; i++) {
-			arr.write(this.readByte(in));
+		ByteArrayOutputStream _arr = new ByteArrayOutputStream();
+		for (int _i = 0; _i < 2; _i++) {
+			_arr.write(this.readByte(__in));
 		}
-		return ByteBuffer.wrap(arr.toByteArray()).getShort();
+		return ByteBuffer.wrap(_arr.toByteArray()).getShort();
 	}
 
 	/**
 	 * Read string.
 	 *
-	 * @param in the in
+	 * @param __in the in
 	 * @return the string
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public String readString(InputStream in) throws IOException {
-		byte[] arr = this.readByteArray(in);
-		String s;
+	public String readString(InputStream __in) throws IOException {
+		byte[] _arr = this.readByteArray(__in);
+		String _s;
 		try {
-			s = new String(arr, "UTF-8");
+			_s = new String(_arr, "UTF-8");
 		}
 		catch (UnsupportedEncodingException e) {
-			this.LOGGER.warn("Unsupport UTF-8");
-			s = new String(arr);
+			Reader.LOGGER.warn("Unsupport UTF-8");
+			_s = new String(_arr);
 		}
-		return s;
+		return _s;
 	}
 
 	/**
 	 * Read json.
 	 *
-	 * @param in the in
+	 * @param __in the in
 	 * @return the json object
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public JsonObject readJson(InputStream in) throws IOException {
-		String s = this.readString(in);
-		return (JsonObject) new JsonParser().parse(s);
+	public JsonObject readJson(InputStream __in) throws IOException {
+		String _s = this.readString(__in);
+		return (JsonObject) new JsonParser().parse(_s);
 	}
 }

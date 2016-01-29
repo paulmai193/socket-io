@@ -15,7 +15,7 @@ public class CheckSocketLiveTime implements Runnable {
 	/** The idle live time. */
 	private long                  idleLiveTime;
 
-	private final Logger          LOGGER = Logger.getLogger(this.getClass());
+	private static final Logger   LOGGER = Logger.getLogger(CheckSocketLiveTime.class);
 
 	/** The max live time. */
 	private long                  maxLiveTime;
@@ -26,26 +26,26 @@ public class CheckSocketLiveTime implements Runnable {
 	/**
 	 * Instantiates a new check socket live time.
 	 *
-	 * @param server the server
-	 * @param maxLiveTime the max live time
+	 * @param __server the server
+	 * @param __maxLiveTime the max live time
 	 */
-	public CheckSocketLiveTime(SocketServerInterface server, long maxLiveTime) {
-		this.server = server;
+	public CheckSocketLiveTime(SocketServerInterface __server, long __maxLiveTime) {
+		this.server = __server;
 		this.idleLiveTime = 0;
-		this.maxLiveTime = maxLiveTime;
+		this.maxLiveTime = __maxLiveTime;
 	}
 
 	/**
 	 * Instantiates a new check socket live time.
 	 *
-	 * @param server the server
-	 * @param idleLiveTime the idle live time
-	 * @param maxLiveTime the max live time
+	 * @param __server the server
+	 * @param __idleLiveTime the idle live time
+	 * @param __maxLiveTime the max live time
 	 */
-	public CheckSocketLiveTime(SocketServerInterface server, long idleLiveTime, long maxLiveTime) {
-		this.server = server;
-		this.idleLiveTime = idleLiveTime;
-		this.maxLiveTime = maxLiveTime;
+	public CheckSocketLiveTime(SocketServerInterface __server, long __idleLiveTime, long __maxLiveTime) {
+		this.server = __server;
+		this.idleLiveTime = __idleLiveTime;
+		this.maxLiveTime = __maxLiveTime;
 	}
 
 	/*
@@ -55,13 +55,13 @@ public class CheckSocketLiveTime implements Runnable {
 	 */
 	@Override
 	public void run() {
-		for (SocketClientInterface client : this.server.getListClients()) {
-			if (this.idleLiveTime > 0 && client.getLiveTime() > this.idleLiveTime) {
+		for (SocketClientInterface _client : this.server.getListClients()) {
+			if (this.idleLiveTime > 0 && _client.getLiveTime() > this.idleLiveTime) {
 				// TODO Thinking how to resolve
 
 			}
-			else if (client.getLiveTime() > this.maxLiveTime) {
-				client.disconnect();
+			else if (_client.getLiveTime() > this.maxLiveTime) {
+				_client.disconnect();
 			}
 		}
 

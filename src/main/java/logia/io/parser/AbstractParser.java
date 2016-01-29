@@ -38,37 +38,37 @@ public abstract class AbstractParser implements ParserInterface {
 	protected static final Map<String, Byte> DICTIONARY;
 
 	/** The Constant TYPE_BYTE. */
-	protected static final byte              TYPE_BYTE          = 1;
+	protected static final byte              TYPE_BYTE         = 1;
 
 	/** The Constant TYPE_BYTE_ARRAY. */
-	protected static final byte              TYPE_BYTE_ARRAY    = 2;
+	protected static final byte              TYPE_BYTE_ARRAY   = 2;
 
 	/** The Constant TYPE_DOUBLE. */
-	protected static final byte              TYPE_DOUBLE        = 4;
+	protected static final byte              TYPE_DOUBLE       = 4;
 
 	/** The Constant TYPE_FILE. */
-	protected static final byte              TYPE_FILE          = 3;
+	protected static final byte              TYPE_FILE         = 3;
 
 	/** The Constant TYPE_FLOAT. */
-	protected static final byte              TYPE_FLOAT         = 5;
+	protected static final byte              TYPE_FLOAT        = 5;
 
 	/** The Constant TYPE_INTERGER. */
-	protected static final byte              TYPE_INTERGER      = 6;
+	protected static final byte              TYPE_INTERGER     = 6;
 
 	/** The Constant TYPE_LIST. */
-	protected static final byte              TYPE_LIST          = 10;
+	protected static final byte              TYPE_LIST         = 10;
 
 	/** The Constant TYPE_LONG. */
-	protected static final byte              TYPE_LONG          = 7;
+	protected static final byte              TYPE_LONG         = 7;
 
 	/** The Constant TYPE_SHORT. */
-	protected static final byte              TYPE_SHORT         = 8;
+	protected static final byte              TYPE_SHORT        = 8;
 
 	/** The Constant TYPE_STRING. */
-	protected static final byte              TYPE_STRING        = 9;
+	protected static final byte              TYPE_STRING       = 9;
 
 	/** The Constant TYPE_JSON. */
-	protected static final byte              TYPE_JSON          = 11;
+	protected static final byte              TYPE_JSON         = 11;
 
 	static {
 		DICTIONARY = new HashMap<String, Byte>();
@@ -110,72 +110,82 @@ public abstract class AbstractParser implements ParserInterface {
 	}
 
 	/** The _command type. */
-	protected String                         _commandType;
+	protected String                         commandType;
 
 	/** The path to xml define data parser file . */
-	protected String                         _definePath;
+	protected String                         definePath;
 
 	/** The _map send command. */
-	protected Map<String, Class<?>>          _mapSendCommand    = new HashMap<String, Class<?>>();
+	protected Map<String, Class<?>>          mapSendCommand    = new HashMap<String, Class<?>>();
 
 	/** The _map receive command. */
-	protected Map<String, Class<?>>          _mapReceiveCommand = new HashMap<String, Class<?>>();
+	protected Map<String, Class<?>>          mapReceiveCommand = new HashMap<String, Class<?>>();
 
 	/** The reader. */
-	protected Reader                         _reader;
+	protected Reader                         reader;
 
 	/** The writer. */
-	protected Writer                         _writer;
+	protected Writer                         writer;
 
 	/** The _xml. */
-	protected XmlUtil                        _xml;
+	protected XmlUtil                        xml;
 
 	/** The logger. */
-	protected final Logger                   LOGGER             = Logger.getLogger(this.getClass());
+	protected static final Logger            LOGGER            = Logger.getLogger(AbstractParser.class);
 
 	/**
 	 * Instantiates a new abstract parser.
+	 *
+	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public AbstractParser() {
-		this._reader = new Reader();
-		this._writer = new Writer();
-		this._definePath = AbstractParser.class.getClassLoader().getResource("data-package.xml").getPath();
-		this._xml = new XmlUtil(this._definePath);
-		this.contextInitialized();
-	}
-
-	public AbstractParser(int bufferSize) {
-		this._reader = new Reader(bufferSize);
-		this._writer = new Writer(bufferSize);
-		this._definePath = AbstractParser.class.getClassLoader().getResource("data-package.xml").getPath();
-		this._xml = new XmlUtil(this._definePath);
+	public AbstractParser() throws ClassNotFoundException {
+		this.reader = new Reader();
+		this.writer = new Writer();
+		this.definePath = AbstractParser.class.getClassLoader().getResource("data-package.xml").getPath();
+		this.xml = new XmlUtil(this.definePath);
 		this.contextInitialized();
 	}
 
 	/**
 	 * Instantiates a new abstract parser.
 	 *
-	 * @param definePath the define path
+	 * @param __bufferSize the __buffer size
+	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public AbstractParser(String definePath) {
-		this._reader = new Reader();
-		this._writer = new Writer();
-		this._definePath = definePath;
-		this._xml = new XmlUtil(this._definePath);
+	public AbstractParser(int __bufferSize) throws ClassNotFoundException {
+		this.reader = new Reader(__bufferSize);
+		this.writer = new Writer(__bufferSize);
+		this.definePath = AbstractParser.class.getClassLoader().getResource("data-package.xml").getPath();
+		this.xml = new XmlUtil(this.definePath);
 		this.contextInitialized();
 	}
 
 	/**
 	 * Instantiates a new abstract parser.
 	 *
-	 * @param definePath the define path
-	 * @param bufferSize the buffer size
+	 * @param __definePath the define path
+	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public AbstractParser(String definePath, int bufferSize) {
-		this._reader = new Reader(bufferSize);
-		this._writer = new Writer(bufferSize);
-		this._definePath = definePath;
-		this._xml = new XmlUtil(this._definePath);
+	public AbstractParser(String __definePath) throws ClassNotFoundException {
+		this.reader = new Reader();
+		this.writer = new Writer();
+		this.definePath = __definePath;
+		this.xml = new XmlUtil(this.definePath);
+		this.contextInitialized();
+	}
+
+	/**
+	 * Instantiates a new abstract parser.
+	 *
+	 * @param __definePath the define path
+	 * @param __bufferSize the buffer size
+	 * @throws ClassNotFoundException the class not found exception
+	 */
+	public AbstractParser(String __definePath, int __bufferSize) throws ClassNotFoundException {
+		this.reader = new Reader(__bufferSize);
+		this.writer = new Writer(__bufferSize);
+		this.definePath = __definePath;
+		this.xml = new XmlUtil(this.definePath);
 		this.contextInitialized();
 	}
 
@@ -185,26 +195,26 @@ public abstract class AbstractParser implements ParserInterface {
 	 * @see logia.socket.Interface.ParserInterface#applyInputStream(logia.socket.Interface.SocketClientInterface)
 	 */
 	@Override
-	public void applyInputStream(SocketClientInterface clientSocket) throws SocketTimeoutException, SocketException, IOException, Exception {
-		ReadDataInterface data = null;
-		while (clientSocket.isConnected()) {
-			long a = System.currentTimeMillis();
-			data = this.readData(clientSocket.getInputStream());
-			long b = System.currentTimeMillis();
-			this.LOGGER.debug("Finish read data after " + (b - a) / 1000 + "s");
-			if (data != null) {
-				if (clientSocket.isWaitForReturn()) {
-					clientSocket.setReturned(data);
-					synchronized (clientSocket) {
-						clientSocket.notify();
+	public void applyInputStream(SocketClientInterface __clientSocket) throws SocketTimeoutException, SocketException, IOException, Exception {
+		ReadDataInterface _data = null;
+		while (__clientSocket.isConnected()) {
+			long _a = System.currentTimeMillis();
+			_data = this.readData(__clientSocket.getInputStream());
+			long _b = System.currentTimeMillis();
+			AbstractParser.LOGGER.debug("Finish read data after " + (_b - _a) / 1000 + "s");
+			if (_data != null) {
+				if (__clientSocket.isWaitForReturn()) {
+					__clientSocket.setReturned(_data);
+					synchronized (__clientSocket) {
+						__clientSocket.notify();
 					}
 				}
 				else {
-					data.executeData(clientSocket);
+					_data.executeData(__clientSocket);
 				}
 			}
 			else {
-				this.LOGGER.warn("Not recognize data from inputstream");
+				AbstractParser.LOGGER.warn("Not recognize data from inputstream");
 			}
 		}
 	}
@@ -215,69 +225,66 @@ public abstract class AbstractParser implements ParserInterface {
 	 * @see logia.socket.Interface.ParserInterface#applyOutputStream(java.io.OutputStream, logia.socket.Interface.WriteDataInterface, int)
 	 */
 	@Override
-	public void applyOutputStream(OutputStream outputStream, WriteDataInterface dataListener, Object command) throws Exception {
-		long a = System.currentTimeMillis();
-		this.writeData(command, outputStream, dataListener);
-		long b = System.currentTimeMillis();
-		this.LOGGER.debug("Finish send data after " + (b - a) / 1000 + "s");
+	public void applyOutputStream(OutputStream __outputStream, WriteDataInterface __dataListener, Object __command) throws Exception {
+		long _a = System.currentTimeMillis();
+		this.writeData(__command, __outputStream, __dataListener);
+		long _b = System.currentTimeMillis();
+		AbstractParser.LOGGER.debug("Finish send data after " + (_b - _a) / 1000 + "s");
 	}
 
 	/**
 	 * Context initialized.
+	 *
+	 * @throws ClassNotFoundException the class not found exception
 	 */
-	private void contextInitialized() {
-		NodeList list = this._xml.getListNode("define", this._xml.getRoot());
-		try {
-			// List all command
-			Node define = list.item(0);
-			this._commandType = this._xml.getAttribute(define, "type");
-			NodeList listCommand = this._xml.getListNode("define-command", (Element) define);
-			for (int i = 0; i < listCommand.getLength(); i++) {
-				Node nodeCommand = listCommand.item(i);
+	private void contextInitialized() throws ClassNotFoundException {
+		NodeList _list = this.xml.getListNode("define", this.xml.getRoot());
+		// List all command
+		Node _define = _list.item(0);
+		this.commandType = this.xml.getAttribute(_define, "type");
+		NodeList _listCommand = this.xml.getListNode("define-command", (Element) _define);
+		for (int _i = 0; _i < _listCommand.getLength(); _i++) {
+			Node _nodeCommand = _listCommand.item(_i);
 
-				// Get command type
-				String valueCommand = this._xml.getAttribute(nodeCommand, "value");
-				String className = this._xml.getValue(nodeCommand);
-				String typePackage = this._xml.getAttribute(nodeCommand, "type");
+			// Get command type
+			String _valueCommand = this.xml.getAttribute(_nodeCommand, "value");
+			String _className = this.xml.getValue(_nodeCommand);
+			String _typePackage = this.xml.getAttribute(_nodeCommand, "type");
 
-				if (typePackage.equalsIgnoreCase("send")) {
-					this._mapSendCommand.put(valueCommand, Class.forName(className));
-				}
-				else if (typePackage.equalsIgnoreCase("receive")) {
-					this._mapReceiveCommand.put(valueCommand, Class.forName(className));
-				}
-
+			if (_typePackage.equalsIgnoreCase("send")) {
+				this.mapSendCommand.put(_valueCommand, Class.forName(_className));
 			}
-		}
-		catch (Exception e) {
-			this.LOGGER.error("Could not initialized parser context", e);
+			else if (_typePackage.equalsIgnoreCase("receive")) {
+				this.mapReceiveCommand.put(_valueCommand, Class.forName(_className));
+			}
+
 		}
 	}
 
 	/**
 	 * Gets the data type.
 	 *
-	 * @param type the type
+	 * @param __type the type
 	 * @return the data type
 	 */
-	protected Byte getDataType(String type) {
-		return AbstractParser.DICTIONARY.get(type.toLowerCase());
+	protected Byte getDataType(String __type) {
+		return AbstractParser.DICTIONARY.get(__type.toLowerCase());
 	}
 
 	/**
 	 * Gets the instance read data.
 	 *
-	 * @param idCommand the id command
+	 * @param __idCommand the id command
 	 * @return the instance read data
 	 */
-	protected ReadDataInterface getInstanceReadData(String idCommand) {
-		Class<?> clazz = this._mapReceiveCommand.get(idCommand);
-		if (clazz != null) {
+	protected ReadDataInterface getInstanceReadData(String __idCommand) {
+		Class<?> _clazz = this.mapReceiveCommand.get(__idCommand);
+		if (_clazz != null) {
 			try {
-				return (ReadDataInterface) clazz.newInstance();
+				return (ReadDataInterface) _clazz.newInstance();
 			}
 			catch (InstantiationException | IllegalAccessException e) {
-				this.LOGGER.error("Get instance of data error", e);
+				AbstractParser.LOGGER.error("Get instance of data error", e);
 				return null;
 			}
 		}
@@ -289,17 +296,17 @@ public abstract class AbstractParser implements ParserInterface {
 	/**
 	 * Gets the instance write data.
 	 *
-	 * @param idCommand the id command
+	 * @param __idCommand the id command
 	 * @return the instance write data
 	 */
-	protected WriteDataInterface getInstanceWriteData(String idCommand) {
-		Class<?> clazz = this._mapSendCommand.get(idCommand);
-		if (clazz != null) {
+	protected WriteDataInterface getInstanceWriteData(String __idCommand) {
+		Class<?> _clazz = this.mapSendCommand.get(__idCommand);
+		if (_clazz != null) {
 			try {
-				return (WriteDataInterface) clazz.newInstance();
+				return (WriteDataInterface) _clazz.newInstance();
 			}
 			catch (InstantiationException | IllegalAccessException e) {
-				this.LOGGER.error("Get instance of data error", e);
+				AbstractParser.LOGGER.error("Get instance of data error", e);
 				return null;
 			}
 		}
@@ -311,275 +318,287 @@ public abstract class AbstractParser implements ParserInterface {
 	/**
 	 * Read data.
 	 *
-	 * @param inputstream the inputstream
+	 * @param __inputstream the inputstream
 	 * @return the read data interface
 	 * @throws Exception the exception
 	 */
-	protected abstract ReadDataInterface readData(InputStream inputstream) throws Exception;
+	protected abstract ReadDataInterface readData(InputStream __inputstream) throws Exception;
 
 	/**
 	 * Read data by type.
 	 *
-	 * @param typeData the type data
-	 * @param inputstream the inputstream
+	 * @param __typeData the type data
+	 * @param __inputstream the inputstream
 	 * @return the object
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	protected Object readDataByType(String typeData, InputStream inputstream) throws IOException {
-		Object value = null;
-		Byte objType = this.getDataType(typeData);
-		if (objType == null) {
-			objType = Byte.MIN_VALUE;
+	protected Object readDataByType(String __typeData, InputStream __inputstream) throws IOException {
+		Object _value = null;
+		Byte _objType = this.getDataType(__typeData);
+		if (_objType == null) {
+			_objType = Byte.MIN_VALUE;
 		}
-		switch (objType) {
+		switch (_objType) {
 			case TYPE_BYTE:
-				value = this._reader.readByte(inputstream);
+				_value = this.reader.readByte(__inputstream);
 				break;
 
 			case TYPE_BYTE_ARRAY:
-				value = this._reader.readByteArray(inputstream);
+				_value = this.reader.readByteArray(__inputstream);
 				break;
 
 			case TYPE_DOUBLE:
-				value = this._reader.readDouble(inputstream);
+				_value = this.reader.readDouble(__inputstream);
 				break;
 
 			case TYPE_FLOAT:
-				value = this._reader.readFloat(inputstream);
+				_value = this.reader.readFloat(__inputstream);
 				break;
 
 			case TYPE_FILE:
-				value = this._reader.readFile(inputstream);
+				_value = this.reader.readFile(__inputstream);
 				break;
 
 			case TYPE_INTERGER:
-				value = this._reader.readInt(inputstream);
+				_value = this.reader.readInt(__inputstream);
 				break;
 
 			case TYPE_JSON:
-				value = this._reader.readJson(inputstream);
+				_value = this.reader.readJson(__inputstream);
 				break;
 
 			case TYPE_LONG:
-				value = this._reader.readLong(inputstream);
+				_value = this.reader.readLong(__inputstream);
 				break;
 
 			case TYPE_SHORT:
-				value = this._reader.readShort(inputstream);
+				_value = this.reader.readShort(__inputstream);
 				break;
 
 			case TYPE_STRING:
-				value = this._reader.readString(inputstream);
+				_value = this.reader.readString(__inputstream);
 				break;
 
 			case TYPE_LIST:
-				value = new ArrayList<>();
+				_value = new ArrayList<>();
 				break;
 
 			default:
 				try {
-					value = Class.forName(typeData).newInstance();
-					value = this._reader.readObject(value.getClass(), inputstream);
+					_value = Class.forName(__typeData).newInstance();
+					// _value = this.reader.readObject(_value.getClass(), __inputstream); // OLD
+
+					Field[] _fields = _value.getClass().getDeclaredFields();
+					for (Field _field : _fields) {
+						_field.setAccessible(true);
+						String _typeData = _field.getType().getCanonicalName();
+						_field.set(_value, readDataByType(_typeData, __inputstream));
+					}
 				}
 				catch (Exception e) {
-					this.LOGGER.error("Read data element error", e);
+					AbstractParser.LOGGER.error("Read data element error", e);
 				}
 				break;
 		}
-		return value;
+		return _value;
 	}
 
 	/**
 	 * Sets the value of.
 	 *
-	 * @param clazz the clazz
-	 * @param lookingForValue the looking for value
-	 * @param value the value
+	 * @param __clazz the clazz
+	 * @param __lookingForValue the looking for value
+	 * @param __value the value
 	 * @throws Exception the exception
 	 */
-	protected void setValueOf(Object clazz, String lookingForValue, Object value) throws Exception {
-		Field field = clazz.getClass().getDeclaredField(lookingForValue);
-		field.setAccessible(true);
-		field.set(clazz, value);
+	protected void setValueOf(Object __clazz, String __lookingForValue, Object __value) throws Exception {
+		Field _field = __clazz.getClass().getDeclaredField(__lookingForValue);
+		_field.setAccessible(true);
+		_field.set(__clazz, __value);
 	}
 
 	/**
 	 * Write data.
 	 *
-	 * @param command the command
-	 * @param out the out
-	 * @param data the data
+	 * @param __command the command
+	 * @param __out the out
+	 * @param __data the data
 	 * @throws Exception the exception
 	 */
-	protected abstract void writeData(Object command, OutputStream out, WriteDataInterface data) throws Exception;
+	protected abstract void writeData(Object __command, OutputStream __out, WriteDataInterface __data) throws Exception;
 
 	/**
 	 * Write data by type.
 	 *
-	 * @param typeData the type data
-	 * @param nameData the name data
-	 * @param out the out
-	 * @param data the data
+	 * @param __typeData the type data
+	 * @param __nameData the name data
+	 * @param __out the out
+	 * @param __data the data
 	 * @return the string
 	 * @throws Exception the exception
 	 */
-	protected String writeDataByType(String typeData, String nameData, OutputStream out, Object data) throws Exception {
-		Byte objType = this.getDataType(typeData);
-		if (objType == null) {
-			objType = Byte.MIN_VALUE;
+	protected String writeDataByType(String __typeData, String __nameData, OutputStream __out, Object __data) throws Exception {
+		Byte _objType = this.getDataType(__typeData);
+		if (_objType == null) {
+			_objType = Byte.MIN_VALUE;
 		}
-		Field field;
-		String returnValue = "";
-		switch (objType) {
+		Field _field;
+		String _returnValue = "";
+		switch (_objType) {
 
 			case TYPE_BYTE:
-				if (nameData.equals("")) {
-					this._writer.writeByte(out, (byte) data);
-					returnValue = data.toString();
+				if (__nameData.equals("")) {
+					this.writer.writeByte(__out, (byte) __data);
+					_returnValue = __data.toString();
 				}
 				else {
-					field = data.getClass().getDeclaredField(nameData);
-					field.setAccessible(true);
-					this._writer.writeByte(out, field.getByte(data));
-					returnValue = field.get(data).toString();
+					_field = __data.getClass().getDeclaredField(__nameData);
+					_field.setAccessible(true);
+					this.writer.writeByte(__out, (byte) _field.get(__data));
+					_returnValue = _field.get(__data).toString();
 				}
 				break;
 
 			case TYPE_BYTE_ARRAY:
-				if (nameData.equals("")) {
-					this._writer.writeByteArray(out, (byte[]) data);
-					returnValue = data.toString();
+				if (__nameData.equals("")) {
+					this.writer.writeByteArray(__out, (byte[]) __data);
+					_returnValue = __data.toString();
 				}
 				else {
-					field = data.getClass().getDeclaredField(nameData);
-					field.setAccessible(true);
-					this._writer.writeByteArray(out, (byte[]) field.get(data));
-					returnValue = field.get(data).toString();
+					_field = __data.getClass().getDeclaredField(__nameData);
+					_field.setAccessible(true);
+					this.writer.writeByteArray(__out, (byte[]) _field.get(__data));
+					_returnValue = _field.get(__data).toString();
 				}
 				break;
 
 			case TYPE_DOUBLE:
-				if (nameData.equals("")) {
-					this._writer.writeDouble(out, (double) data);
-					returnValue = data.toString();
+				if (__nameData.equals("")) {
+					this.writer.writeDouble(__out, (double) __data);
+					_returnValue = __data.toString();
 				}
 				else {
-					field = data.getClass().getDeclaredField(nameData);
-					field.setAccessible(true);
-					this._writer.writeDouble(out, field.getDouble(data));
-					returnValue = field.get(data).toString();
+					_field = __data.getClass().getDeclaredField(__nameData);
+					_field.setAccessible(true);
+					this.writer.writeDouble(__out, (double) _field.get(__data));
+					_returnValue = _field.get(__data).toString();
 				}
 				break;
 
 			case TYPE_FLOAT:
-				if (nameData.equals("")) {
-					this._writer.writeFloat(out, (float) data);
-					returnValue = data.toString();
+				if (__nameData.equals("")) {
+					this.writer.writeFloat(__out, (float) __data);
+					_returnValue = __data.toString();
 				}
 				else {
-					field = data.getClass().getDeclaredField(nameData);
-					field.setAccessible(true);
-					this._writer.writeFloat(out, field.getFloat(data));
-					returnValue = field.get(data).toString();
+					_field = __data.getClass().getDeclaredField(__nameData);
+					_field.setAccessible(true);
+					this.writer.writeFloat(__out, (float) _field.get(__data));
+					_returnValue = _field.get(__data).toString();
 				}
 				break;
 
 			case TYPE_FILE:
-				if (nameData.equals("")) {
-					this._writer.writeFile(out, (File) data);
-					returnValue = data.toString();
+				if (__nameData.equals("")) {
+					this.writer.writeFile(__out, (File) __data);
+					_returnValue = __data.toString();
 				}
 				else {
-					field = data.getClass().getDeclaredField(nameData);
-					field.setAccessible(true);
-					this._writer.writeFile(out, (File) field.get(data));
-					returnValue = field.get(data).toString();
+					_field = __data.getClass().getDeclaredField(__nameData);
+					_field.setAccessible(true);
+					this.writer.writeFile(__out, (File) _field.get(__data));
+					_returnValue = _field.get(__data).toString();
 				}
 				break;
 
 			case TYPE_INTERGER:
-				if (nameData.equals("")) {
-					this._writer.writeInt(out, (int) data);
-					returnValue = data.toString();
+				if (__nameData.equals("")) {
+					this.writer.writeInt(__out, (int) __data);
+					_returnValue = __data.toString();
 				}
 				else {
-					field = data.getClass().getDeclaredField(nameData);
-					field.setAccessible(true);
-					this._writer.writeInt(out, field.getInt(data));
-					returnValue = field.get(data).toString();
+					_field = __data.getClass().getDeclaredField(__nameData);
+					_field.setAccessible(true);
+					this.writer.writeInt(__out, (int) _field.get(__data));
+					_returnValue = _field.get(__data).toString();
 				}
 				break;
 
 			case TYPE_JSON:
-				if (nameData.equals("")) {
-					this._writer.writeJson(out, (JsonObject) data);
-					returnValue = data.toString();
+				if (__nameData.equals("")) {
+					this.writer.writeJson(__out, (JsonObject) __data);
+					_returnValue = __data.toString();
 				}
 				else {
-					field = data.getClass().getDeclaredField(nameData);
-					field.setAccessible(true);
-					this._writer.writeJson(out, (JsonObject) (field.get(data)));
-					returnValue = field.get(data).toString();
+					_field = __data.getClass().getDeclaredField(__nameData);
+					_field.setAccessible(true);
+					this.writer.writeJson(__out, (JsonObject) (_field.get(__data)));
+					_returnValue = _field.get(__data).toString();
 				}
 				break;
 
 			case TYPE_LONG:
-				if (nameData.equals("")) {
-					this._writer.writeLong(out, (long) data);
-					returnValue = data.toString();
+				if (__nameData.equals("")) {
+					this.writer.writeLong(__out, (long) __data);
+					_returnValue = __data.toString();
 				}
 				else {
-					field = data.getClass().getDeclaredField(nameData);
-					field.setAccessible(true);
-					this._writer.writeLong(out, field.getLong(data));
-					returnValue = field.get(data).toString();
+					_field = __data.getClass().getDeclaredField(__nameData);
+					_field.setAccessible(true);
+					this.writer.writeLong(__out, (long) _field.get(__data));
+					_returnValue = _field.get(__data).toString();
 				}
 				break;
 
 			case TYPE_SHORT:
-				if (nameData.equals("")) {
-					this._writer.writeShort(out, (short) data);
-					returnValue = data.toString();
+				if (__nameData.equals("")) {
+					this.writer.writeShort(__out, (short) __data);
+					_returnValue = __data.toString();
 				}
 				else {
-					field = data.getClass().getDeclaredField(nameData);
-					field.setAccessible(true);
-					this._writer.writeShort(out, field.getShort(data));
-					returnValue = field.get(data).toString();
+					_field = __data.getClass().getDeclaredField(__nameData);
+					_field.setAccessible(true);
+					this.writer.writeShort(__out, (short) _field.get(__data));
+					_returnValue = _field.get(__data).toString();
 				}
 				break;
 
 			case TYPE_STRING:
-				if (nameData.equals("")) {
-					this._writer.writeString(out, (String) data);
-					returnValue = data.toString();
+				if (__nameData.equals("")) {
+					this.writer.writeString(__out, (String) __data);
+					_returnValue = __data.toString();
 				}
 				else {
-					field = data.getClass().getDeclaredField(nameData);
-					field.setAccessible(true);
-					this._writer.writeString(out, (String) field.get(data));
-					returnValue = field.get(data).toString();
+					_field = __data.getClass().getDeclaredField(__nameData);
+					_field.setAccessible(true);
+					this.writer.writeString(__out, (String) _field.get(__data));
+					_returnValue = _field.get(__data).toString();
 				}
 				break;
 
 			case TYPE_LIST:
-				field = data.getClass().getDeclaredField(nameData);
-				field.setAccessible(true);
+				_field = __data.getClass().getDeclaredField(__nameData);
+				_field.setAccessible(true);
 				@SuppressWarnings("rawtypes")
-				List list = (List) field.get(data);
-				this._writer.writeInt(out, list.size());
-				for (Object object : list) {
-					String objectType = object.getClass().getName();
-					this.writeDataByType(objectType, "", out, object);
+				List _list = (List) _field.get(__data);
+				this.writer.writeInt(__out, _list.size());
+				for (Object _object : _list) {
+					String _objectType = _object.getClass().getName();
+					this.writeDataByType(_objectType, "", __out, _object);
 				}
 				break;
 
 			default:
-				this._writer.writeObject(out, data);
-				returnValue = data.toString();
+				Field[] _fields = __data.getClass().getDeclaredFields();
+				for (Field _eachfield : _fields) {
+					String _typeData = _eachfield.getType().getCanonicalName();
+					String _nameData = _eachfield.getName();
+					// _eachfield.get(__data);
+					this.writeDataByType(_typeData, _nameData, __out, __data);
+				}
 				break;
 		}
-		return returnValue;
+		return _returnValue;
 	}
 
 }

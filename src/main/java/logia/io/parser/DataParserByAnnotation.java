@@ -24,46 +24,51 @@ public class DataParserByAnnotation extends AbstractParser {
 
 	/**
 	 * Instantiates a new data parser by annotation.
+	 *
+	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public DataParserByAnnotation() {
+	public DataParserByAnnotation() throws ClassNotFoundException {
 		super();
 	}
 
 	/**
 	 * Instantiates a new data parser by annotation.
 	 *
-	 * @param bufferSize the buffer size
+	 * @param __bufferSize the buffer size
+	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public DataParserByAnnotation(int bufferSize) {
-		super(bufferSize);
+	public DataParserByAnnotation(int __bufferSize) throws ClassNotFoundException {
+		super(__bufferSize);
 	}
 
 	/**
 	 * Instantiates a new data parser by annotation.
 	 *
-	 * @param definePath the define path
+	 * @param __definePath the define path
+	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public DataParserByAnnotation(String definePath) {
-		super(definePath);
+	public DataParserByAnnotation(String __definePath) throws ClassNotFoundException {
+		super(__definePath);
 	}
 
 	/**
 	 * Instantiates a new data parser by annotation.
 	 *
-	 * @param definePath the define path
-	 * @param bufferSize the buffer size
+	 * @param __definePath the define path
+	 * @param __bufferSize the buffer size
+	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public DataParserByAnnotation(String definePath, int bufferSize) {
-		super(definePath, bufferSize);
+	public DataParserByAnnotation(String __definePath, int __bufferSize) throws ClassNotFoundException {
+		super(__definePath, __bufferSize);
 	}
 
 	/**
 	 * Sort fields by data order.
 	 *
-	 * @param fields the fields
+	 * @param __fields the fields
 	 */
-	private void sortByOrder(Field[] fields) {
-		Arrays.sort(fields, new Comparator<Field>() {
+	private void sortByOrder(Field[] __fields) {
+		Arrays.sort(__fields, new Comparator<Field>() {
 
 			/*
 			 * (non-Javadoc)
@@ -71,11 +76,11 @@ public class DataParserByAnnotation extends AbstractParser {
 			 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 			 */
 			@Override
-			public int compare(Field o1, Field o2) {
-				IOData order1 = o1.getAnnotation(IOData.class);
-				IOData order2 = o2.getAnnotation(IOData.class);
-				if (order1 != null && order2 != null) {
-					return order1.order() - order2.order();
+			public int compare(Field __o1, Field __o2) {
+				IOData _order1 = __o1.getAnnotation(IOData.class);
+				IOData _order2 = __o2.getAnnotation(IOData.class);
+				if (_order1 != null && _order2 != null) {
+					return _order1.order() - _order2.order();
 				}
 				else {
 					return 0;
@@ -91,63 +96,64 @@ public class DataParserByAnnotation extends AbstractParser {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	protected ReadDataInterface readData(InputStream inputstream) throws Exception {
-		ReadDataInterface data;
+	protected ReadDataInterface readData(InputStream __inputstream) throws Exception {
+		ReadDataInterface _data;
 
 		// Read command
-		Object command = this.readDataByType(this._commandType, inputstream);
-		if (command != null && !command.toString().equals("-1")) {
+		Object _command = this.readDataByType(this.commandType, __inputstream);
+		if (_command != null && !_command.toString().equals("-1")) {
 			// Get instance which this command
-			data = this.getInstanceReadData(command.toString());
-			if (data != null) {
-				IOCommand clazzAnnotation = data.getClass().getAnnotation(IOCommand.class);
-				if (clazzAnnotation != null) {
+			_data = this.getInstanceReadData(_command.toString());
+			if (_data != null) {
+				IOCommand _clazzAnnotation = _data.getClass().getAnnotation(IOCommand.class);
+				if (_clazzAnnotation != null) {
 					// Iterate fields with IOCommand annotation
-					Field[] fields = data.getClass().getDeclaredFields();
-					this.sortByOrder(fields);
-					for (Field field : fields) {
-						field.setAccessible(true);
-						IOData fieldAnnotation = field.getAnnotation(IOData.class);
-						if (fieldAnnotation != null) {
-							String typeData = fieldAnnotation.type().toString().toLowerCase();
-							String breakData = fieldAnnotation.breakValue();
-							String continueData = fieldAnnotation.continueValue();
-							Object fieldData = this.readDataByType(typeData, inputstream);
-							if (field.getGenericType() instanceof ParameterizedType) {
-								ParameterizedType pt = (ParameterizedType) field.getGenericType();
-								String elementType = pt.getActualTypeArguments()[0].toString().replace("class ", "");
+					Field[] _fields = _data.getClass().getDeclaredFields();
+					this.sortByOrder(_fields);
+					for (Field _field : _fields) {
+						_field.setAccessible(true);
+						IOData _fieldAnnotation = _field.getAnnotation(IOData.class);
+						if (_fieldAnnotation != null) {
+							String _typeData = _fieldAnnotation.type().toString().toLowerCase();
+							String _breakData = _fieldAnnotation.breakValue();
+							String _continueData = _fieldAnnotation.continueValue();
+							Object _fieldData = this.readDataByType(_typeData, __inputstream);
+							if (_field.getGenericType() instanceof ParameterizedType) {
+								ParameterizedType _pt = (ParameterizedType) _field.getGenericType();
+								String _elementType = _pt.getActualTypeArguments()[0].toString().replace("class ", "");
 
-								int size = this._reader.readInt(inputstream);
-								fieldData = new ArrayList<Object>();
-								for (int k = 0; k < size; k++) {
-									Object element = this.readDataByType(elementType, inputstream);
-									((ArrayList) fieldData).add(element);
+								int _size = this.reader.readInt(__inputstream);
+								_fieldData = new ArrayList<Object>();
+								for (int _k = 0; _k < _size; _k++) {
+									Object _element = this.readDataByType(_elementType, __inputstream);
+									((ArrayList) _fieldData).add(_element);
 								}
 							}
 							try {
-								this.setValueOf(data, field.getName(), fieldData);
+								this.setValueOf(_data, _field.getName(), _fieldData);
 							}
 							catch (Exception e) {
-								this.LOGGER.error("Try to set value " + fieldData + " to field " + field.getName() + " in " + typeData + " type.", e);
+								DataParserByAnnotation.LOGGER.error("Try to set value " + _fieldData + " to field " + _field.getName() + " in "
+								        + _typeData + " type.", e);
 							}
 
-							if (breakData.equals(fieldData.toString())) {
+							if (_breakData.equals(_fieldData.toString())) {
 								break;
 							}
 
-							if (!continueData.equals(fieldData.toString())) {
+							if (!_continueData.equals("n/a") && !_continueData.equals(_fieldData.toString())) {
 								break;
 							}
 						}
 					}
-					return data;
+					return _data;
 				}
 				else {
 					throw new ReadDataException("Commands document is empty");
 				}
 			}
 			else {
-				throw new ReadDataException("Not recogize data from command " + command.toString());
+				throw new ReadDataException("Not recogize data from command " + _command.toString());
 			}
 			// return data;
 		}
@@ -162,31 +168,35 @@ public class DataParserByAnnotation extends AbstractParser {
 	 * @see logia.io.parser.AbstractParser#writeData(java.lang.Object, java.io.OutputStream, logia.socket.Interface.WriteDataInterface)
 	 */
 	@Override
-	protected void writeData(Object command, OutputStream out, WriteDataInterface data) throws Exception {
-		WriteDataInterface writedata = this.getInstanceWriteData(command.toString());
-		if (data != null) {
+	protected void writeData(Object __command, OutputStream __out, WriteDataInterface __data) throws Exception {
+		WriteDataInterface _writedata = this.getInstanceWriteData(__command.toString());
+		if (__data != null) {
 			// Write command first
-			this.writeDataByType(this._commandType, "", out, command);
+			this.writeDataByType(this.commandType, "", __out, __command);
 
 			// Write each element
-			data.getClass().cast(writedata);
-			Field[] fields = data.getClass().getDeclaredFields();
-			this.sortByOrder(fields);
-			for (Field field : fields) {
-				field.setAccessible(true);
-				IOData fieldAnnotation = field.getAnnotation(IOData.class);
-				if (fieldAnnotation != null) {
-					String typeData = fieldAnnotation.type().toString().toLowerCase();
-					String checkValue = fieldAnnotation.breakValue();
-					String nameData = field.getName();
-					field.get(data);
-					String checkData = this.writeDataByType(typeData, nameData, out, data);
-					if (checkValue != null && checkValue.toString().equals(checkData.toString())) {
+			__data.getClass().cast(_writedata);
+			Field[] _fields = __data.getClass().getDeclaredFields();
+			this.sortByOrder(_fields);
+			for (Field _field : _fields) {
+				_field.setAccessible(true);
+				IOData _fieldAnnotation = _field.getAnnotation(IOData.class);
+				if (_fieldAnnotation != null) {
+					String _typeData = _fieldAnnotation.type().toString().toLowerCase();
+					String _breakValue = _fieldAnnotation.breakValue();
+					String _nameData = _field.getName();
+					_field.get(__data);
+					String _checkData = this.writeDataByType(_typeData, _nameData, __out, __data);
+					if (_breakValue != null && _breakValue.equals(_checkData.toString())) {
+						break;
+					}
+					String _continueValue = _fieldAnnotation.continueValue();
+					if (!_continueValue.equals("n/a") && !_continueValue.equals(_checkData.toString())) {
 						break;
 					}
 				}
 			}
-			out.flush();
+			__out.flush();
 		}
 	}
 }

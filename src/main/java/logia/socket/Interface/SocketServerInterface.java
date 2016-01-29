@@ -14,10 +14,10 @@ public interface SocketServerInterface extends Runnable {
 	/**
 	 * Adds the client.
 	 *
-	 * @param client the client
+	 * @param __client the client
 	 * @return true, if successful
 	 */
-	public void addClient(SocketClientInterface client);
+	public void addClient(SocketClientInterface __client);
 
 	/**
 	 * Gets the list clients.
@@ -36,10 +36,10 @@ public interface SocketServerInterface extends Runnable {
 	/**
 	 * Removes the client.
 	 *
-	 * @param client the client
+	 * @param __client the client
 	 * @return true, if successful
 	 */
-	public void removeClient(SocketClientInterface client);
+	public void removeClient(SocketClientInterface __client);
 
 	/*
 	 * (non-Javadoc)
@@ -52,9 +52,9 @@ public interface SocketServerInterface extends Runnable {
 	/**
 	 * Sets the accept client listener.
 	 *
-	 * @param acceptClientListener the new accept client listener
+	 * @param __acceptClientListener the new accept client listener
 	 */
-	public void setAcceptClientListener(AcceptClientListener acceptClientListener);
+	public void setAcceptClientListener(AcceptClientListener __acceptClientListener);
 
 	/**
 	 * Start.

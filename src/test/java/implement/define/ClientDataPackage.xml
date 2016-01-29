@@ -12,6 +12,7 @@
 		<define-command name="listnumber" value="7">implement.client.datapackage.ListNumberData</define-command>
 		<define-command name="test" value="10">implement.client.datapackage.TestData</define-command>
 		<define-command name="result" value="11">implement.client.datapackage.ResultData</define-command>
+		<define-command name="json" value="12">implement.client.datapackage.JsonData</define-command>
 	</define>
 
 	<command value="0"></command>
@@ -53,6 +54,10 @@
 		<data name="number" type="long" breakvalue="0"></data>
 		<data name="name" type="string"></data>
 		<data name="message" type="string"></data>
+	</command>
+	
+	<command value="12">
+		<data name="jsonelement" type="jsonobject"></data>
 	</command>
 
 </datapackage>

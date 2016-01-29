@@ -38,7 +38,7 @@ public class ClientSide implements SocketClientInterface {
 	private boolean                  isWait;
 
 	/** The logger. */
-	private final Logger             LOGGER = Logger.getLogger(this.getClass());
+	private static final Logger      LOGGER = Logger.getLogger(ClientSide.class);
 
 	/** The port. */
 	private final int                PORT;
@@ -73,16 +73,16 @@ public class ClientSide implements SocketClientInterface {
 	/**
 	 * Instantiates a new client side.
 	 *
-	 * @param host the host
-	 * @param port the port
-	 * @param timeout the timeout
+	 * @param __host the host
+	 * @param __port the port
+	 * @param __timeout the timeout
 	 */
-	public ClientSide(String host, int port, int timeout) {
+	public ClientSide(String __host, int __port, int __timeout) {
 		this.isConnected = false;
 		this.START_TIME = System.currentTimeMillis();
-		this.HOST = host;
-		this.PORT = port;
-		this.TIME_OUT = timeout;
+		this.HOST = __host;
+		this.PORT = __port;
+		this.TIME_OUT = __timeout;
 		this.isWait = false;
 		this.returned = new LinkedBlockingQueue<ReadDataInterface>(1);
 	}
@@ -90,18 +90,18 @@ public class ClientSide implements SocketClientInterface {
 	/**
 	 * Instantiates a new client side.
 	 *
-	 * @param host the host
-	 * @param port the port
-	 * @param timeout the timeout in millisecond
-	 * @param dataParser the data parser
+	 * @param __host the host
+	 * @param __port the port
+	 * @param __timeout the timeout in millisecond
+	 * @param __dataParser the data parser
 	 */
-	public ClientSide(String host, int port, int timeout, ParserInterface dataParser) {
+	public ClientSide(String __host, int __port, int __timeout, ParserInterface __dataParser) {
 		this.isConnected = false;
-		this.parser = dataParser;
+		this.parser = __dataParser;
 		this.START_TIME = System.currentTimeMillis();
-		this.HOST = host;
-		this.PORT = port;
-		this.TIME_OUT = timeout;
+		this.HOST = __host;
+		this.PORT = __port;
+		this.TIME_OUT = __timeout;
 		this.isWait = false;
 		this.returned = new LinkedBlockingQueue<ReadDataInterface>(1);
 	}
@@ -109,20 +109,20 @@ public class ClientSide implements SocketClientInterface {
 	/**
 	 * Instantiates a new client side.
 	 *
-	 * @param host the host
-	 * @param port the port
-	 * @param timeout the timeout
-	 * @param dataParser the data parser
-	 * @param timeoutListener the timeout listener
+	 * @param __host the host
+	 * @param __port the port
+	 * @param __timeout the timeout
+	 * @param __dataParser the data parser
+	 * @param __timeoutListener the timeout listener
 	 */
-	public ClientSide(String host, int port, int timeout, ParserInterface dataParser, SocketTimeoutListener timeoutListener) {
+	public ClientSide(String __host, int __port, int __timeout, ParserInterface __dataParser, SocketTimeoutListener __timeoutListener) {
 		this.isConnected = false;
-		this.parser = dataParser;
+		this.parser = __dataParser;
 		this.START_TIME = System.currentTimeMillis();
-		this.HOST = host;
-		this.PORT = port;
-		this.TIME_OUT = timeout;
-		this.timeoutListener = timeoutListener;
+		this.HOST = __host;
+		this.PORT = __port;
+		this.TIME_OUT = __timeout;
+		this.timeoutListener = __timeoutListener;
 		this.isWait = false;
 		this.returned = new LinkedBlockingQueue<ReadDataInterface>(1);
 	}
@@ -143,19 +143,19 @@ public class ClientSide implements SocketClientInterface {
 				this.inputStream = this.socket.getInputStream();
 				this.outputStream = this.socket.getOutputStream();
 				this.isConnected = true;
-				this.LOGGER.debug("Yeah, connected!");
+				ClientSide.LOGGER.debug("Yeah, connected!");
 			}
-			catch (SocketException e) {
-				this.LOGGER.error("Cannot connect to socket server", e);
-				throw new ConnectionErrorException(e);
+			catch (SocketException _e) {
+				ClientSide.LOGGER.error("Cannot connect to socket server", _e);
+				throw new ConnectionErrorException(_e);
 			}
-			catch (UnknownHostException e) {
-				this.LOGGER.error("Unknown socket server", e);
-				throw new ConnectionErrorException(e);
+			catch (UnknownHostException _e) {
+				ClientSide.LOGGER.error("Unknown socket server", _e);
+				throw new ConnectionErrorException(_e);
 			}
-			catch (IOException e) {
-				this.LOGGER.error("Cannot connect to socket server", e);
-				throw new ConnectionErrorException(e);
+			catch (IOException _e) {
+				ClientSide.LOGGER.error("Cannot connect to socket server", _e);
+				throw new ConnectionErrorException(_e);
 			}
 		}
 	}
@@ -172,7 +172,7 @@ public class ClientSide implements SocketClientInterface {
 			try {
 				this.outputStream.close();
 			}
-			catch (IOException e) {
+			catch (IOException _e) {
 			}
 			this.outputStream = null;
 		}
@@ -180,7 +180,7 @@ public class ClientSide implements SocketClientInterface {
 			try {
 				this.inputStream.close();
 			}
-			catch (IOException e) {
+			catch (IOException _e) {
 			}
 			this.inputStream = null;
 		}
@@ -188,7 +188,7 @@ public class ClientSide implements SocketClientInterface {
 			try {
 				this.socket.close();
 			}
-			catch (IOException e) {
+			catch (IOException _e) {
 			}
 			this.socket = null;
 		}
@@ -206,14 +206,14 @@ public class ClientSide implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#echo(logia.socket.Interface.WriteDataInterface, int)
 	 */
 	@Override
-	public void echo(WriteDataInterface data, Object command) throws WriteDataException {
+	public void echo(WriteDataInterface __data, Object __command) throws WriteDataException {
 		synchronized (this.outputStream) {
 			try {
-				this.parser.applyOutputStream(this.outputStream, data, command);
+				this.parser.applyOutputStream(this.outputStream, __data, __command);
 			}
-			catch (Exception e) {
-				this.LOGGER.error("Send data error", e);
-				throw new WriteDataException(e);
+			catch (Exception _e) {
+				ClientSide.LOGGER.error("Send data error", _e);
+				throw new WriteDataException(_e);
 			}
 
 		}
@@ -225,27 +225,27 @@ public class ClientSide implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#echoAndWait(logia.socket.Interface.WriteDataInterface, int)
 	 */
 	@Override
-	public ReadDataInterface echoAndWait(WriteDataInterface data, Object command) throws WriteDataException, InterruptedException {
+	public ReadDataInterface echoAndWait(WriteDataInterface __data, Object __command) throws WriteDataException, InterruptedException {
 		synchronized (this.outputStream) {
 			this.isWait = true;
-			this.LOGGER.debug("Set wait response after echo data");
+			ClientSide.LOGGER.debug("Set wait response after echo data");
 			try {
-				this.parser.applyOutputStream(this.outputStream, data, command);
+				this.parser.applyOutputStream(this.outputStream, __data, __command);
 			}
-			catch (Exception e) {
-				this.LOGGER.error("Send data error", e);
-				throw new WriteDataException(e);
+			catch (Exception _e) {
+				ClientSide.LOGGER.error("Send data error", _e);
+				throw new WriteDataException(_e);
 			}
-			this.LOGGER.debug("Send data to server");
+			ClientSide.LOGGER.debug("Send data to server");
 
 			// Waiting until have return value
-			this.LOGGER.debug("Is waiting response...");
+			ClientSide.LOGGER.debug("Is waiting response...");
 			synchronized (this) {
 				this.wait(60000);
 			}
 
 			this.isWait = false;
-			this.LOGGER.debug("Received data");
+			ClientSide.LOGGER.debug("Received data");
 
 			return this.returned.poll();
 		}
@@ -341,25 +341,25 @@ public class ClientSide implements SocketClientInterface {
 		try {
 			this.parser.applyInputStream(this);
 		}
-		catch (SocketTimeoutException e) {
+		catch (SocketTimeoutException _e) {
 			if (this.timeoutListener != null) {
 				this.timeoutListener.solveTimeout();
 			}
 			else {
-				throw e;
+				throw _e;
 			}
 		}
-		catch (SocketException e) {
-			throw e;
+		catch (SocketException _e) {
+			throw _e;
 		}
-		catch (ReadDataException e) {
-			throw e;
+		catch (ReadDataException _e) {
+			throw _e;
 		}
-		catch (IOException e) {
-			throw new ReadDataException(e);
+		catch (IOException _e) {
+			throw new ReadDataException(_e);
 		}
-		catch (Exception e) {
-			throw new ReadDataException(e);
+		catch (Exception _e) {
+			throw new ReadDataException(_e);
 		}
 
 	}
@@ -374,14 +374,14 @@ public class ClientSide implements SocketClientInterface {
 		try {
 			this.listen();
 		}
-		catch (ReadDataException e) {
-			this.LOGGER.error(e);
+		catch (ReadDataException _e) {
+			ClientSide.LOGGER.error(_e);
 		}
-		catch (SocketTimeoutException e) {
-			this.LOGGER.warn("Connection timeout");
+		catch (SocketTimeoutException _e) {
+			ClientSide.LOGGER.warn("Connection timeout");
 		}
-		catch (SocketException e) {
-			this.LOGGER.warn("Socket interrupt because " + e.getMessage());
+		catch (SocketException _e) {
+			ClientSide.LOGGER.warn("Socket interrupt because " + _e.getMessage());
 		}
 		finally {
 			this.disconnect();
@@ -394,8 +394,8 @@ public class ClientSide implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#setDataParser(logia.socket.Interface.ParserInterface)
 	 */
 	@Override
-	public void setDataParser(ParserInterface dataParser) {
-		this.parser = dataParser;
+	public void setDataParser(ParserInterface __dataParser) {
+		this.parser = __dataParser;
 	}
 
 	/*
@@ -404,8 +404,8 @@ public class ClientSide implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#setId(java.lang.String)
 	 */
 	@Override
-	public void setId(String id) {
-		this.id = id;
+	public void setId(String __id) {
+		this.id = __id;
 	}
 
 	/*
@@ -414,8 +414,8 @@ public class ClientSide implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#setReturned(logia.socket.Interface.ReadDataInterface)
 	 */
 	@Override
-	public void setReturned(ReadDataInterface returned) {
-		this.returned.add(returned);
+	public void setReturned(ReadDataInterface __returned) {
+		this.returned.add(__returned);
 	}
 
 	/*
@@ -424,8 +424,8 @@ public class ClientSide implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#setTimeoutListener(logia.socket.Interface.SocketTimeoutListener)
 	 */
 	@Override
-	public void setTimeoutListener(SocketTimeoutListener listener) {
-		this.timeoutListener = listener;
+	public void setTimeoutListener(SocketTimeoutListener __listener) {
+		this.timeoutListener = __listener;
 	}
 
 }

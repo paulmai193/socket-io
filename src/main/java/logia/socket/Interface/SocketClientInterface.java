@@ -32,21 +32,21 @@ public interface SocketClientInterface extends Runnable {
 	/**
 	 * Echo method. Start send data through connection
 	 *
-	 * @param data the data
-	 * @param command the command
+	 * @param __data the data
+	 * @param __command the command
 	 * @throws WriteDataException the write data exception
 	 */
-	public void echo(WriteDataInterface data, Object command) throws WriteDataException;
+	public void echo(WriteDataInterface __data, Object __command) throws WriteDataException;
 
 	/**
 	 * Echo method. Start send data through connection and waiting a response
 	 *
-	 * @param data the data
-	 * @param command the command
+	 * @param __data the data
+	 * @param __command the command
 	 * @return the response data
 	 * @throws Exception the exception
 	 */
-	public ReadDataInterface echoAndWait(WriteDataInterface data, Object command) throws WriteDataException, InterruptedException;
+	public ReadDataInterface echoAndWait(WriteDataInterface __data, Object __command) throws WriteDataException, InterruptedException;
 
 	/**
 	 * Gets the data parser.
@@ -116,29 +116,29 @@ public interface SocketClientInterface extends Runnable {
 	/**
 	 * Sets the data parser.
 	 *
-	 * @param dataParser the new data parser
+	 * @param __dataParser the new data parser
 	 */
-	public void setDataParser(ParserInterface dataParser);
+	public void setDataParser(ParserInterface __dataParser);
 
 	/**
 	 * Sets the id.
 	 *
-	 * @param id the new id
+	 * @param __id the new id
 	 */
-	public void setId(String id);
+	public void setId(String __id);
 
 	/**
 	 * Sets the returned.
 	 *
-	 * @param returned the returned to set
+	 * @param __returned the returned to set
 	 */
-	public void setReturned(ReadDataInterface returned);
+	public void setReturned(ReadDataInterface __returned);
 
 	/**
 	 * Sets the timeout listener.
 	 *
-	 * @param listener the new timeout listener
+	 * @param __listener the new timeout listener
 	 */
-	public void setTimeoutListener(SocketTimeoutListener listener);
+	public void setTimeoutListener(SocketTimeoutListener __listener);
 
 }
