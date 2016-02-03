@@ -144,6 +144,16 @@ public class ServerSide implements SocketServerInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see logia.socket.Interface.SocketServerInterface#getClient(java.lang.String)
+	 */
+	@Override
+	public SocketClientInterface getClient(String __id) {
+		return this.CLIENTS.get(__id);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see logia.socket.Interface.SocketServerInterface#getListClients()
 	 */
 	@Override
@@ -194,7 +204,7 @@ public class ServerSide implements SocketServerInterface {
 
 						@Override
 						public void acceptClient(Socket _socket) throws ConnectionErrorException {
-							SocketClientInterface _clientSocket = new ClientOnServerSide(ServerSide.this.INSTANCE, _socket);
+							SocketClientInterface _clientSocket = new DefaultClientHandler(ServerSide.this.INSTANCE, _socket);
 							ServerSide.this.addClient(_clientSocket);
 							new Thread(_clientSocket).start();
 						}

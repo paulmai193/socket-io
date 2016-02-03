@@ -20,6 +20,14 @@ public interface SocketServerInterface extends Runnable {
 	public void addClient(SocketClientInterface __client);
 
 	/**
+	 * Gets the client.
+	 *
+	 * @param id the id
+	 * @return the client
+	 */
+	public SocketClientInterface getClient(String id);
+
+	/**
 	 * Gets the list clients.
 	 *
 	 * @return the list clients
