@@ -17,6 +17,7 @@ import java.util.Map;
 
 import logia.io.annotation.IOCommand;
 import logia.io.annotation.IOData;
+import logia.io.annotation.type.ConditionType;
 import logia.io.exception.ReadDataException;
 import logia.io.util.Reader;
 import logia.io.util.Writer;
@@ -338,9 +339,23 @@ public class DataParserByAnnotation implements ParserInterface {
 						_field.setAccessible(true);
 						IOData _fieldAnnotation = _field.getAnnotation(IOData.class);
 						if (_fieldAnnotation != null) {
+							// Check condition to skip read this data and move to next one
+							String _conditionField = _fieldAnnotation.conditionField();
+							String _conditionValue = _fieldAnnotation.conditionValue();
+							if (!_conditionField.equals("n/a") && !_conditionValue.equals("n/a")) {
+								Field _checkField = _data.getClass().getDeclaredField(_conditionField);
+								_checkField.setAccessible(true);
+								Object _checkData = _checkField.get(_data);
+								ConditionType _conditionType = _fieldAnnotation.conditionType();
+								if (_conditionType.equals(ConditionType.EQUAL) && !_conditionValue.equals(_checkData.toString())) {
+									continue;
+								}
+								else if (_conditionType.equals(ConditionType.DIFFERENT) && _conditionValue.equals(_checkData.toString())) {
+									continue;
+								}
+							}
+
 							String _typeData = _fieldAnnotation.type().toString().toLowerCase();
-							String _breakData = _fieldAnnotation.breakValue();
-							String _continueData = _fieldAnnotation.continueValue();
 							Object _fieldData = this.readDataByType(_typeData, __inputstream);
 							if (_field.getGenericType() instanceof ParameterizedType) {
 								ParameterizedType _pt = (ParameterizedType) _field.getGenericType();
@@ -361,13 +376,16 @@ public class DataParserByAnnotation implements ParserInterface {
 								        + _typeData + " type.", e);
 							}
 
+							// Check condition to stop reading
+							String _breakData = _fieldAnnotation.breakValue();
 							if (_breakData.equals(_fieldData.toString())) {
 								break;
 							}
-
+							String _continueData = _fieldAnnotation.continueValue();
 							if (!_continueData.equals("n/a") && !_continueData.equals(_fieldData.toString())) {
 								break;
 							}
+
 						}
 					}
 					return _data;
@@ -568,17 +586,35 @@ public class DataParserByAnnotation implements ParserInterface {
 	 * @param __out the __out
 	 * @throws Exception the exception
 	 */
-	protected void writeData(Object __data, OutputStream __out) throws Exception {
+	private void writeData(Object __data, OutputStream __out) throws Exception {
 		Field[] _fields = __data.getClass().getDeclaredFields();
 		this.sortByOrder(_fields);
 		for (Field _field : _fields) {
 			_field.setAccessible(true);
 			IOData _fieldAnnotation = _field.getAnnotation(IOData.class);
 			if (_fieldAnnotation != null) {
+				// Check condition to skip read this data and move to next one
+				String _conditionField = _fieldAnnotation.conditionField();
+				String _conditionValue = _fieldAnnotation.conditionValue();
+				if (!_conditionField.equals("n/a") && !_conditionValue.equals("n/a")) {
+					Field _checkField = __data.getClass().getDeclaredField(_conditionField);
+					_checkField.setAccessible(true);
+					Object _checkData = _checkField.get(__data);
+					ConditionType _conditionType = _fieldAnnotation.conditionType();
+					if (_conditionType.equals(ConditionType.EQUAL) && !_conditionValue.equals(_checkData.toString())) {
+						continue;
+					}
+					else if (_conditionType.equals(ConditionType.DIFFERENT) && _conditionValue.equals(_checkData.toString())) {
+						continue;
+					}
+				}
+
 				String _typeData = _fieldAnnotation.type().toString().toLowerCase();
 				String _nameData = _field.getName();
 				_field.get(__data);
 				String _checkData = this.writeDataByType(_typeData, _nameData, __out, __data);
+
+				// Check condition to stop writing
 				String _breakValue = _fieldAnnotation.breakValue();
 				if (_breakValue != null && _breakValue.equals(_checkData.toString())) {
 					break;

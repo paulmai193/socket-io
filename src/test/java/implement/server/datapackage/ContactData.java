@@ -60,6 +60,7 @@ public class ContactData implements ReadDataInterface, WriteDataInterface {
 	public void executeData(SocketClientInterface clientSocket) {
 		System.out.println("Client send contact list");
 		ListNumberData listNumberData = new ListNumberData();
+		listNumberData.setCheck(2);
 		for (Contact contact : this.contacts) {
 			System.out.println(contact.getName() + " - " + contact.getEmail() + " - " + contact.getPhone());
 			listNumberData.addnumber(Double.parseDouble(contact.getPhone()));
