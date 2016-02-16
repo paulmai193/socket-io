@@ -19,6 +19,7 @@ import org.w3c.dom.NodeList;
  * 
  * @author Paul Mai
  */
+@Deprecated
 public class DataParserByXML extends AbstractParser {
 
 	/**
@@ -121,8 +122,8 @@ public class DataParserByXML extends AbstractParser {
 			Node _nodeData = _listData.item(_j);
 			String _nameData = __xml.getAttribute(_nodeData, "name");
 			String _typeData = __xml.getAttribute(_nodeData, "type");
-			String _breakValue = __xml.getAttribute(_nodeData, "breakvalue");
 			String _checkData = this.writeDataByType(_typeData, _nameData, __out, __data);
+			String _breakValue = __xml.getAttribute(_nodeData, "breakvalue");
 			if (_breakValue != null && _breakValue.equals(_checkData.toString())) {
 				break;
 			}

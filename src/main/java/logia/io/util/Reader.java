@@ -256,6 +256,18 @@ public class Reader {
 	}
 
 	/**
+	 * Read json.
+	 *
+	 * @param __in the in
+	 * @return the json object
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public JsonObject readJson(InputStream __in) throws IOException {
+		String _s = this.readString(__in);
+		return (JsonObject) new JsonParser().parse(_s);
+	}
+
+	/**
 	 * Read long.
 	 *
 	 * @param __in the in
@@ -351,17 +363,5 @@ public class Reader {
 			_s = new String(_arr);
 		}
 		return _s;
-	}
-
-	/**
-	 * Read json.
-	 *
-	 * @param __in the in
-	 * @return the json object
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public JsonObject readJson(InputStream __in) throws IOException {
-		String _s = this.readString(__in);
-		return (JsonObject) new JsonParser().parse(_s);
 	}
 }

@@ -29,40 +29,40 @@ import org.apache.log4j.Logger;
 public class DefaultClientHandler implements SocketClientInterface {
 
 	/** The id. */
-	private String                     id;
+	private String                      id;
 
 	/** The input stream. */
-	private InputStream                inputStream;
+	private InputStream                 inputStream;
 
 	/** The is connected. */
-	private boolean                    isConnected;
+	private boolean                     isConnected;
 
 	/** The is wait for response. */
-	private boolean                    isWait;
+	private boolean                     isWait;
 
 	/** The logger. */
-	private static final Logger        LOGGER = Logger.getLogger(DefaultClientHandler.class);
+	private static final Logger         LOGGER = Logger.getLogger(DefaultClientHandler.class);
 
 	/** The output stream. */
-	private OutputStream               outputStream;
+	private OutputStream                outputStream;
 
 	/** The data parser. */
-	private ParserInterface            parser;
+	private ParserInterface             parser;
 
 	/** The returned data. */
-	private Queue<ReadDataInterface>   returned;
+	private Queue<ReadDataInterface>    returned;
 
 	/** The server socket. */
-	public final SocketServerInterface SERVER_SOCKET;
+	private final SocketServerInterface SERVER_SOCKET;
 
 	/** The socket. */
-	private Socket                     socket;
+	private Socket                      socket;
 
 	/** The start time. */
-	private final long                 startTime;
+	private final long                  startTime;
 
 	/** The timeout listener. */
-	private SocketTimeoutListener      timeoutListener;
+	private SocketTimeoutListener       timeoutListener;
 
 	/**
 	 * Instantiates a new client socket on server side.
@@ -112,7 +112,7 @@ public class DefaultClientHandler implements SocketClientInterface {
 	 * @throws ConnectionErrorException
 	 */
 	public DefaultClientHandler(SocketServerInterface __serverSocket, Socket __socket, ParserInterface __dataParser,
-	        SocketTimeoutListener __timeoutListener) throws ConnectionErrorException {
+			SocketTimeoutListener __timeoutListener) throws ConnectionErrorException {
 		this.isConnected = false;
 		this.parser = __dataParser;
 		this.startTime = System.currentTimeMillis();

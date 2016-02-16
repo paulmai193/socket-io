@@ -146,6 +146,17 @@ public class Writer {
 	}
 
 	/**
+	 * Write json.
+	 *
+	 * @param __out the out
+	 * @param __data the data
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public void writeJson(OutputStream __out, JsonObject __data) throws IOException {
+		this.writeString(__out, __data.toString());
+	}
+
+	/**
 	 * Write long.
 	 * 
 	 * @param __out the data output stream
@@ -181,17 +192,6 @@ public class Writer {
 	public void writeString(OutputStream __out, String __data) throws IOException {
 		byte[] _bytes = __data.getBytes("UTF-8");
 		this.writeByteArray(__out, _bytes);
-	}
-
-	/**
-	 * Write json.
-	 *
-	 * @param __out the out
-	 * @param __data the data
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public void writeJson(OutputStream __out, JsonObject __data) throws IOException {
-		this.writeString(__out, __data.toString());
 	}
 
 }

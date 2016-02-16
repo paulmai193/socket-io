@@ -1,14 +1,15 @@
 package implement.run;
 
-import implement.client.datapackage.FileData;
-import implement.client.datapackage.ResultData;
+import implement.client.datapackage.Contact;
+import implement.client.datapackage.ContactData;
+import implement.client.datapackage.ListNumberData;
+import implement.define.Command;
 import implement.define.Config;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.SocketException;
 
-import logia.io.parser.DataParserByXML;
+import logia.io.parser.DataParserByAnnotation;
 import logia.socket.Interface.ParserInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.client.ClientSide;
@@ -16,18 +17,20 @@ import logia.socket.client.ClientSide;
 public class RunSimpleClient {
 
 	public static void main(String[] args) {
-		File testFile = new File("C:/Users/Paul Mai/Desktop/fm.mp4");
 		try {
 
-			ParserInterface parser = new DataParserByXML(Config.DATA_PACKAGE_PATH_CLIENT, 1024 * 1024);
+			ParserInterface parser = new DataParserByAnnotation(Config.DATA_PACKAGE_PATH_CLIENT, 1024 * 1024);
 
-			final SocketClientInterface client = new ClientSide("localhost", 1234, 0, parser);
+			final SocketClientInterface client = new ClientSide("localhost", 1234, 5 * 60000, parser);
 			client.connect();
 			if (client.isConnected()) {
 				new Thread(client).start();
 				long c = System.currentTimeMillis();
-				FileData data = new FileData(testFile);
-				ResultData result = (ResultData) client.echoAndWait(data, 5);
+
+				ContactData data = new ContactData();
+				data.addContact(new Contact("Dai", "0933101959", ""));
+				data.addContact(new Contact("Thuan", "0165505756", ""));
+				ListNumberData result = (ListNumberData) client.echoAndWait(data, Command.CONTACT);
 				result.executeData();
 
 				long d = System.currentTimeMillis();

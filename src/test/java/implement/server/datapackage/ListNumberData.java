@@ -1,8 +1,13 @@
 package implement.server.datapackage;
 
+import implement.define.Command;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import logia.io.annotation.IOCommand;
+import logia.io.annotation.IOData;
+import logia.io.annotation.type.DataType;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.WriteDataInterface;
@@ -12,9 +17,11 @@ import logia.socket.Interface.WriteDataInterface;
  * 
  * @author Paul Mai
  */
+@IOCommand(value = Command.LIST_NUMBER)
 public class ListNumberData implements ReadDataInterface, WriteDataInterface {
 
 	/** The listnumber. */
+	@IOData(order = 1, type = DataType.LIST)
 	private List<Double> listnumber;
 
 	/**

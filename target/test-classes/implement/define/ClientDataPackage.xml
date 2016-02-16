@@ -6,12 +6,13 @@
 		<define-command name="ping" value="1">implement.client.datapackage.PingData</define-command>
 		<define-command name="receive_message" value="2">implement.client.datapackage.MessageData</define-command>
 		<define-command name="send_message" value="3">implement.client.datapackage.MessageData</define-command>
-		<define-command name="contact" value="4">implement.client.datapackage.ContactData</define-command>
+		<define-command name="contact" value="4" type="send">implement.client.datapackage.ContactData</define-command>
 		<define-command name="file" value="5">implement.client.datapackage.FileData</define-command>
 		<define-command name="disconnect" value="6">implement.client.datapackage.DisconnectData</define-command>
-		<define-command name="listnumber" value="7">implement.client.datapackage.ListNumberData</define-command>
+		<define-command name="listnumber" value="7" type="receive">implement.client.datapackage.ListNumberData</define-command>
 		<define-command name="test" value="10">implement.client.datapackage.TestData</define-command>
 		<define-command name="result" value="11">implement.client.datapackage.ResultData</define-command>
+		<define-command name="json" value="12">implement.client.datapackage.JsonData</define-command>
 	</define>
 
 	<command value="0"></command>
@@ -53,6 +54,10 @@
 		<data name="number" type="long" breakvalue="0"></data>
 		<data name="name" type="string"></data>
 		<data name="message" type="string"></data>
+	</command>
+	
+	<command value="12">
+		<data name="jsonelement" type="jsonobject"></data>
 	</command>
 
 </datapackage>

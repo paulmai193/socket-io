@@ -32,6 +32,7 @@ import com.google.gson.JsonObject;
  * 
  * @author Paul Mai
  */
+@Deprecated
 public abstract class AbstractParser implements ParserInterface {
 
 	/** The Constant DICTIONARY, use to get data type by input string. */
@@ -392,7 +393,7 @@ public abstract class AbstractParser implements ParserInterface {
 					for (Field _field : _fields) {
 						_field.setAccessible(true);
 						String _typeData = _field.getType().getCanonicalName();
-						_field.set(_value, readDataByType(_typeData, __inputstream));
+						_field.set(_value, this.readDataByType(_typeData, __inputstream));
 					}
 				}
 				catch (Exception e) {
@@ -532,7 +533,7 @@ public abstract class AbstractParser implements ParserInterface {
 				else {
 					_field = __data.getClass().getDeclaredField(__nameData);
 					_field.setAccessible(true);
-					this.writer.writeJson(__out, (JsonObject) (_field.get(__data)));
+					this.writer.writeJson(__out, (JsonObject) _field.get(__data));
 					_returnValue = _field.get(__data).toString();
 				}
 				break;

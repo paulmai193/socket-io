@@ -5,6 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import logia.io.annotation.type.ConditionType;
 import logia.io.annotation.type.DataType;
 
 /**
@@ -43,5 +44,26 @@ public @interface IOData {
 	 * @return the data type
 	 */
 	public DataType type();
+
+	/**
+	 * Condition field.
+	 *
+	 * @return the string
+	 */
+	public String conditionField() default "n/a";
+
+	/**
+	 * Condition value.
+	 *
+	 * @return the string
+	 */
+	public String conditionValue() default "n/a";
+
+	/**
+	 * Condition type.
+	 *
+	 * @return the condition type
+	 */
+	public ConditionType conditionType() default ConditionType.EQUAL;
 
 }

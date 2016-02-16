@@ -22,10 +22,10 @@ public interface SocketServerInterface extends Runnable {
 	/**
 	 * Gets the client.
 	 *
-	 * @param id the id
+	 * @param __id the ID client
 	 * @return the client
 	 */
-	public SocketClientInterface getClient(String id);
+	public SocketClientInterface getClient(String __id);
 
 	/**
 	 * Gets the list clients.

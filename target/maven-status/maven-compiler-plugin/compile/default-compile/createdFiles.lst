@@ -4,7 +4,6 @@ logia\socket\client\ClientSide.class
 logia\socket\Interface\WriteDataInterface.class
 logia\socket\Interface\SocketClientInterface.class
 logia\socket\Interface\ReadDataInterface.class
-logia\socket\server\ClientOnServerSide.class
 logia\socket\server\CheckSocketLiveTime.class
 logia\io\util\Writer.class
 logia\socket\Interface\SocketServerInterface.class

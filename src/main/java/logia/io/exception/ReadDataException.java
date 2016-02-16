@@ -23,19 +23,19 @@ public class ReadDataException extends Exception {
 	/**
 	 * Instantiates a new read data exception.
 	 *
-	 * @param __cause the cause
+	 * @param __message the message
 	 */
-	public ReadDataException(Throwable __cause) {
-		super(__cause.getMessage(), __cause);
+	public ReadDataException(String __message) {
+		super(__message);
 	}
 
 	/**
 	 * Instantiates a new read data exception.
 	 *
-	 * @param __message the message
+	 * @param __cause the cause
 	 */
-	public ReadDataException(String __message) {
-		super(__message);
+	public ReadDataException(Throwable __cause) {
+		super(__cause.getMessage(), __cause);
 	}
 
 }

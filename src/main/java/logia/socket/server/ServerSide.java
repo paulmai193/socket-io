@@ -249,11 +249,11 @@ public class ServerSide implements SocketServerInterface {
 			this.checkRemoteSocketLiveTime = Executors.newSingleThreadScheduledExecutor();
 			if (this.IDLE_LIVE_TIME > 0) {
 				this.checkRemoteSocketLiveTime.scheduleWithFixedDelay(new CheckSocketLiveTime(this, this.IDLE_LIVE_TIME, this.MAX_LIVE_TIME),
-				        this.MAX_LIVE_TIME, this.MAX_LIVE_TIME, TimeUnit.MINUTES);
+						this.MAX_LIVE_TIME, this.MAX_LIVE_TIME, TimeUnit.MINUTES);
 			}
 			else {
 				this.checkRemoteSocketLiveTime.scheduleWithFixedDelay(new CheckSocketLiveTime(this, this.MAX_LIVE_TIME), this.MAX_LIVE_TIME,
-				        this.MAX_LIVE_TIME, TimeUnit.MINUTES);
+						this.MAX_LIVE_TIME, TimeUnit.MINUTES);
 			}
 		}
 		ServerSide.LOGGER.debug("Server online");

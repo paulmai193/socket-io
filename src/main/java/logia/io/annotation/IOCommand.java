@@ -15,13 +15,6 @@ import java.lang.annotation.Target;
 public @interface IOCommand {
 
 	/**
-	 * Type of command: Reader or Writer.
-	 *
-	 * @return the command type
-	 */
-	// public CommandType[] type() default CommandType.NOT_SET;
-
-	/**
 	 * Command value.
 	 *
 	 * @return the int

@@ -34,6 +34,9 @@ public enum DataType {
 	/** The long. */
 	LONG,
 
+	/** The object. */
+	OBJECT,
+
 	/** The short. */
 	SHORT,
 

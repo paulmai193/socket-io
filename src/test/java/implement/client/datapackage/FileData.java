@@ -20,13 +20,6 @@ public class FileData implements WriteDataInterface {
 	File file;
 
 	/**
-	 * @return the file
-	 */
-	public File getFile() {
-		return file;
-	}
-
-	/**
 	 * Instantiates a new file data.
 	 */
 	public FileData() {
@@ -40,6 +33,13 @@ public class FileData implements WriteDataInterface {
 	 */
 	public FileData(File file) {
 		this.file = file;
+	}
+
+	/**
+	 * @return the file
+	 */
+	public File getFile() {
+		return this.file;
 	}
 
 	/**

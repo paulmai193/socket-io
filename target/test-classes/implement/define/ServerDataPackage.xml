@@ -1,17 +1,18 @@
 <?xml version="1.0"?>
 <datapackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="jar:file:/e:/FoodMob/Android/workspace/Test/src/lib/socketio.jar!/logia/io/define/datapackage.xsd">
+	xsi:noNamespaceSchemaLocation="datapackage.xsd">
 	<define type="int">
 		<define-command name="ping" value="0">implement.server.datapackage.PongData</define-command>
 		<define-command name="ping" value="1">implement.server.datapackage.PingData</define-command>
 		<define-command name="receive_message" value="2">implement.server.datapackage.MessageData</define-command>
 		<define-command name="send_message" value="3">implement.server.datapackage.MessageData</define-command>
-		<define-command name="contact" value="4">implement.server.datapackage.ContactData</define-command>
+		<define-command name="contact" value="4" type="receive">implement.server.datapackage.ContactData</define-command>
 		<define-command name="file" value="5">implement.server.datapackage.FileData</define-command>
 		<define-command name="disconnect" value="6">implement.server.datapackage.DisconnectData</define-command>
-		<define-command name="listnumber" value="7">implement.server.datapackage.ListNumberData</define-command>
+		<define-command name="listnumber" value="7" type="send">implement.server.datapackage.ListNumberData</define-command>
 		<define-command name="test" value="10">implement.server.datapackage.TestData</define-command>
 		<define-command name="result" value="11">implement.server.datapackage.ResultData</define-command>
+		<define-command name="json" value="12">implement.server.datapackage.JsonData</define-command>
 	</define>
 
 	<command value="0"></command>
@@ -53,6 +54,10 @@
 		<data name="number" type="long" breakvalue="0"></data>
 		<data name="name" type="string"></data>
 		<data name="message" type="string"></data>
+	</command>
+	
+	<command value="12">
+		<data name="jsonelement" type="jsonobject"></data>
 	</command>
 
 </datapackage>
