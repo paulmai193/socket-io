@@ -17,6 +17,8 @@ import org.w3c.dom.NodeList;
 /**
  * The Class DataParser. Read data from inputstream and Write data to outputstream base on data structure define by XML DataPackage file
  * 
+ * @deprecated since version 0.0.8
+ * 
  * @author Paul Mai
  */
 @Deprecated
@@ -60,6 +62,17 @@ public class DataParserByXML extends AbstractParser {
 	 */
 	public DataParserByXML(String __definePath, int __bufferSize) throws ClassNotFoundException {
 		super(__definePath, __bufferSize);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see logia.socket.Interface.ParserInterface#applyOutputStream(java.io.OutputStream, logia.socket.Interface.WriteDataInterface)
+	 */
+	@Override
+	public void applyOutputStream(OutputStream __outputStream, WriteDataInterface __writeData) throws Exception {
+		// TODO Auto-generated method stub
+
 	}
 
 	/**

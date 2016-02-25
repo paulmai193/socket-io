@@ -21,13 +21,13 @@ import logia.socket.Interface.WriteDataInterface;
 @IOCommand(value = Command.LIST_NUMBER)
 public class ListNumberData implements ReadDataInterface, WriteDataInterface {
 
-	/** The listnumber. */
-	@IOData(order = 2, type = DataType.LIST, conditionField = "check", conditionType = ConditionType.EQUAL, conditionValue = "2")
-	private List<Double> listnumber;
-
 	/** The check. */
 	@IOData(order = 1, type = DataType.INTEGER, breakValue = "-1")
 	private int          check;
+
+	/** The listnumber. */
+	@IOData(order = 2, type = DataType.LIST, conditionField = "check", conditionType = ConditionType.EQUAL, conditionValue = "2")
+	private List<Double> listnumber;
 
 	/**
 	 * Instantiates a new list number data.
@@ -69,20 +69,8 @@ public class ListNumberData implements ReadDataInterface, WriteDataInterface {
 	}
 
 	/**
-	 * @return the listnumber
-	 */
-	public List<Double> getListnumber() {
-		return this.listnumber;
-	}
-
-	/**
-	 * @param __listnumber the listnumber to set
-	 */
-	public void setListnumber(List<Double> __listnumber) {
-		this.listnumber = __listnumber;
-	}
-
-	/**
+	 * Gets the check.
+	 *
 	 * @return the check
 	 */
 	public int getCheck() {
@@ -90,10 +78,30 @@ public class ListNumberData implements ReadDataInterface, WriteDataInterface {
 	}
 
 	/**
+	 * Gets the listnumber.
+	 *
+	 * @return the listnumber
+	 */
+	public List<Double> getListnumber() {
+		return this.listnumber;
+	}
+
+	/**
+	 * Sets the check.
+	 *
 	 * @param __check the check to set
 	 */
 	public void setCheck(int __check) {
 		this.check = __check;
+	}
+
+	/**
+	 * Sets the listnumber.
+	 *
+	 * @param __listnumber the listnumber to set
+	 */
+	public void setListnumber(List<Double> __listnumber) {
+		this.listnumber = __listnumber;
 	}
 
 }

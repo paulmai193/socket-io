@@ -18,11 +18,17 @@ public class PingData implements ReadDataInterface {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see logia.socket.Interface.ReadDataInterface#executeData()
+	 */
 	@Override
 	public void executeData() throws Exception {
 		System.out.println("Receive PING from server");
 	}
 
+	/* (non-Javadoc)
+	 * @see logia.socket.Interface.ReadDataInterface#executeData(logia.socket.Interface.SocketClientInterface)
+	 */
 	@Override
 	public void executeData(SocketClientInterface clientSocket) throws Exception {
 		System.out.println("Receive PING from server, PONG again");

@@ -36,6 +36,8 @@ public class FileData implements WriteDataInterface {
 	}
 
 	/**
+	 * Gets the file.
+	 *
 	 * @return the file
 	 */
 	public File getFile() {

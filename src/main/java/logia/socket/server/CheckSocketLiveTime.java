@@ -12,10 +12,11 @@ import org.apache.log4j.Logger;
  */
 public class CheckSocketLiveTime implements Runnable {
 
+	/** The Constant LOGGER. */
+	private static final Logger   LOGGER = Logger.getLogger(CheckSocketLiveTime.class);
+
 	/** The idle live time. */
 	private long                  idleLiveTime;
-
-	private static final Logger   LOGGER = Logger.getLogger(CheckSocketLiveTime.class);
 
 	/** The max live time. */
 	private long                  maxLiveTime;

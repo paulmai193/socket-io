@@ -2,6 +2,8 @@ package implement.define;
 
 /**
  * The Class define all Command constant.
+ *
+ * @author Paul Mai
  */
 public class Command {
 

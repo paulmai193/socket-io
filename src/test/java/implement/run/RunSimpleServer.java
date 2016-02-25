@@ -13,8 +13,19 @@ import logia.socket.listener.AcceptClientListener;
 import logia.socket.server.DefaultClientHandler;
 import logia.socket.server.ServerSide;
 
+/**
+ * The Class RunSimpleServer.
+ *
+ * @author Paul Mai
+ */
 public class RunSimpleServer extends Thread {
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 * @throws InterruptedException the interrupted exception
+	 */
 	public static void main(String[] args) throws InterruptedException {
 
 		final ServerSide server = new ServerSide(1234, 0, 5 * 60000);

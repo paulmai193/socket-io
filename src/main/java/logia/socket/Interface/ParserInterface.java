@@ -25,12 +25,24 @@ public interface ParserInterface {
 	public void applyInputStream(SocketClientInterface __clientSocket) throws SocketTimeoutException, SocketException, IOException, Exception;
 
 	/**
+	 * Apply output stream.
+	 *
+	 * @param __outputStream the __output stream
+	 * @param __writeData the __write data
+	 * @throws Exception the exception
+	 */
+	public void applyOutputStream(OutputStream __outputStream, WriteDataInterface __writeData) throws Exception;
+
+	/**
 	 * Apply stream. Get and write data from instance of WriteDataInterface into stream
+	 * 
+	 * @deprecated since version 0.0.8
 	 *
 	 * @param __outputStream the output stream
 	 * @param __dataListener the data listener
 	 * @param __command the command
 	 * @throws Exception the exception
 	 */
+	@Deprecated
 	public void applyOutputStream(OutputStream __outputStream, WriteDataInterface __dataListener, Object __command) throws Exception;
 }

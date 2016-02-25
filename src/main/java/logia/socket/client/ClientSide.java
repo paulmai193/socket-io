@@ -28,6 +28,9 @@ import org.apache.log4j.Logger;
  */
 public class ClientSide implements SocketClientInterface {
 
+	/** The logger. */
+	private static final Logger      LOGGER = Logger.getLogger(ClientSide.class);
+
 	/** The host. */
 	private final String             HOST;
 
@@ -36,9 +39,6 @@ public class ClientSide implements SocketClientInterface {
 
 	/** The is wait for response. */
 	private boolean                  isWait;
-
-	/** The logger. */
-	private static final Logger      LOGGER = Logger.getLogger(ClientSide.class);
 
 	/** The port. */
 	private final int                PORT;
@@ -203,6 +203,25 @@ public class ClientSide implements SocketClientInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see logia.socket.Interface.SocketClientInterface#echo(logia.socket.Interface.WriteDataInterface)
+	 */
+	@Override
+	public void echo(WriteDataInterface __data) throws WriteDataException {
+		synchronized (this.outputStream) {
+			try {
+				this.parser.applyOutputStream(this.outputStream, __data);
+			}
+			catch (Exception _e) {
+				ClientSide.LOGGER.error("Send data error", _e);
+				throw new WriteDataException(_e);
+			}
+
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see logia.socket.Interface.SocketClientInterface#echo(logia.socket.Interface.WriteDataInterface, int)
 	 */
 	@Override
@@ -216,6 +235,38 @@ public class ClientSide implements SocketClientInterface {
 				throw new WriteDataException(_e);
 			}
 
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see logia.socket.Interface.SocketClientInterface#echoAndWait(logia.socket.Interface.WriteDataInterface)
+	 */
+	@Override
+	public ReadDataInterface echoAndWait(WriteDataInterface __data) throws WriteDataException, InterruptedException {
+		synchronized (this.outputStream) {
+			this.isWait = true;
+			ClientSide.LOGGER.debug("Set wait response after echo data");
+			try {
+				this.parser.applyOutputStream(this.outputStream, __data);
+			}
+			catch (Exception _e) {
+				ClientSide.LOGGER.error("Send data error", _e);
+				throw new WriteDataException(_e);
+			}
+			ClientSide.LOGGER.debug("Send data to server");
+
+			// Waiting until have return value
+			ClientSide.LOGGER.debug("Is waiting response...");
+			synchronized (this) {
+				this.wait(60000);
+			}
+
+			this.isWait = false;
+			ClientSide.LOGGER.debug("Received data");
+
+			return this.returned.poll();
 		}
 	}
 

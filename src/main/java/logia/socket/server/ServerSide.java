@@ -25,6 +25,9 @@ import org.apache.log4j.Logger;
  */
 public class ServerSide implements SocketServerInterface {
 
+	/** The logger. */
+	private static final Logger                      LOGGER = Logger.getLogger(ServerSide.class);
+
 	/** The thread socket. */
 	private static Thread                            threadSocket;
 
@@ -45,9 +48,6 @@ public class ServerSide implements SocketServerInterface {
 
 	/** The idle live time. */
 	private final long                               IDLE_LIVE_TIME;
-
-	/** The logger. */
-	private static final Logger                      LOGGER = Logger.getLogger(ServerSide.class);
 
 	/** The max socket live time. */
 	private final long                               MAX_LIVE_TIME;

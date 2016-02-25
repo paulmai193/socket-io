@@ -11,7 +11,6 @@ import logia.io.annotation.type.DataType;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.WriteDataInterface;
-import logia.socket.server.DefaultClientHandler;
 
 /**
  * The Class ContactData. This class implements both ReadDataInterface and WriteDataInterface to read / write list contact data package
@@ -60,14 +59,14 @@ public class ContactData implements ReadDataInterface, WriteDataInterface {
 	public void executeData(SocketClientInterface clientSocket) {
 		System.out.println("Client send contact list");
 		ListNumberData listNumberData = new ListNumberData();
-		listNumberData.setCheck(2);
+		listNumberData.setCheck(1);
 		for (Contact contact : this.contacts) {
 			System.out.println(contact.getName() + " - " + contact.getEmail() + " - " + contact.getPhone());
 			listNumberData.addnumber(Double.parseDouble(contact.getPhone()));
 		}
 		System.out.println("Return list phone to client");
 		try {
-			((DefaultClientHandler) clientSocket).echo(listNumberData, Command.LIST_NUMBER);
+			clientSocket.echo(listNumberData);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

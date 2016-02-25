@@ -28,6 +28,9 @@ import org.apache.log4j.Logger;
  */
 public class DefaultClientHandler implements SocketClientInterface {
 
+	/** The logger. */
+	private static final Logger         LOGGER = Logger.getLogger(DefaultClientHandler.class);
+
 	/** The id. */
 	private String                      id;
 
@@ -39,9 +42,6 @@ public class DefaultClientHandler implements SocketClientInterface {
 
 	/** The is wait for response. */
 	private boolean                     isWait;
-
-	/** The logger. */
-	private static final Logger         LOGGER = Logger.getLogger(DefaultClientHandler.class);
 
 	/** The output stream. */
 	private OutputStream                outputStream;
@@ -69,7 +69,7 @@ public class DefaultClientHandler implements SocketClientInterface {
 	 *
 	 * @param __serverSocket the server socket
 	 * @param __socket the socket
-	 * @throws ConnectionErrorException
+	 * @throws ConnectionErrorException the connection error exception
 	 */
 	public DefaultClientHandler(SocketServerInterface __serverSocket, Socket __socket) throws ConnectionErrorException {
 		this.isConnected = false;
@@ -88,7 +88,7 @@ public class DefaultClientHandler implements SocketClientInterface {
 	 * @param __serverSocket the server socket
 	 * @param __socket the socket
 	 * @param __dataParser the data parser
-	 * @throws ConnectionErrorException
+	 * @throws ConnectionErrorException the connection error exception
 	 */
 	public DefaultClientHandler(SocketServerInterface __serverSocket, Socket __socket, ParserInterface __dataParser) throws ConnectionErrorException {
 		this.isConnected = false;
@@ -109,10 +109,10 @@ public class DefaultClientHandler implements SocketClientInterface {
 	 * @param __socket the socket
 	 * @param __dataParser the data parser
 	 * @param __timeoutListener the timeout listener
-	 * @throws ConnectionErrorException
+	 * @throws ConnectionErrorException the connection error exception
 	 */
 	public DefaultClientHandler(SocketServerInterface __serverSocket, Socket __socket, ParserInterface __dataParser,
-			SocketTimeoutListener __timeoutListener) throws ConnectionErrorException {
+	        SocketTimeoutListener __timeoutListener) throws ConnectionErrorException {
 		this.isConnected = false;
 		this.parser = __dataParser;
 		this.startTime = System.currentTimeMillis();
@@ -192,6 +192,24 @@ public class DefaultClientHandler implements SocketClientInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see logia.socket.Interface.SocketClientInterface#echo(logia.socket.Interface.WriteDataInterface)
+	 */
+	@Override
+	public void echo(WriteDataInterface __data) throws WriteDataException {
+		synchronized (this.outputStream) {
+			try {
+				this.parser.applyOutputStream(this.outputStream, __data);
+			}
+			catch (Exception _e) {
+				DefaultClientHandler.LOGGER.error("Send data error", _e);
+				throw new WriteDataException(_e);
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see logia.socket.Interface.SocketClientInterface#echo(logia.socket.Interface.WriteDataInterface, int)
 	 */
 	@Override
@@ -204,6 +222,38 @@ public class DefaultClientHandler implements SocketClientInterface {
 				DefaultClientHandler.LOGGER.error("Send data error", _e);
 				throw new WriteDataException(_e);
 			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see logia.socket.Interface.SocketClientInterface#echoAndWait(logia.socket.Interface.WriteDataInterface)
+	 */
+	@Override
+	public ReadDataInterface echoAndWait(WriteDataInterface __data) throws WriteDataException, InterruptedException {
+		synchronized (this.outputStream) {
+			this.isWait = true;
+			DefaultClientHandler.LOGGER.debug("Set wait response after echo data");
+			try {
+				this.parser.applyOutputStream(this.outputStream, __data);
+			}
+			catch (Exception _e) {
+				DefaultClientHandler.LOGGER.error("Send data error", _e);
+				throw new WriteDataException(_e);
+			}
+			DefaultClientHandler.LOGGER.debug("Send data to server");
+
+			// Waiting until have return value
+			DefaultClientHandler.LOGGER.debug("Is waiting response...");
+			synchronized (this) {
+				this.wait(60000);
+			}
+
+			this.isWait = false;
+			DefaultClientHandler.LOGGER.debug("Received data");
+
+			return this.returned.poll();
 		}
 	}
 

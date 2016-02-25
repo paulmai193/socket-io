@@ -30,6 +30,8 @@ import com.google.gson.JsonObject;
 /**
  * The Class AbstractParser.
  * 
+ * @deprecated since version 0.0.8
+ * 
  * @author Paul Mai
  */
 @Deprecated
@@ -37,6 +39,9 @@ public abstract class AbstractParser implements ParserInterface {
 
 	/** The Constant DICTIONARY, use to get data type by input string. */
 	protected static final Map<String, Byte> DICTIONARY;
+
+	/** The logger. */
+	protected static final Logger            LOGGER            = Logger.getLogger(AbstractParser.class);
 
 	/** The Constant TYPE_BYTE. */
 	protected static final byte              TYPE_BYTE         = 1;
@@ -56,6 +61,9 @@ public abstract class AbstractParser implements ParserInterface {
 	/** The Constant TYPE_INTERGER. */
 	protected static final byte              TYPE_INTERGER     = 6;
 
+	/** The Constant TYPE_JSON. */
+	protected static final byte              TYPE_JSON         = 11;
+
 	/** The Constant TYPE_LIST. */
 	protected static final byte              TYPE_LIST         = 10;
 
@@ -67,9 +75,6 @@ public abstract class AbstractParser implements ParserInterface {
 
 	/** The Constant TYPE_STRING. */
 	protected static final byte              TYPE_STRING       = 9;
-
-	/** The Constant TYPE_JSON. */
-	protected static final byte              TYPE_JSON         = 11;
 
 	static {
 		DICTIONARY = new HashMap<String, Byte>();
@@ -116,11 +121,11 @@ public abstract class AbstractParser implements ParserInterface {
 	/** The path to xml define data parser file . */
 	protected String                         definePath;
 
-	/** The _map send command. */
-	protected Map<String, Class<?>>          mapSendCommand    = new HashMap<String, Class<?>>();
-
 	/** The _map receive command. */
 	protected Map<String, Class<?>>          mapReceiveCommand = new HashMap<String, Class<?>>();
+
+	/** The _map send command. */
+	protected Map<String, Class<?>>          mapSendCommand    = new HashMap<String, Class<?>>();
 
 	/** The reader. */
 	protected Reader                         reader;
@@ -130,9 +135,6 @@ public abstract class AbstractParser implements ParserInterface {
 
 	/** The _xml. */
 	protected XmlUtil                        xml;
-
-	/** The logger. */
-	protected static final Logger            LOGGER            = Logger.getLogger(AbstractParser.class);
 
 	/**
 	 * Instantiates a new abstract parser.

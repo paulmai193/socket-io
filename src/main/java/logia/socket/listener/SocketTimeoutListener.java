@@ -7,8 +7,8 @@ package logia.socket.listener;
  * the socketTimeout event occurs, that object's appropriate
  * method is invoked.
  *
- * @see SocketTimeoutEvent
  * @author Paul Mai
+ * @see SocketTimeoutEvent
  */
 public interface SocketTimeoutListener {
 

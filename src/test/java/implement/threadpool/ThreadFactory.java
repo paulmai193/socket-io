@@ -46,8 +46,8 @@ public class ThreadFactory {
 
 	/**
 	 * Inits the pool.
-	 * 
-	 * @param poolSize the pool size
+	 *
+	 * @param maxConnection the max connection
 	 */
 	public void connect(int maxConnection) {
 		ThreadFactory.pool = (ThreadPoolExecutor) Executors.newCachedThreadPool(new MyThreadFactory());

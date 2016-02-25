@@ -7,6 +7,7 @@ package logia.io.exception;
  */
 public class ConnectionErrorException extends Exception {
 
+	/** The message. */
 	private static String     message          = "Connection not reachable";
 
 	/** The Constant serialVersionUID. */

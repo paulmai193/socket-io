@@ -20,4 +20,5 @@ public @interface IOCommand {
 	 * @return the int
 	 */
 	public int value();
+
 }

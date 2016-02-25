@@ -19,8 +19,8 @@ public interface SocketClientInterface extends Runnable {
 
 	/**
 	 * Socket connect.
-	 * 
-	 * @throws ConnectionErrorException
+	 *
+	 * @throws ConnectionErrorException the connection error exception
 	 */
 	public void connect() throws ConnectionErrorException;
 
@@ -33,19 +33,44 @@ public interface SocketClientInterface extends Runnable {
 	 * Echo method. Start send data through connection
 	 *
 	 * @param __data the data
+	 * @throws WriteDataException the write data exception
+	 */
+	public void echo(WriteDataInterface __data) throws WriteDataException;
+
+	/**
+	 * Echo method. Start send data through connection
+	 * 
+	 * @deprecated since version 0.0.8
+	 *
+	 * @param __data the data
 	 * @param __command the command
 	 * @throws WriteDataException the write data exception
 	 */
+	@Deprecated
 	public void echo(WriteDataInterface __data, Object __command) throws WriteDataException;
 
 	/**
 	 * Echo method. Start send data through connection and waiting a response
 	 *
 	 * @param __data the data
+	 * @return the response data
+	 * @throws WriteDataException the write data exception
+	 * @throws InterruptedException the interrupted exception
+	 */
+	public ReadDataInterface echoAndWait(WriteDataInterface __data) throws WriteDataException, InterruptedException;
+
+	/**
+	 * Echo method. Start send data through connection and waiting a response
+	 * 
+	 * @deprecated since version 0.0.8
+	 *
+	 * @param __data the data
 	 * @param __command the command
 	 * @return the response data
-	 * @throws Exception the exception
+	 * @throws WriteDataException the write data exception
+	 * @throws InterruptedException the interrupted exception
 	 */
+	@Deprecated
 	public ReadDataInterface echoAndWait(WriteDataInterface __data, Object __command) throws WriteDataException, InterruptedException;
 
 	/**
@@ -106,10 +131,10 @@ public interface SocketClientInterface extends Runnable {
 
 	/**
 	 * Listen method. Start reading data send through connection
-	 * 
-	 * @throws ReadDataException
-	 * @throws SocketException
-	 * @throws SocketTimeoutException
+	 *
+	 * @throws ReadDataException the read data exception
+	 * @throws SocketTimeoutException the socket timeout exception
+	 * @throws SocketException the socket exception
 	 */
 	public void listen() throws ReadDataException, SocketTimeoutException, SocketException;
 

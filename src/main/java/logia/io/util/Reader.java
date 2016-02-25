@@ -29,8 +29,6 @@ public class Reader {
 
 	/**
 	 * Instantiates a new reader.
-	 * 
-	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public Reader() {
 		this.MAX_SIZE_BUFFER = 4 * 1024;

@@ -3,7 +3,6 @@ package implement.run;
 import implement.client.datapackage.Contact;
 import implement.client.datapackage.ContactData;
 import implement.client.datapackage.ListNumberData;
-import implement.define.Command;
 import implement.define.Config;
 
 import java.io.IOException;
@@ -14,8 +13,18 @@ import logia.socket.Interface.ParserInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.client.ClientSide;
 
+/**
+ * The Class RunSimpleClient.
+ *
+ * @author Paul Mai
+ */
 public class RunSimpleClient {
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		try {
 
@@ -30,7 +39,7 @@ public class RunSimpleClient {
 				ContactData data = new ContactData();
 				data.addContact(new Contact("Dai", "0933101959", ""));
 				data.addContact(new Contact("Thuan", "0165505756", ""));
-				ListNumberData result = (ListNumberData) client.echoAndWait(data, Command.CONTACT);
+				ListNumberData result = (ListNumberData) client.echoAndWait(data);
 				result.executeData();
 
 				long d = System.currentTimeMillis();
