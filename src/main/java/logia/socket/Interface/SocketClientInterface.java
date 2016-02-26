@@ -15,14 +15,15 @@ import logia.socket.listener.SocketTimeoutListener;
  * 
  * @author Paul Mai
  */
-public interface SocketClientInterface extends Runnable {
+public interface SocketClientInterface {
 
 	/**
 	 * Socket connect.
 	 *
 	 * @throws ConnectionErrorException the connection error exception
+	 * @throws ReadDataException the read data exception
 	 */
-	public void connect() throws ConnectionErrorException;
+	public void connect() throws ConnectionErrorException, ReadDataException;
 
 	/**
 	 * Socket disconnect.

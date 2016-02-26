@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.net.SocketException;
 
 import logia.io.exception.ConnectionErrorException;
+import logia.io.exception.ReadDataException;
 import logia.io.parser.DataParserByAnnotation;
 import logia.socket.Interface.ParserInterface;
 import logia.socket.Interface.SocketClientInterface;
@@ -33,7 +34,7 @@ public class RunSimpleServer extends Thread {
 		server.setAcceptClientListener(new AcceptClientListener() {
 
 			@Override
-			public void acceptClient(Socket socket) throws ConnectionErrorException, ClassNotFoundException {
+			public void acceptClient(Socket socket) throws ConnectionErrorException, ClassNotFoundException, ReadDataException {
 				int bufferSize = 10 * 1024 * 1024;
 				try {
 					socket.setReceiveBufferSize(10 * 1024 * 1024);
@@ -43,8 +44,9 @@ public class RunSimpleServer extends Thread {
 				}
 				ParserInterface parser = new DataParserByAnnotation(Config.DATA_PACKAGE_PATH_SERVER, bufferSize);
 				SocketClientInterface clientSocket = new DefaultClientHandler(server, socket, parser);
+				clientSocket.connect();
 				server.addClient(clientSocket);
-				new Thread(clientSocket).start();
+				// new Thread(clientSocket).start();
 			}
 
 		});

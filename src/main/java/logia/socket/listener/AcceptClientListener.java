@@ -3,6 +3,7 @@ package logia.socket.listener;
 import java.net.Socket;
 
 import logia.io.exception.ConnectionErrorException;
+import logia.io.exception.ReadDataException;
 
 /**
  * The listener interface for receiving acceptClient events. The class that is interested in processing a acceptClient event implements this
@@ -22,6 +23,7 @@ public interface AcceptClientListener {
 	 * @param __socket the socket
 	 * @throws ConnectionErrorException the connection error exception
 	 * @throws ClassNotFoundException the class not found exception
+	 * @throws ReadDataException the read data exception
 	 */
-	public void acceptClient(Socket __socket) throws ConnectionErrorException, ClassNotFoundException;
+	public void acceptClient(Socket __socket) throws ConnectionErrorException, ClassNotFoundException, ReadDataException;
 }

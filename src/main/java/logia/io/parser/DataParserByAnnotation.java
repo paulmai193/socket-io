@@ -27,6 +27,7 @@ import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.WriteDataInterface;
 import logia.utility.readfile.XmlUtil;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -200,28 +201,64 @@ public class DataParserByAnnotation implements ParserInterface {
 	 * @see logia.socket.Interface.ParserInterface#applyInputStream(logia.socket.Interface.SocketClientInterface)
 	 */
 	@Override
-	public void applyInputStream(SocketClientInterface __clientSocket) throws SocketTimeoutException, SocketException, IOException, Exception {
-		ReadDataInterface _data = null;
-		while (__clientSocket.isConnected()) {
-			long _a = System.currentTimeMillis();
-			_data = this.readData(__clientSocket.getInputStream());
-			long _b = System.currentTimeMillis();
-			DataParserByAnnotation.LOGGER.debug("Finish read data after " + (_b - _a) / 1000 + "s");
-			if (_data != null) {
-				if (__clientSocket.isWaitForReturn()) {
-					__clientSocket.setReturned(_data);
-					synchronized (__clientSocket) {
-						__clientSocket.notify();
+	public void applyInputStream(final SocketClientInterface __clientSocket) {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				ReadDataInterface _data = null;
+				while (__clientSocket.isConnected()) {
+
+					try {
+						long _a = System.currentTimeMillis();
+						_data = readData(__clientSocket.getInputStream());
+						long _b = System.currentTimeMillis();
+						DataParserByAnnotation.LOGGER.debug("Finish read data after " + (_b - _a) / 1000 + "s");
+						if (_data != null) {
+							if (__clientSocket.isWaitForReturn()) {
+								__clientSocket.setReturned(_data);
+								synchronized (__clientSocket) {
+									__clientSocket.notify();
+								}
+							}
+							else {
+								_data.executeData(__clientSocket);
+							}
+						}
+						else {
+							DataParserByAnnotation.LOGGER.warn("Not recognize data from inputstream");
+						}
+					}
+					catch (SocketTimeoutException _e) {
+						if (__clientSocket.getTimeoutListener() != null) {
+							__clientSocket.getTimeoutListener().solveTimeout();
+						}
+						else {
+							LOGGER.error(_e.getMessage(), _e);
+						}
+					}
+					catch (SocketException _e) {
+						LOGGER.error(_e.getMessage(), _e);
+						break;
+					}
+					catch (ReadDataException _e) {
+						LOGGER.error(_e.getMessage(), _e);
+					}
+					catch (IOException _e) {
+						LOGGER.error(_e.getMessage(), _e);
+						break;
+					}
+					catch (Exception _e) {
+						LOGGER.error(_e.getMessage(), _e);
+						break;
+					}
+					finally {
+						__clientSocket.disconnect();
 					}
 				}
-				else {
-					_data.executeData(__clientSocket);
-				}
 			}
-			else {
-				DataParserByAnnotation.LOGGER.warn("Not recognize data from inputstream");
-			}
-		}
+		}).start();
+
 	}
 
 	/*
@@ -243,6 +280,7 @@ public class DataParserByAnnotation implements ParserInterface {
 	 * @see logia.socket.Interface.ParserInterface#applyOutputStream(java.io.OutputStream, logia.socket.Interface.WriteDataInterface, int)
 	 */
 	@Override
+	@Deprecated
 	public void applyOutputStream(OutputStream __outputStream, WriteDataInterface __dataListener, Object __command) throws Exception {
 		long _a = System.currentTimeMillis();
 		this.writeData(__command, __outputStream, __dataListener);
@@ -292,7 +330,7 @@ public class DataParserByAnnotation implements ParserInterface {
 	 * @throws NoSuchFieldException the no such field exception
 	 * @throws SecurityException the security exception
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked" })
 	private Object readData(Object _data, InputStream __inputstream) throws IOException, InstantiationException, IllegalAccessException,
 	        ClassNotFoundException, NoSuchFieldException, SecurityException {
 		// Iterate fields with IOCommand annotation
@@ -438,7 +476,7 @@ public class DataParserByAnnotation implements ParserInterface {
 					_fieldData = new ArrayList<Object>();
 					for (int _k = 0; _k < _size; _k++) {
 						Object _element = this.readDataByType(_elementType, __inputstream);
-						((ArrayList) _fieldData).add(_element);
+						((ArrayList<Object>) _fieldData).add(_element);
 					}
 				}
 				try {
@@ -496,159 +534,164 @@ public class DataParserByAnnotation implements ParserInterface {
 	 * @throws Exception the exception
 	 */
 	private void writeData(Object __data, OutputStream __out) throws Exception {
-		Field[] _fields = __data.getClass().getDeclaredFields();
-		this.sortByOrder(_fields);
-		for (Field _field : _fields) {
-			_field.setAccessible(true);
-			IOData _fieldAnnotation = _field.getAnnotation(IOData.class);
-			if (_fieldAnnotation != null) {
-				// Check condition to skip write this data and move to next one
-				String[] _conditionFields = _fieldAnnotation.conditionField();
-				String[] _conditionValues = _fieldAnnotation.conditionValue();
-				ConditionType _conditionType = _fieldAnnotation.conditionType();
-				if (_conditionFields.length > 0 && _conditionValues.length > 0) {
-					// Field _checkField = __data.getClass().getDeclaredField(_conditionField);
-					// _checkField.setAccessible(true);
-					// Object _checkData = _checkField.get(__data);
-					//
-					// if (_conditionType.equals(ConditionType.EQUAL) && !_conditionValue.equals(_checkData.toString())) {
-					// continue;
-					// }
-					// else if (_conditionType.equals(ConditionType.DIFFERENT) && _conditionValue.equals(_checkData.toString())) {
-					// continue;
-					// }
+		if (ClassUtils.isPrimitiveOrWrapper(__data.getClass())) {
+			this.writeDataByType(ClassUtils.getShortCanonicalName(__data.getClass()).toLowerCase(), "", __out, __data);
+		}
+		else {
+			Field[] _fields = __data.getClass().getDeclaredFields();
+			this.sortByOrder(_fields);
+			for (Field _field : _fields) {
+				_field.setAccessible(true);
+				IOData _fieldAnnotation = _field.getAnnotation(IOData.class);
+				if (_fieldAnnotation != null) {
+					// Check condition to skip write this data and move to next one
+					String[] _conditionFields = _fieldAnnotation.conditionField();
+					String[] _conditionValues = _fieldAnnotation.conditionValue();
+					ConditionType _conditionType = _fieldAnnotation.conditionType();
+					if (_conditionFields.length > 0 && _conditionValues.length > 0) {
+						// Field _checkField = __data.getClass().getDeclaredField(_conditionField);
+						// _checkField.setAccessible(true);
+						// Object _checkData = _checkField.get(__data);
+						//
+						// if (_conditionType.equals(ConditionType.EQUAL) && !_conditionValue.equals(_checkData.toString())) {
+						// continue;
+						// }
+						// else if (_conditionType.equals(ConditionType.DIFFERENT) && _conditionValue.equals(_checkData.toString())) {
+						// continue;
+						// }
 
-					// NEW
-					boolean _continue = false;
-					switch (_conditionType) {
-						case OR_DIFFERENT:
-							int _count = 0; // Number of field match this condition
+						// NEW
+						boolean _continue = false;
+						switch (_conditionType) {
+							case OR_DIFFERENT:
+								int _count = 0; // Number of field match this condition
 
-							// Counting match condition
-							for (String _eachField : _conditionFields) {
-								Field _checkField = __data.getClass().getDeclaredField(_eachField);
-								_checkField.setAccessible(true);
-								Object _checkData = _checkField.get(__data);
-								if (_checkData != null) {
-									for (String _eachValue : _conditionValues) {
-										if (_eachValue.equals(_checkData.toString())) {
-											_count++;
+								// Counting match condition
+								for (String _eachField : _conditionFields) {
+									Field _checkField = __data.getClass().getDeclaredField(_eachField);
+									_checkField.setAccessible(true);
+									Object _checkData = _checkField.get(__data);
+									if (_checkData != null) {
+										for (String _eachValue : _conditionValues) {
+											if (_eachValue.equals(_checkData.toString())) {
+												_count++;
+											}
 										}
 									}
-								}
-								else {
-									_count++;
-								}
-							}
-
-							// Check count value
-							if (_count >= 1) {
-								_continue = true;
-							}
-
-							break;
-
-						case DIFFERENT:
-							_count = 0; // Number of field match this condition
-
-							// Counting match condition
-							for (String _eachField : _conditionFields) {
-								Field _checkField = __data.getClass().getDeclaredField(_eachField);
-								_checkField.setAccessible(true);
-								Object _checkData = _checkField.get(__data);
-								if (_checkData != null) {
-									for (String _eachValue : _conditionValues) {
-										if (_eachValue.equals(_checkData.toString())) {
-											_count++;
-										}
+									else {
+										_count++;
 									}
 								}
-								else {
-									_count++;
+
+								// Check count value
+								if (_count >= 1) {
+									_continue = true;
 								}
-							}
 
-							// Check count value
-							if (_count >= _conditionFields.length) {
-								_continue = true;
-							}
+								break;
 
-							break;
+							case DIFFERENT:
+								_count = 0; // Number of field match this condition
 
-						case OR_EQUAL:
-							_count = 0; // Number of field match this condition
-
-							// Counting match condition
-							for (String _eachField : _conditionFields) {
-								Field _checkField = __data.getClass().getDeclaredField(_eachField);
-								_checkField.setAccessible(true);
-								Object _checkData = _checkField.get(__data);
-								if (_checkData != null) {
-									for (String _eachValue : _conditionValues) {
-										if (_eachValue.equals(_checkData.toString())) {
-											_count++;
+								// Counting match condition
+								for (String _eachField : _conditionFields) {
+									Field _checkField = __data.getClass().getDeclaredField(_eachField);
+									_checkField.setAccessible(true);
+									Object _checkData = _checkField.get(__data);
+									if (_checkData != null) {
+										for (String _eachValue : _conditionValues) {
+											if (_eachValue.equals(_checkData.toString())) {
+												_count++;
+											}
 										}
 									}
-								}
-								else {
-									_count++;
-								}
-							}
-
-							// Check count value
-							if (_count >= 1) {
-								_continue = true;
-							}
-
-							break;
-
-						default: // EQUAL
-							_count = 0; // Number of field match this condition
-
-							// Counting match condition
-							for (String _eachField : _conditionFields) {
-								Field _checkField = __data.getClass().getDeclaredField(_eachField);
-								_checkField.setAccessible(true);
-								Object _checkData = _checkField.get(__data);
-								if (_checkData != null) {
-									for (String _eachValue : _conditionValues) {
-										if (_eachValue.equals(_checkData.toString())) {
-											_count++;
-										}
+									else {
+										_count++;
 									}
 								}
-								else {
-									_count++;
+
+								// Check count value
+								if (_count >= _conditionFields.length) {
+									_continue = true;
 								}
-							}
 
-							// Check count value
-							if (_count >= _conditionFields.length) {
-								_continue = true;
-							}
+								break;
 
-							break;
+							case OR_EQUAL:
+								_count = 0; // Number of field match this condition
+
+								// Counting match condition
+								for (String _eachField : _conditionFields) {
+									Field _checkField = __data.getClass().getDeclaredField(_eachField);
+									_checkField.setAccessible(true);
+									Object _checkData = _checkField.get(__data);
+									if (_checkData != null) {
+										for (String _eachValue : _conditionValues) {
+											if (_eachValue.equals(_checkData.toString())) {
+												_count++;
+											}
+										}
+									}
+									else {
+										_count++;
+									}
+								}
+
+								// Check count value
+								if (_count >= 1) {
+									_continue = true;
+								}
+
+								break;
+
+							default: // EQUAL
+								_count = 0; // Number of field match this condition
+
+								// Counting match condition
+								for (String _eachField : _conditionFields) {
+									Field _checkField = __data.getClass().getDeclaredField(_eachField);
+									_checkField.setAccessible(true);
+									Object _checkData = _checkField.get(__data);
+									if (_checkData != null) {
+										for (String _eachValue : _conditionValues) {
+											if (_eachValue.equals(_checkData.toString())) {
+												_count++;
+											}
+										}
+									}
+									else {
+										_count++;
+									}
+								}
+
+								// Check count value
+								if (_count >= _conditionFields.length) {
+									_continue = true;
+								}
+
+								break;
+						}
+
+						// Check continue value
+						if (_continue) {
+							continue;
+						}
 					}
 
-					// Check continue value
-					if (_continue) {
-						continue;
+					String _typeData = _fieldAnnotation.type().toString().toLowerCase();
+					String _nameData = _field.getName();
+					Object _valueData = _field.get(__data);
+					String _checkData = this.writeDataByType(_typeData, _nameData, __out, _valueData);
+
+					// Check condition to stop writing
+					String _breakValue = _fieldAnnotation.breakValue();
+					if (_breakValue != null && _breakValue.equals(_checkData.toString())) {
+						break;
 					}
-				}
-
-				String _typeData = _fieldAnnotation.type().toString().toLowerCase();
-				String _nameData = _field.getName();
-				_field.get(__data);
-				String _checkData = this.writeDataByType(_typeData, _nameData, __out, __data);
-
-				// Check condition to stop writing
-				String _breakValue = _fieldAnnotation.breakValue();
-				if (_breakValue != null && _breakValue.equals(_checkData.toString())) {
-					break;
-				}
-				String _continueValue = _fieldAnnotation.continueValue();
-				if (!_continueValue.equals("n/a") && !_continueValue.equals(_checkData.toString())) {
-					break;
+					String _continueValue = _fieldAnnotation.continueValue();
+					if (!_continueValue.equals("n/a") && !_continueValue.equals(_checkData.toString())) {
+						break;
+					}
 				}
 			}
 		}
@@ -715,7 +758,7 @@ public class DataParserByAnnotation implements ParserInterface {
 	 * @return the read data interface
 	 * @throws Exception the exception
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked" })
 	protected ReadDataInterface readData(InputStream __inputstream) throws Exception {
 		ReadDataInterface _data;
 
@@ -866,7 +909,7 @@ public class DataParserByAnnotation implements ParserInterface {
 								_fieldData = new ArrayList<Object>();
 								for (int _k = 0; _k < _size; _k++) {
 									Object _element = this.readDataByType(_elementType, __inputstream);
-									((ArrayList) _fieldData).add(_element);
+									((ArrayList<Object>) _fieldData).add(_element);
 								}
 							}
 							try {
@@ -900,7 +943,7 @@ public class DataParserByAnnotation implements ParserInterface {
 			}
 		}
 		else {
-			throw new SocketException();
+			throw new SocketException("Client send command " + _command.toString());
 		}
 	}
 
@@ -1063,13 +1106,13 @@ public class DataParserByAnnotation implements ParserInterface {
 	 * Write data by type.
 	 *
 	 * @param __typeData the type data
-	 * @param __nameData the name data
+	 * @param __fieldName the name of field, if read data from field in object
 	 * @param __out the out
-	 * @param __data the data
+	 * @param __data the data to read and write in outputstream
 	 * @return the string
 	 * @throws Exception the exception
 	 */
-	protected String writeDataByType(String __typeData, String __nameData, OutputStream __out, Object __data) throws Exception {
+	protected String writeDataByType(String __typeData, String __fieldName, OutputStream __out, Object __data) throws Exception {
 		Byte _objType = this.getDataType(__typeData);
 		if (_objType == null) {
 			_objType = Byte.MIN_VALUE;
@@ -1077,196 +1120,221 @@ public class DataParserByAnnotation implements ParserInterface {
 		Field _field;
 		String _returnValue = "";
 		Object _fieldValue;
-		switch (_objType) {
+		if (__data != null) {
+			switch (_objType) {
 
-			case TYPE_BYTE:
-				if (__nameData.equals("") && __data != null) {
+				case TYPE_BYTE:
+					// if (__fieldName.equals("") && __data != null) {
+					// this.writer.writeByte(__out, (byte) __data);
+					// _returnValue = __data.toString();
+					// }
+					// else {
+					// _field = __data.getClass().getDeclaredField(__fieldName);
+					// _field.setAccessible(true);
+					// _fieldValue = _field.get(__data);
+					// if (_fieldValue != null) {
+					// this.writer.writeByte(__out, (byte) _fieldValue);
+					// _returnValue = _fieldValue.toString();
+					// }
+					// }
 					this.writer.writeByte(__out, (byte) __data);
 					_returnValue = __data.toString();
-				}
-				else {
-					_field = __data.getClass().getDeclaredField(__nameData);
-					_field.setAccessible(true);
-					_fieldValue = _field.get(__data);
-					if (_fieldValue != null) {
-						this.writer.writeByte(__out, (byte) _fieldValue);
-						_returnValue = _fieldValue.toString();
-					}
-				}
-				break;
+					break;
 
-			case TYPE_BYTE_ARRAY:
-				if (__nameData.equals("") && __data != null) {
+				case TYPE_BYTE_ARRAY:
+					// if (__fieldName.equals("") && __data != null) {
+					// this.writer.writeByteArray(__out, (byte[]) __data);
+					// _returnValue = __data.toString();
+					// }
+					// else {
+					// _field = __data.getClass().getDeclaredField(__fieldName);
+					// _field.setAccessible(true);
+					// _fieldValue = _field.get(__data);
+					// if (_fieldValue != null) {
+					// this.writer.writeByteArray(__out, (byte[]) _fieldValue);
+					// _returnValue = _fieldValue.toString();
+					// }
+					// }
 					this.writer.writeByteArray(__out, (byte[]) __data);
 					_returnValue = __data.toString();
-				}
-				else {
-					_field = __data.getClass().getDeclaredField(__nameData);
-					_field.setAccessible(true);
-					_fieldValue = _field.get(__data);
-					if (_fieldValue != null) {
-						this.writer.writeByteArray(__out, (byte[]) _fieldValue);
-						_returnValue = _fieldValue.toString();
-					}
-				}
-				break;
+					break;
 
-			case TYPE_DOUBLE:
-				if (__nameData.equals("") && __data != null) {
+				case TYPE_DOUBLE:
+					// if (__fieldName.equals("") && __data != null) {
+					// this.writer.writeDouble(__out, (double) __data);
+					// _returnValue = __data.toString();
+					// }
+					// else {
+					// _field = __data.getClass().getDeclaredField(__fieldName);
+					// _field.setAccessible(true);
+					// _fieldValue = _field.get(__data);
+					// if (_fieldValue != null) {
+					// this.writer.writeDouble(__out, (double) _fieldValue);
+					// _returnValue = _fieldValue.toString();
+					// }
+					// }
 					this.writer.writeDouble(__out, (double) __data);
 					_returnValue = __data.toString();
-				}
-				else {
-					_field = __data.getClass().getDeclaredField(__nameData);
-					_field.setAccessible(true);
-					_fieldValue = _field.get(__data);
-					if (_fieldValue != null) {
-						this.writer.writeDouble(__out, (double) _fieldValue);
-						_returnValue = _fieldValue.toString();
-					}
-				}
-				break;
+					break;
 
-			case TYPE_FLOAT:
-				if (__nameData.equals("") && __data != null) {
+				case TYPE_FLOAT:
+					// if (__fieldName.equals("") && __data != null) {
+					// this.writer.writeFloat(__out, (float) __data);
+					// _returnValue = __data.toString();
+					// }
+					// else {
+					// _field = __data.getClass().getDeclaredField(__fieldName);
+					// _field.setAccessible(true);
+					// _fieldValue = _field.get(__data);
+					// if (_fieldValue != null) {
+					// this.writer.writeFloat(__out, (float) _fieldValue);
+					// _returnValue = _fieldValue.toString();
+					// }
+					// }
 					this.writer.writeFloat(__out, (float) __data);
 					_returnValue = __data.toString();
-				}
-				else {
-					_field = __data.getClass().getDeclaredField(__nameData);
-					_field.setAccessible(true);
-					_fieldValue = _field.get(__data);
-					if (_fieldValue != null) {
-						this.writer.writeFloat(__out, (float) _fieldValue);
-						_returnValue = _fieldValue.toString();
-					}
-				}
-				break;
+					break;
 
-			case TYPE_FILE:
-				if (__nameData.equals("") && __data != null) {
+				case TYPE_FILE:
+					// if (__fieldName.equals("") && __data != null) {
+					// this.writer.writeFile(__out, (File) __data);
+					// _returnValue = __data.toString();
+					// }
+					// else {
+					// _field = __data.getClass().getDeclaredField(__fieldName);
+					// _field.setAccessible(true);
+					// _fieldValue = _field.get(__data);
+					// if (_fieldValue != null) {
+					// this.writer.writeFile(__out, (File) _fieldValue);
+					// _returnValue = _fieldValue.toString();
+					// }
+					// }
 					this.writer.writeFile(__out, (File) __data);
 					_returnValue = __data.toString();
-				}
-				else {
-					_field = __data.getClass().getDeclaredField(__nameData);
-					_field.setAccessible(true);
-					_fieldValue = _field.get(__data);
-					if (_fieldValue != null) {
-						this.writer.writeFile(__out, (File) _fieldValue);
-						_returnValue = _fieldValue.toString();
-					}
-				}
-				break;
+					break;
 
-			case TYPE_INTERGER:
-				if (__nameData.equals("") && __data != null) {
+				case TYPE_INTERGER:
+					// if (__fieldName.equals("") && __data != null) {
+					// this.writer.writeInt(__out, (int) __data);
+					// _returnValue = __data.toString();
+					// }
+					// else {
+					// _field = __data.getClass().getDeclaredField(__fieldName);
+					// _field.setAccessible(true);
+					// _fieldValue = _field.get(__data);
+					// if (_fieldValue != null) {
+					// this.writer.writeInt(__out, (int) _fieldValue);
+					// _returnValue = _fieldValue.toString();
+					// }
+					// }
 					this.writer.writeInt(__out, (int) __data);
 					_returnValue = __data.toString();
-				}
-				else {
-					_field = __data.getClass().getDeclaredField(__nameData);
-					_field.setAccessible(true);
-					_fieldValue = _field.get(__data);
-					if (_fieldValue != null) {
-						this.writer.writeInt(__out, (int) _fieldValue);
-						_returnValue = _fieldValue.toString();
-					}
-				}
-				break;
+					break;
 
-			case TYPE_JSON:
-				if (__nameData.equals("") && __data != null) {
+				case TYPE_JSON:
+					// if (__fieldName.equals("") && __data != null) {
+					// this.writer.writeJson(__out, (JsonObject) __data);
+					// _returnValue = __data.toString();
+					// }
+					// else {
+					// _field = __data.getClass().getDeclaredField(__fieldName);
+					// _field.setAccessible(true);
+					// _fieldValue = _field.get(__data);
+					// if (_fieldValue != null) {
+					// this.writer.writeJson(__out, (JsonObject) _fieldValue);
+					// _returnValue = _fieldValue.toString();
+					// }
+					// }
 					this.writer.writeJson(__out, (JsonObject) __data);
 					_returnValue = __data.toString();
-				}
-				else {
-					_field = __data.getClass().getDeclaredField(__nameData);
-					_field.setAccessible(true);
-					_fieldValue = _field.get(__data);
-					if (_fieldValue != null) {
-						this.writer.writeJson(__out, (JsonObject) _fieldValue);
-						_returnValue = _fieldValue.toString();
-					}
-				}
-				break;
+					break;
 
-			case TYPE_LONG:
-				if (__nameData.equals("") && __data != null) {
+				case TYPE_LONG:
+					// if (__fieldName.equals("") && __data != null) {
+					// this.writer.writeLong(__out, (long) __data);
+					// _returnValue = __data.toString();
+					// }
+					// else {
+					// _field = __data.getClass().getDeclaredField(__fieldName);
+					// _field.setAccessible(true);
+					// _fieldValue = _field.get(__data);
+					// if (_fieldValue != null) {
+					// this.writer.writeLong(__out, (long) _fieldValue);
+					// _returnValue = _fieldValue.toString();
+					// }
+					// }
 					this.writer.writeLong(__out, (long) __data);
 					_returnValue = __data.toString();
-				}
-				else {
-					_field = __data.getClass().getDeclaredField(__nameData);
-					_field.setAccessible(true);
-					_fieldValue = _field.get(__data);
-					if (_fieldValue != null) {
-						this.writer.writeLong(__out, (long) _fieldValue);
-						_returnValue = _fieldValue.toString();
-					}
-				}
-				break;
+					break;
 
-			case TYPE_SHORT:
-				if (__nameData.equals("") && __data != null) {
+				case TYPE_SHORT:
+					// if (__fieldName.equals("") && __data != null) {
+					// this.writer.writeShort(__out, (short) __data);
+					// _returnValue = __data.toString();
+					// }
+					// else {
+					// _field = __data.getClass().getDeclaredField(__fieldName);
+					// _field.setAccessible(true);
+					// _fieldValue = _field.get(__data);
+					// if (_fieldValue != null) {
+					// this.writer.writeShort(__out, (short) _fieldValue);
+					// _returnValue = _fieldValue.toString();
+					// }
+					// }
 					this.writer.writeShort(__out, (short) __data);
 					_returnValue = __data.toString();
-				}
-				else {
-					_field = __data.getClass().getDeclaredField(__nameData);
-					_field.setAccessible(true);
-					_fieldValue = _field.get(__data);
-					if (_fieldValue != null) {
-						this.writer.writeShort(__out, (short) _fieldValue);
-						_returnValue = _fieldValue.toString();
-					}
-				}
-				break;
+					break;
 
-			case TYPE_STRING:
-				if (__nameData.equals("") && __data != null) {
+				case TYPE_STRING:
+					// if (__fieldName.equals("") && __data != null) {
+					// this.writer.writeString(__out, (String) __data);
+					// _returnValue = __data.toString();
+					// }
+					// else {
+					// _field = __data.getClass().getDeclaredField(__fieldName);
+					// _field.setAccessible(true);
+					// _fieldValue = _field.get(__data);
+					// if (_fieldValue != null) {
+					// this.writer.writeString(__out, (String) _fieldValue);
+					// _returnValue = _fieldValue.toString();
+					// }
+					// }
 					this.writer.writeString(__out, (String) __data);
 					_returnValue = __data.toString();
-				}
-				else {
-					_field = __data.getClass().getDeclaredField(__nameData);
-					_field.setAccessible(true);
-					_fieldValue = _field.get(__data);
-					if (_fieldValue != null) {
-						this.writer.writeString(__out, (String) _fieldValue);
-						_returnValue = _fieldValue.toString();
+					break;
+
+				case TYPE_LIST:
+					// _field = __data.getClass().getDeclaredField(__fieldName);
+					// _field.setAccessible(true);
+					// @SuppressWarnings("rawtypes")
+					// List _list = (List) _field.get(__data);
+					List<?> _list = (List<?>) __data;
+					if (_list != null) {
+						this.writer.writeInt(__out, _list.size());
+						for (Object _object : _list) {
+							// String _objectType = _object.getClass().getName();
+							// this.writeDataByType(_objectType, "", __out, _object);
+							this.writeData(_object, __out);
+						}
 					}
-				}
-				break;
 
-			case TYPE_LIST:
-				_field = __data.getClass().getDeclaredField(__nameData);
-				_field.setAccessible(true);
-				@SuppressWarnings("rawtypes")
-				List _list = (List) _field.get(__data);
-				if (_list != null) {
-					this.writer.writeInt(__out, _list.size());
-					for (Object _object : _list) {
-						String _objectType = _object.getClass().getName();
-						this.writeDataByType(_objectType, "", __out, _object);
-					}
-				}
+					break;
 
-				break;
+				default:
+					// Field[] _fields = __data.getClass().getDeclaredFields();
+					// for (Field _eachfield : _fields) {
+					// String _typeData = _eachfield.getType().getCanonicalName();
+					// String _nameData = _eachfield.getName();
+					// // _eachfield.get(__data);
+					// this.writeDataByType(_typeData, _nameData, __out, __data);
+					// }
 
-			default:
-				// Field[] _fields = __data.getClass().getDeclaredFields();
-				// for (Field _eachfield : _fields) {
-				// String _typeData = _eachfield.getType().getCanonicalName();
-				// String _nameData = _eachfield.getName();
-				// // _eachfield.get(__data);
-				// this.writeDataByType(_typeData, _nameData, __out, __data);
-				// }
+					this.writeData(__data, __out);
 
-				this.writeData(__data, __out);
-
-				break;
+					break;
+			}
 		}
+
 		return _returnValue;
 	}
 }

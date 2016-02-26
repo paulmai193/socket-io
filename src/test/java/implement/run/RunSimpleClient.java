@@ -33,7 +33,7 @@ public class RunSimpleClient {
 			final SocketClientInterface client = new ClientSide("localhost", 1234, 5 * 60000, parser);
 			client.connect();
 			if (client.isConnected()) {
-				new Thread(client).start();
+
 				long c = System.currentTimeMillis();
 
 				ContactData data = new ContactData();

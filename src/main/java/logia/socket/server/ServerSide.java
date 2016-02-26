@@ -12,6 +12,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import logia.io.exception.ConnectionErrorException;
+import logia.io.exception.ReadDataException;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.SocketServerInterface;
 import logia.socket.listener.AcceptClientListener;
@@ -203,10 +204,11 @@ public class ServerSide implements SocketServerInterface {
 					this.acceptClientListener = new AcceptClientListener() {
 
 						@Override
-						public void acceptClient(Socket _socket) throws ConnectionErrorException {
+						public void acceptClient(Socket _socket) throws ConnectionErrorException, ReadDataException {
 							SocketClientInterface _clientSocket = new DefaultClientHandler(ServerSide.this.INSTANCE, _socket);
+							_clientSocket.connect();
 							ServerSide.this.addClient(_clientSocket);
-							new Thread(_clientSocket).start();
+							// new Thread(_clientSocket).start();
 						}
 					};
 				}
@@ -217,6 +219,9 @@ public class ServerSide implements SocketServerInterface {
 					ServerSide.LOGGER.error(_e.getMessage(), _e);
 				}
 				catch (ClassNotFoundException _e) {
+					ServerSide.LOGGER.error(_e.getMessage(), _e);
+				}
+				catch (ReadDataException _e) {
 					ServerSide.LOGGER.error(_e.getMessage(), _e);
 				}
 			}
@@ -249,11 +254,11 @@ public class ServerSide implements SocketServerInterface {
 			this.checkRemoteSocketLiveTime = Executors.newSingleThreadScheduledExecutor();
 			if (this.IDLE_LIVE_TIME > 0) {
 				this.checkRemoteSocketLiveTime.scheduleWithFixedDelay(new CheckSocketLiveTime(this, this.IDLE_LIVE_TIME, this.MAX_LIVE_TIME),
-						this.MAX_LIVE_TIME, this.MAX_LIVE_TIME, TimeUnit.MINUTES);
+				        this.MAX_LIVE_TIME, this.MAX_LIVE_TIME, TimeUnit.MINUTES);
 			}
 			else {
 				this.checkRemoteSocketLiveTime.scheduleWithFixedDelay(new CheckSocketLiveTime(this, this.MAX_LIVE_TIME), this.MAX_LIVE_TIME,
-						this.MAX_LIVE_TIME, TimeUnit.MINUTES);
+				        this.MAX_LIVE_TIME, TimeUnit.MINUTES);
 			}
 		}
 		ServerSide.LOGGER.debug("Server online");

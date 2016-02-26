@@ -78,8 +78,6 @@ public class DefaultClientHandler implements SocketClientInterface {
 		this.socket = __socket;
 		this.setId(__socket.getRemoteSocketAddress().toString());
 		this.returned = new LinkedBlockingQueue<ReadDataInterface>(1);
-
-		this.connect();
 	}
 
 	/**
@@ -98,8 +96,6 @@ public class DefaultClientHandler implements SocketClientInterface {
 		this.socket = __socket;
 		this.setId(__socket.getRemoteSocketAddress().toString());
 		this.returned = new LinkedBlockingQueue<ReadDataInterface>(1);
-
-		this.connect();
 	}
 
 	/**
@@ -121,8 +117,6 @@ public class DefaultClientHandler implements SocketClientInterface {
 		this.setId(__socket.getRemoteSocketAddress().toString());
 		this.timeoutListener = __timeoutListener;
 		this.returned = new LinkedBlockingQueue<ReadDataInterface>(1);
-
-		this.connect();
 	}
 
 	/*
@@ -131,12 +125,14 @@ public class DefaultClientHandler implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#connect()
 	 */
 	@Override
-	public void connect() throws ConnectionErrorException {
+	public void connect() throws ConnectionErrorException, ReadDataException {
 		if (!this.isConnected()) {
 			try {
 				this.inputStream = this.socket.getInputStream();
 				this.outputStream = this.socket.getOutputStream();
 				this.isConnected = true;
+
+				this.listen();
 
 				DefaultClientHandler.LOGGER.debug("A client connected, waiting to read data from client...");
 			}
@@ -378,31 +374,7 @@ public class DefaultClientHandler implements SocketClientInterface {
 	 */
 	@Override
 	public void listen() throws ReadDataException, SocketTimeoutException, SocketException {
-		try {
-			this.parser.applyInputStream(this);
-		}
-		catch (SocketTimeoutException _e) {
-			if (this.timeoutListener != null) {
-				this.timeoutListener.solveTimeout();
-			}
-			else {
-				throw _e;
-			}
-		}
-		catch (SocketException _e) {
-			throw _e;
-		}
-		catch (ReadDataException _e) {
-			throw _e;
-		}
-		catch (IOException _e) {
-			DefaultClientHandler.LOGGER.debug(_e.getMessage(), _e);
-			throw new ReadDataException(_e);
-		}
-		catch (Exception _e) {
-			DefaultClientHandler.LOGGER.debug(_e.getMessage(), _e);
-			throw new ReadDataException(_e);
-		}
+		this.parser.applyInputStream(this);
 	}
 
 	/*
@@ -410,24 +382,26 @@ public class DefaultClientHandler implements SocketClientInterface {
 	 * 
 	 * @see java.lang.Runnable#run()
 	 */
-	@Override
-	public void run() {
-		try {
-			this.listen();
-		}
-		catch (SocketTimeoutException _e) {
-			DefaultClientHandler.LOGGER.warn("Connection timeout");
-		}
-		catch (SocketException _e) {
-			DefaultClientHandler.LOGGER.warn("Socket interrupt because " + _e.getMessage());
-		}
-		catch (ReadDataException _e) {
-			DefaultClientHandler.LOGGER.error(_e);
-		}
-		finally {
-			this.disconnect();
-		}
-	}
+	// @Override
+	// public void run() {
+	// try {
+	// this.listen();
+	// }
+	// catch (SocketTimeoutException _e) {
+	// DefaultClientHandler.LOGGER.warn("Connection timeout");
+	// this.disconnect();
+	// }
+	// catch (SocketException _e) {
+	// DefaultClientHandler.LOGGER.warn("Socket interrupt because " + _e.getMessage());
+	// this.disconnect();
+	// }
+	// catch (ReadDataException _e) {
+	// DefaultClientHandler.LOGGER.error(_e);
+	// }
+	// finally {
+	// // this.disconnect();
+	// }
+	// }
 
 	/*
 	 * (non-Javadoc)

@@ -133,7 +133,7 @@ public class ClientSide implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#connect()
 	 */
 	@Override
-	public void connect() throws ConnectionErrorException {
+	public void connect() throws ConnectionErrorException, ReadDataException {
 		if (!this.isConnected) {
 			try {
 				this.socket = new Socket(this.HOST, this.PORT);
@@ -143,6 +143,9 @@ public class ClientSide implements SocketClientInterface {
 				this.inputStream = this.socket.getInputStream();
 				this.outputStream = this.socket.getOutputStream();
 				this.isConnected = true;
+
+				this.listen();
+
 				ClientSide.LOGGER.debug("Yeah, connected!");
 			}
 			catch (SocketException _e) {
@@ -389,30 +392,7 @@ public class ClientSide implements SocketClientInterface {
 	 */
 	@Override
 	public void listen() throws ReadDataException, SocketTimeoutException, SocketException {
-		try {
-			this.parser.applyInputStream(this);
-		}
-		catch (SocketTimeoutException _e) {
-			if (this.timeoutListener != null) {
-				this.timeoutListener.solveTimeout();
-			}
-			else {
-				throw _e;
-			}
-		}
-		catch (SocketException _e) {
-			throw _e;
-		}
-		catch (ReadDataException _e) {
-			throw _e;
-		}
-		catch (IOException _e) {
-			throw new ReadDataException(_e);
-		}
-		catch (Exception _e) {
-			throw new ReadDataException(_e);
-		}
-
+		this.parser.applyInputStream(this);
 	}
 
 	/*
@@ -420,24 +400,24 @@ public class ClientSide implements SocketClientInterface {
 	 * 
 	 * @see java.lang.Runnable#run()
 	 */
-	@Override
-	public void run() {
-		try {
-			this.listen();
-		}
-		catch (ReadDataException _e) {
-			ClientSide.LOGGER.error(_e);
-		}
-		catch (SocketTimeoutException _e) {
-			ClientSide.LOGGER.warn("Connection timeout");
-		}
-		catch (SocketException _e) {
-			ClientSide.LOGGER.warn("Socket interrupt because " + _e.getMessage());
-		}
-		finally {
-			this.disconnect();
-		}
-	}
+	// @Override
+	// public void run() {
+	// try {
+	// this.listen();
+	// }
+	// catch (ReadDataException _e) {
+	// ClientSide.LOGGER.error(_e);
+	// }
+	// catch (SocketTimeoutException _e) {
+	// ClientSide.LOGGER.warn("Connection timeout");
+	// }
+	// catch (SocketException _e) {
+	// ClientSide.LOGGER.warn("Socket interrupt because " + _e.getMessage());
+	// }
+	// finally {
+	// this.disconnect();
+	// }
+	// }
 
 	/*
 	 * (non-Javadoc)

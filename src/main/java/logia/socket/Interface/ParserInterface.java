@@ -1,9 +1,6 @@
 package logia.socket.Interface;
 
-import java.io.IOException;
 import java.io.OutputStream;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 
 /**
  * The Interface ParserInterface.
@@ -17,12 +14,8 @@ public interface ParserInterface {
 	 * reading.
 	 *
 	 * @param __clientSocket the client socket
-	 * @throws SocketTimeoutException the socket timeout exception
-	 * @throws SocketException the socket exception
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws Exception the exception
 	 */
-	public void applyInputStream(SocketClientInterface __clientSocket) throws SocketTimeoutException, SocketException, IOException, Exception;
+	public void applyInputStream(SocketClientInterface __clientSocket);
 
 	/**
 	 * Apply output stream.
