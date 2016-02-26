@@ -318,11 +318,15 @@ public class DataParserByAnnotation implements ParserInterface {
 								Field _checkField = _data.getClass().getDeclaredField(_eachField);
 								_checkField.setAccessible(true);
 								Object _checkData = _checkField.get(_data);
-
-								for (String _eachValue : _conditionValues) {
-									if (_eachValue.equals(_checkData.toString())) {
-										_count++;
+								if (_checkData != null) {
+									for (String _eachValue : _conditionValues) {
+										if (_eachValue.equals(_checkData.toString())) {
+											_count++;
+										}
 									}
+								}
+								else {
+									_count++;
 								}
 							}
 
@@ -341,16 +345,20 @@ public class DataParserByAnnotation implements ParserInterface {
 								Field _checkField = _data.getClass().getDeclaredField(_eachField);
 								_checkField.setAccessible(true);
 								Object _checkData = _checkField.get(_data);
-
-								for (String _eachValue : _conditionValues) {
-									if (_eachValue.equals(_checkData.toString())) {
-										_count++;
+								if (_checkData != null) {
+									for (String _eachValue : _conditionValues) {
+										if (_eachValue.equals(_checkData.toString())) {
+											_count++;
+										}
 									}
+								}
+								else {
+									_count++;
 								}
 							}
 
 							// Check count value
-							if (_count == _conditionFields.length) {
+							if (_count >= _conditionFields.length) {
 								_continue = true;
 							}
 
@@ -364,11 +372,15 @@ public class DataParserByAnnotation implements ParserInterface {
 								Field _checkField = _data.getClass().getDeclaredField(_eachField);
 								_checkField.setAccessible(true);
 								Object _checkData = _checkField.get(_data);
-
-								for (String _eachValue : _conditionValues) {
-									if (_eachValue.equals(_checkData.toString())) {
-										_count++;
+								if (_checkData != null) {
+									for (String _eachValue : _conditionValues) {
+										if (_eachValue.equals(_checkData.toString())) {
+											_count++;
+										}
 									}
+								}
+								else {
+									_count++;
 								}
 							}
 
@@ -387,16 +399,20 @@ public class DataParserByAnnotation implements ParserInterface {
 								Field _checkField = _data.getClass().getDeclaredField(_eachField);
 								_checkField.setAccessible(true);
 								Object _checkData = _checkField.get(_data);
-
-								for (String _eachValue : _conditionValues) {
-									if (_eachValue.equals(_checkData.toString())) {
-										_count++;
+								if (_checkData != null) {
+									for (String _eachValue : _conditionValues) {
+										if (_eachValue.equals(_checkData.toString())) {
+											_count++;
+										}
 									}
+								}
+								else {
+									_count++;
 								}
 							}
 
 							// Check count value
-							if (_count == _conditionFields.length) {
+							if (_count >= _conditionFields.length) {
 								_continue = true;
 							}
 
@@ -513,11 +529,15 @@ public class DataParserByAnnotation implements ParserInterface {
 								Field _checkField = __data.getClass().getDeclaredField(_eachField);
 								_checkField.setAccessible(true);
 								Object _checkData = _checkField.get(__data);
-
-								for (String _eachValue : _conditionValues) {
-									if (_eachValue.equals(_checkData.toString())) {
-										_count++;
+								if (_checkData != null) {
+									for (String _eachValue : _conditionValues) {
+										if (_eachValue.equals(_checkData.toString())) {
+											_count++;
+										}
 									}
+								}
+								else {
+									_count++;
 								}
 							}
 
@@ -536,16 +556,20 @@ public class DataParserByAnnotation implements ParserInterface {
 								Field _checkField = __data.getClass().getDeclaredField(_eachField);
 								_checkField.setAccessible(true);
 								Object _checkData = _checkField.get(__data);
-
-								for (String _eachValue : _conditionValues) {
-									if (_eachValue.equals(_checkData.toString())) {
-										_count++;
+								if (_checkData != null) {
+									for (String _eachValue : _conditionValues) {
+										if (_eachValue.equals(_checkData.toString())) {
+											_count++;
+										}
 									}
+								}
+								else {
+									_count++;
 								}
 							}
 
 							// Check count value
-							if (_count == _conditionFields.length) {
+							if (_count >= _conditionFields.length) {
 								_continue = true;
 							}
 
@@ -559,11 +583,15 @@ public class DataParserByAnnotation implements ParserInterface {
 								Field _checkField = __data.getClass().getDeclaredField(_eachField);
 								_checkField.setAccessible(true);
 								Object _checkData = _checkField.get(__data);
-
-								for (String _eachValue : _conditionValues) {
-									if (_eachValue.equals(_checkData.toString())) {
-										_count++;
+								if (_checkData != null) {
+									for (String _eachValue : _conditionValues) {
+										if (_eachValue.equals(_checkData.toString())) {
+											_count++;
+										}
 									}
+								}
+								else {
+									_count++;
 								}
 							}
 
@@ -582,16 +610,20 @@ public class DataParserByAnnotation implements ParserInterface {
 								Field _checkField = __data.getClass().getDeclaredField(_eachField);
 								_checkField.setAccessible(true);
 								Object _checkData = _checkField.get(__data);
-
-								for (String _eachValue : _conditionValues) {
-									if (_eachValue.equals(_checkData.toString())) {
-										_count++;
+								if (_checkData != null) {
+									for (String _eachValue : _conditionValues) {
+										if (_eachValue.equals(_checkData.toString())) {
+											_count++;
+										}
 									}
+								}
+								else {
+									_count++;
 								}
 							}
 
 							// Check count value
-							if (_count == _conditionFields.length) {
+							if (_count >= _conditionFields.length) {
 								_continue = true;
 							}
 
@@ -717,11 +749,15 @@ public class DataParserByAnnotation implements ParserInterface {
 											Field _checkField = _data.getClass().getDeclaredField(_eachField);
 											_checkField.setAccessible(true);
 											Object _checkData = _checkField.get(_data);
-
-											for (String _eachValue : _conditionValues) {
-												if (_eachValue.equals(_checkData.toString())) {
-													_count++;
+											if (_checkData != null) {
+												for (String _eachValue : _conditionValues) {
+													if (_eachValue.equals(_checkData.toString())) {
+														_count++;
+													}
 												}
+											}
+											else {
+												_count++;
 											}
 										}
 
@@ -740,16 +776,20 @@ public class DataParserByAnnotation implements ParserInterface {
 											Field _checkField = _data.getClass().getDeclaredField(_eachField);
 											_checkField.setAccessible(true);
 											Object _checkData = _checkField.get(_data);
-
-											for (String _eachValue : _conditionValues) {
-												if (_eachValue.equals(_checkData.toString())) {
-													_count++;
+											if (_checkData != null) {
+												for (String _eachValue : _conditionValues) {
+													if (_eachValue.equals(_checkData.toString())) {
+														_count++;
+													}
 												}
+											}
+											else {
+												_count++;
 											}
 										}
 
 										// Check count value
-										if (_count == _conditionFields.length) {
+										if (_count >= _conditionFields.length) {
 											_continue = true;
 										}
 
@@ -763,11 +803,15 @@ public class DataParserByAnnotation implements ParserInterface {
 											Field _checkField = _data.getClass().getDeclaredField(_eachField);
 											_checkField.setAccessible(true);
 											Object _checkData = _checkField.get(_data);
-
-											for (String _eachValue : _conditionValues) {
-												if (_eachValue.equals(_checkData.toString())) {
-													_count++;
+											if (_checkData != null) {
+												for (String _eachValue : _conditionValues) {
+													if (_eachValue.equals(_checkData.toString())) {
+														_count++;
+													}
 												}
+											}
+											else {
+												_count++;
 											}
 										}
 
@@ -786,16 +830,20 @@ public class DataParserByAnnotation implements ParserInterface {
 											Field _checkField = _data.getClass().getDeclaredField(_eachField);
 											_checkField.setAccessible(true);
 											Object _checkData = _checkField.get(_data);
-
-											for (String _eachValue : _conditionValues) {
-												if (_eachValue.equals(_checkData.toString())) {
-													_count++;
+											if (_checkData != null) {
+												for (String _eachValue : _conditionValues) {
+													if (_eachValue.equals(_checkData.toString())) {
+														_count++;
+													}
 												}
+											}
+											else {
+												_count++;
 											}
 										}
 
 										// Check count value
-										if (_count == _conditionFields.length) {
+										if (_count >= _conditionFields.length) {
 											_continue = true;
 										}
 

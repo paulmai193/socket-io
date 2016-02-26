@@ -213,6 +213,7 @@ public class DefaultClientHandler implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#echo(logia.socket.Interface.WriteDataInterface, int)
 	 */
 	@Override
+	@Deprecated
 	public void echo(WriteDataInterface __data, Object __command) throws WriteDataException {
 		synchronized (this.outputStream) {
 			try {
@@ -263,6 +264,7 @@ public class DefaultClientHandler implements SocketClientInterface {
 	 * @see logia.socket.Interface.SocketClientInterface#echoAndWait(logia.socket.Interface.WriteDataInterface, int)
 	 */
 	@Override
+	@Deprecated
 	public ReadDataInterface echoAndWait(WriteDataInterface __data, Object __command) throws WriteDataException, InterruptedException {
 		synchronized (this.outputStream) {
 			this.isWait = true;
