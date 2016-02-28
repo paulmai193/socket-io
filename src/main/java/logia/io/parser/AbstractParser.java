@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -198,28 +196,41 @@ public abstract class AbstractParser implements ParserInterface {
 	 * @see logia.socket.Interface.ParserInterface#applyInputStream(logia.socket.Interface.SocketClientInterface)
 	 */
 	@Override
-	public void applyInputStream(SocketClientInterface __clientSocket) throws SocketTimeoutException, SocketException, IOException, Exception {
-		ReadDataInterface _data = null;
-		while (__clientSocket.isConnected()) {
-			long _a = System.currentTimeMillis();
-			_data = this.readData(__clientSocket.getInputStream());
-			long _b = System.currentTimeMillis();
-			AbstractParser.LOGGER.debug("Finish read data after " + (_b - _a) / 1000 + "s");
-			if (_data != null) {
-				if (__clientSocket.isWaitForReturn()) {
-					__clientSocket.setReturned(_data);
-					synchronized (__clientSocket) {
-						__clientSocket.notify();
+	public void applyInputStream(final SocketClientInterface __clientSocket) {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					ReadDataInterface _data = null;
+					while (__clientSocket.isConnected()) {
+						long _a = System.currentTimeMillis();
+						_data = readData(__clientSocket.getInputStream());
+						long _b = System.currentTimeMillis();
+						AbstractParser.LOGGER.debug("Finish read data after " + (_b - _a) / 1000 + "s");
+						if (_data != null) {
+							if (__clientSocket.isWaitForReturn()) {
+								__clientSocket.setReturned(_data);
+								synchronized (__clientSocket) {
+									__clientSocket.notify();
+								}
+							}
+							else {
+								_data.executeData(__clientSocket);
+							}
+						}
+						else {
+							AbstractParser.LOGGER.warn("Not recognize data from inputstream");
+						}
 					}
 				}
-				else {
-					_data.executeData(__clientSocket);
+				catch (Exception __e) {
+					LOGGER.error(__e.getMessage(), __e);
+					__clientSocket.disconnect();
 				}
+
 			}
-			else {
-				AbstractParser.LOGGER.warn("Not recognize data from inputstream");
-			}
-		}
+		}).start();
 	}
 
 	/*

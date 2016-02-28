@@ -239,6 +239,7 @@ public class DataParserByAnnotation implements ParserInterface {
 					}
 					catch (SocketException _e) {
 						LOGGER.error(_e.getMessage(), _e);
+						__clientSocket.disconnect();
 						break;
 					}
 					catch (ReadDataException _e) {
@@ -246,14 +247,13 @@ public class DataParserByAnnotation implements ParserInterface {
 					}
 					catch (IOException _e) {
 						LOGGER.error(_e.getMessage(), _e);
+						__clientSocket.disconnect();
 						break;
 					}
 					catch (Exception _e) {
 						LOGGER.error(_e.getMessage(), _e);
-						break;
-					}
-					finally {
 						__clientSocket.disconnect();
+						break;
 					}
 				}
 			}
