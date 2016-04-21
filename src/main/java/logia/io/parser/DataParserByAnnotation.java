@@ -561,7 +561,7 @@ public class DataParserByAnnotation implements ParserInterface {
 						// }
 
 						// NEW
-						boolean _continue = false;
+						boolean _allowReading = true;
 						switch (_conditionType) {
 							case OR_DIFFERENT:
 								int _count = 0; // Number of field match this condition
@@ -585,7 +585,7 @@ public class DataParserByAnnotation implements ParserInterface {
 
 								// Check count value
 								if (_count >= 1) {
-									_continue = true;
+									_allowReading = true;
 								}
 
 								break;
@@ -612,7 +612,7 @@ public class DataParserByAnnotation implements ParserInterface {
 
 								// Check count value
 								if (_count >= _conditionFields.length) {
-									_continue = true;
+									_allowReading = true;
 								}
 
 								break;
@@ -639,7 +639,7 @@ public class DataParserByAnnotation implements ParserInterface {
 
 								// Check count value
 								if (_count >= 1) {
-									_continue = true;
+									_allowReading = true;
 								}
 
 								break;
@@ -666,14 +666,14 @@ public class DataParserByAnnotation implements ParserInterface {
 
 								// Check count value
 								if (_count >= _conditionFields.length) {
-									_continue = true;
+									_allowReading = true;
 								}
 
 								break;
 						}
 
-						// Check continue value
-						if (_continue) {
+						// Check allow reading value
+						if (!_allowReading) {
 							continue;
 						}
 					}

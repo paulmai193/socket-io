@@ -4,8 +4,32 @@
 	<groupId>logia</groupId>
 	<artifactId>logia-socketio</artifactId>
 	<version>0.0.8</version>
+	
+	<distributionManagement>
+		<repository>
+			<id>internal-repo</id>
+			<url>file://${project.build.directory}/logia-mvn-repo</url>
+		</repository>
+	</distributionManagement>
+	
+	<repositories>
+		<repository>
+			<id>logia-mvn-repo</id>
+			<url>https://raw.github.com/paulmai193/logia-mvn-repo/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
+	
+	<properties>
+		<github.global.server>github</github.global.server>
+		<logia.utility.version>0.1.3</logia.utility.version>
+	</properties>
+	
 	<build>
-		<defaultGoal>source:jar install</defaultGoal>
+		<defaultGoal>clean deploy</defaultGoal>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<resources>
 			<resource>
@@ -33,11 +57,72 @@
 					<wtpversion>2.0</wtpversion>
 				</configuration>
 			</plugin>
+			
+			<!-- Deploy to remote repository -->
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.8.1</version>
+				<configuration>
+					<altDeploymentRepository>internal-repo::default::file://${project.build.directory}/logia-mvn-repo</altDeploymentRepository>
+				</configuration>
+			</plugin>
+
+			<!-- Github commit plugin -->
+			<plugin>
+				<groupId>com.github.github</groupId>
+				<artifactId>site-maven-plugin</artifactId>
+				<version>0.11</version>
+				<configuration>
+					<!-- git commit message -->
+					<message>Logia Socket Impl artifacts for ${project.version}</message>
+					<!-- disable webpage processing -->
+					<noJekyll>true</noJekyll>
+					<!-- matches distribution management repository url above -->
+					<outputDirectory>${project.build.directory}/logia-mvn-repo</outputDirectory>
+					<!-- remote branch name -->
+					<branch>refs/heads/master</branch>
+					<!-- If you remove this then the old artifact will be removed and new 
+						one will replace. But with the merge tag you can just release by changing 
+						the version -->
+					<merge>true</merge>
+					<includes>
+						<include>**/*</include>
+					</includes>
+
+					<!-- github repo name -->
+					<repositoryName>logia-mvn-repo</repositoryName>
+					<!-- github username -->
+					<repositoryOwner>paulmai193</repositoryOwner>
+					<!-- github password -->
+					<password>dbf9b0b3bf68a8ff715b4a699980a897c3aab04e</password>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>site</goal>
+						</goals>
+						<phase>deploy</phase>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Source plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
-	<properties>
-		<logia.utility.version>0.1.3</logia.utility.version>
-	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>logia</groupId>

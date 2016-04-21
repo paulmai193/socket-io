@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import org.apache.log4j.Logger;
 
@@ -47,6 +48,7 @@ public class Writer {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void writeByte(OutputStream __out, byte __data) throws IOException {
+		Writer.LOGGER.debug("Write " + __data + " as byte");
 		__out.write(__data);
 	}
 
@@ -58,6 +60,7 @@ public class Writer {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void writeByteArray(OutputStream __out, byte[] __data) throws IOException {
+		Writer.LOGGER.debug("Write " + Arrays.toString(__data) + " as byte array");
 		int _length = __data.length;
 		this.writeInt(__out, _length);
 		__out.write(__data);
@@ -71,6 +74,7 @@ public class Writer {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void writeDouble(OutputStream __out, double __data) throws IOException {
+		Writer.LOGGER.debug("Write " + __data + " as double");
 		byte[] _bytes = new byte[8];
 		ByteBuffer.wrap(_bytes).putDouble(__data);
 		__out.write(_bytes);
@@ -84,6 +88,8 @@ public class Writer {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void writeFile(OutputStream __out, File __data) throws IOException {
+		Writer.LOGGER.debug("Write " + __data + " as file");
+
 		// OLD
 		long length = __data.length();
 		this.writeLong(__out, length);
@@ -127,6 +133,7 @@ public class Writer {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void writeFloat(OutputStream __out, float __data) throws IOException {
+		Writer.LOGGER.debug("Write " + __data + " as float");
 		byte[] _bytes = new byte[4];
 		ByteBuffer.wrap(_bytes).putFloat(__data);
 		__out.write(_bytes);
@@ -140,6 +147,7 @@ public class Writer {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void writeInt(OutputStream __out, int __data) throws IOException {
+		Writer.LOGGER.debug("Write " + __data + " as integer");
 		byte[] _bytes = new byte[4];
 		ByteBuffer.wrap(_bytes).putInt(__data);
 		__out.write(_bytes);
@@ -153,6 +161,7 @@ public class Writer {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void writeJson(OutputStream __out, JsonObject __data) throws IOException {
+		Writer.LOGGER.debug("Write " + __data + " as json object");
 		this.writeString(__out, __data.toString());
 	}
 
@@ -164,6 +173,7 @@ public class Writer {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void writeLong(OutputStream __out, long __data) throws IOException {
+		Writer.LOGGER.debug("Write " + __data + " as long");
 		byte[] _bytes = new byte[8];
 		ByteBuffer.wrap(_bytes).putLong(__data);
 		__out.write(_bytes);
@@ -177,6 +187,7 @@ public class Writer {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void writeShort(OutputStream __out, short __data) throws IOException {
+		Writer.LOGGER.debug("Write " + __data + " as short");
 		byte[] _bytes = new byte[2];
 		ByteBuffer.wrap(_bytes).putShort(__data);
 		__out.write(_bytes);
@@ -190,6 +201,7 @@ public class Writer {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void writeString(OutputStream __out, String __data) throws IOException {
+		Writer.LOGGER.debug("Write " + __data + " as string");
 		byte[] _bytes = __data.getBytes("UTF-8");
 		this.writeByteArray(__out, _bytes);
 	}
