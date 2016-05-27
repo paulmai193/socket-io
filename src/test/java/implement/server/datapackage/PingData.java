@@ -3,8 +3,8 @@ package implement.server.datapackage;
 import logia.socket.Interface.WriteDataInterface;
 
 /**
- * The Class PingData. This class implements both ReadDataListener and WriteDataListener to read / write Ping data package
- * 
+ * The Class PingData.
+ *
  * @author Paul Mai
  */
 public class PingData implements WriteDataInterface {

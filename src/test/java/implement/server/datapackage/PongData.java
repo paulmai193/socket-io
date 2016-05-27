@@ -4,14 +4,14 @@ import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
 
 /**
- * The Class PingData. This class implements ReadDataListener to read Ping data package
- * 
+ * The Class PongData.
+ *
  * @author Paul Mai
  */
 public class PongData implements ReadDataInterface {
 
 	/**
-	 * Instantiates a new ping data.
+	 * Instantiates a new pong data.
 	 */
 	public PongData() {
 

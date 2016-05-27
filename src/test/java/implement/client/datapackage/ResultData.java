@@ -15,10 +15,12 @@ import logia.socket.Interface.SocketClientInterface;
 public class ResultData implements ReadDataInterface {
 
 	/** The message. */
-	@IOData(order = 1, type = DataType.STRING, breakValue = "n/a")
+	@IOData(order = 1, type = DataType.STRING)
 	private String message;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see logia.socket.Interface.ReadDataInterface#executeData()
 	 */
 	@Override
@@ -27,8 +29,11 @@ public class ResultData implements ReadDataInterface {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see logia.socket.Interface.ReadDataInterface#executeData(logia.socket.Interface.SocketClientInterface)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see logia.socket.Interface.ReadDataInterface#executeData(logia.socket.Interface.
+	 * SocketClientInterface)
 	 */
 	@Override
 	public void executeData(SocketClientInterface clientSocket) throws Exception {

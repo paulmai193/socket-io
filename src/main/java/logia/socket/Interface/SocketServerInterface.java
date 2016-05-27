@@ -6,7 +6,7 @@ import logia.socket.listener.AcceptClientListener;
 
 /**
  * The Interface SocketServerInterface.
- * 
+ *
  * @author Paul Mai
  */
 public interface SocketServerInterface extends Runnable {
@@ -14,15 +14,14 @@ public interface SocketServerInterface extends Runnable {
 	/**
 	 * Adds the client.
 	 *
-	 * @param __client the client
-	 * @return true, if successful
+	 * @param __client the __client
 	 */
 	public void addClient(SocketClientInterface __client);
 
 	/**
 	 * Gets the client.
 	 *
-	 * @param __id the ID client
+	 * @param __id the __id
 	 * @return the client
 	 */
 	public SocketClientInterface getClient(String __id);
@@ -44,8 +43,7 @@ public interface SocketServerInterface extends Runnable {
 	/**
 	 * Removes the client.
 	 *
-	 * @param __client the client
-	 * @return true, if successful
+	 * @param __client the __client
 	 */
 	public void removeClient(SocketClientInterface __client);
 

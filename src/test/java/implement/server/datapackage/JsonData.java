@@ -1,12 +1,12 @@
 package implement.server.datapackage;
 
+import com.google.gson.JsonObject;
+
 import logia.io.annotation.IOCommand;
 import logia.io.annotation.IOData;
 import logia.io.annotation.type.DataType;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
-
-import com.google.gson.JsonObject;
 
 /**
  * The Class JsonData.
@@ -17,10 +17,12 @@ import com.google.gson.JsonObject;
 public class JsonData implements ReadDataInterface {
 
 	/** The jsonelement. */
-	@IOData(order = 1, type = DataType.JSON, breakValue = "n/a")
+	@IOData(order = 1, type = DataType.JSON)
 	private JsonObject jsonelement;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see logia.socket.Interface.ReadDataInterface#executeData()
 	 */
 	@Override
@@ -28,8 +30,11 @@ public class JsonData implements ReadDataInterface {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see logia.socket.Interface.ReadDataInterface#executeData(logia.socket.Interface.SocketClientInterface)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see logia.socket.Interface.ReadDataInterface#executeData(logia.socket.Interface.
+	 * SocketClientInterface)
 	 */
 	@Override
 	public void executeData(SocketClientInterface clientSocket) throws Exception {

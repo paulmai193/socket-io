@@ -2,7 +2,7 @@ package logia.io.exception;
 
 /**
  * The Class WriteDataException.
- * 
+ *
  * @author Paul Mai
  */
 public class WriteDataException extends Exception {
@@ -23,7 +23,7 @@ public class WriteDataException extends Exception {
 	/**
 	 * Instantiates a new write data exception.
 	 *
-	 * @param __cause the cause
+	 * @param __cause the __cause
 	 */
 	public WriteDataException(Throwable __cause) {
 		super(WriteDataException.message, __cause);

@@ -2,7 +2,7 @@ package logia.io.exception;
 
 /**
  * The Class ConnectionErrorException.
- * 
+ *
  * @author Paul Mai
  */
 public class ConnectionErrorException extends Exception {
@@ -23,7 +23,7 @@ public class ConnectionErrorException extends Exception {
 	/**
 	 * Instantiates a new connection error exception.
 	 *
-	 * @param __cause the cause
+	 * @param __cause the __cause
 	 */
 	public ConnectionErrorException(Throwable __cause) {
 		super(ConnectionErrorException.message, __cause);

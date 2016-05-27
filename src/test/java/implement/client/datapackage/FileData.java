@@ -8,15 +8,15 @@ import logia.io.annotation.type.DataType;
 import logia.socket.Interface.WriteDataInterface;
 
 /**
- * The Class FileData. This class implements WriteDataListener to read write file data package
- * 
+ * The Class FileData.
+ *
  * @author Paul Mai
  */
 @IOCommand(value = 5)
 public class FileData implements WriteDataInterface {
 
 	/** The file. */
-	@IOData(order = 1, type = DataType.FILE, breakValue = "n/a")
+	@IOData(order = 1, type = DataType.FILE)
 	File file;
 
 	/**
@@ -47,7 +47,7 @@ public class FileData implements WriteDataInterface {
 	/**
 	 * Sets the file.
 	 *
-	 * @param file the file to set
+	 * @param file the new file
 	 */
 	public void setFile(File file) {
 		this.file = file;

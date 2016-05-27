@@ -7,23 +7,23 @@ import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
 
 /**
- * The Class TestData. This class implements both ReadDataInterface and WriteDataInterface to read / write Test data package
- * 
+ * The Class TestData.
+ *
  * @author Paul Mai
  */
 @IOCommand(value = 10)
 public class TestData implements ReadDataInterface {
 
 	/** The message. */
-	@IOData(order = 3, type = DataType.STRING, breakValue = "n/a")
+	@IOData(order = 3, type = DataType.STRING)
 	String message;
 
 	/** The name. */
-	@IOData(order = 2, type = DataType.STRING, breakValue = "n/a")
+	@IOData(order = 2, type = DataType.STRING)
 	String name;
 
 	/** The number. */
-	@IOData(order = 1, type = DataType.LONG, breakValue = "n/a")
+	@IOData(order = 1, type = DataType.LONG)
 	long   number;
 
 	/**
@@ -63,14 +63,16 @@ public class TestData implements ReadDataInterface {
 	 */
 	@Override
 	public void executeData(SocketClientInterface clientSocket) {
-		System.out.println("Client " + this.name + " send number " + this.number + " with message " + this.message + " to server");
+		System.out.println("Client " + this.name + " send number " + this.number + " with message "
+		        + this.message + " to server");
 		// try {
 		// Thread.sleep(10000);
 		// }
 		// catch (InterruptedException e1) {
 		// e1.printStackTrace();
 		// }
-		// ResultData result = new ResultData("I received package " + this.getClass().getCanonicalName() + " from you, right ?");
+		// ResultData result = new ResultData("I received package " +
+		// this.getClass().getCanonicalName() + " from you, right ?");
 		// try {
 		// clientSocket.echo(result, 11);
 		// }
@@ -109,7 +111,7 @@ public class TestData implements ReadDataInterface {
 	/**
 	 * Sets the message.
 	 *
-	 * @param message the message to set
+	 * @param message the new message
 	 */
 	public void setMessage(String message) {
 		this.message = message;
@@ -118,7 +120,7 @@ public class TestData implements ReadDataInterface {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the name to set
+	 * @param name the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -127,7 +129,7 @@ public class TestData implements ReadDataInterface {
 	/**
 	 * Sets the number.
 	 *
-	 * @param number the number to set
+	 * @param number the new number
 	 */
 	public void setNumber(long number) {
 		this.number = number;

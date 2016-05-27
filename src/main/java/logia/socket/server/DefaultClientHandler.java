@@ -9,6 +9,8 @@ import java.net.SocketTimeoutException;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.apache.log4j.Logger;
+
 import logia.io.exception.ConnectionErrorException;
 import logia.io.exception.ReadDataException;
 import logia.io.exception.WriteDataException;
@@ -19,59 +21,58 @@ import logia.socket.Interface.SocketServerInterface;
 import logia.socket.Interface.WriteDataInterface;
 import logia.socket.listener.SocketTimeoutListener;
 
-import org.apache.log4j.Logger;
-
 /**
  * The Class DefaultClientHandler.
- * 
+ *
  * @author Paul Mai
  */
 public class DefaultClientHandler implements SocketClientInterface {
 
-	/** The logger. */
-	private static final Logger         LOGGER = Logger.getLogger(DefaultClientHandler.class);
+	/** The Constant LOGGER. */
+	private static final Logger			LOGGER = Logger.getLogger(DefaultClientHandler.class);
 
 	/** The id. */
-	private String                      id;
+	private String						id;
 
 	/** The input stream. */
-	private InputStream                 inputStream;
+	private InputStream					inputStream;
 
 	/** The is connected. */
-	private boolean                     isConnected;
+	private boolean						isConnected;
 
-	/** The is wait for response. */
-	private boolean                     isWait;
+	/** The is wait. */
+	private boolean						isWait;
 
 	/** The output stream. */
-	private OutputStream                outputStream;
+	private OutputStream				outputStream;
 
-	/** The data parser. */
-	private ParserInterface             parser;
+	/** The parser. */
+	private ParserInterface				parser;
 
-	/** The returned data. */
-	private Queue<ReadDataInterface>    returned;
+	/** The returned. */
+	private Queue<ReadDataInterface>	returned;
 
 	/** The server socket. */
-	private final SocketServerInterface SERVER_SOCKET;
+	private final SocketServerInterface	SERVER_SOCKET;
 
 	/** The socket. */
-	private Socket                      socket;
+	private Socket						socket;
 
 	/** The start time. */
-	private final long                  startTime;
+	private final long					startTime;
 
 	/** The timeout listener. */
-	private SocketTimeoutListener       timeoutListener;
+	private SocketTimeoutListener		timeoutListener;
 
 	/**
-	 * Instantiates a new client socket on server side.
+	 * Instantiates a new default client handler.
 	 *
-	 * @param __serverSocket the server socket
-	 * @param __socket the socket
+	 * @param __serverSocket the __server socket
+	 * @param __socket the __socket
 	 * @throws ConnectionErrorException the connection error exception
 	 */
-	public DefaultClientHandler(SocketServerInterface __serverSocket, Socket __socket) throws ConnectionErrorException {
+	public DefaultClientHandler(SocketServerInterface __serverSocket, Socket __socket)
+	        throws ConnectionErrorException {
 		this.isConnected = false;
 		this.startTime = System.currentTimeMillis();
 		this.SERVER_SOCKET = __serverSocket;
@@ -81,14 +82,15 @@ public class DefaultClientHandler implements SocketClientInterface {
 	}
 
 	/**
-	 * Instantiates a new client socket on server side.
+	 * Instantiates a new default client handler.
 	 *
-	 * @param __serverSocket the server socket
-	 * @param __socket the socket
-	 * @param __dataParser the data parser
+	 * @param __serverSocket the __server socket
+	 * @param __socket the __socket
+	 * @param __dataParser the __data parser
 	 * @throws ConnectionErrorException the connection error exception
 	 */
-	public DefaultClientHandler(SocketServerInterface __serverSocket, Socket __socket, ParserInterface __dataParser) throws ConnectionErrorException {
+	public DefaultClientHandler(SocketServerInterface __serverSocket, Socket __socket,
+	        ParserInterface __dataParser) throws ConnectionErrorException {
 		this.isConnected = false;
 		this.parser = __dataParser;
 		this.startTime = System.currentTimeMillis();
@@ -99,16 +101,17 @@ public class DefaultClientHandler implements SocketClientInterface {
 	}
 
 	/**
-	 * Instantiates a new client on server side.
+	 * Instantiates a new default client handler.
 	 *
-	 * @param __serverSocket the server socket
-	 * @param __socket the socket
-	 * @param __dataParser the data parser
-	 * @param __timeoutListener the timeout listener
+	 * @param __serverSocket the __server socket
+	 * @param __socket the __socket
+	 * @param __dataParser the __data parser
+	 * @param __timeoutListener the __timeout listener
 	 * @throws ConnectionErrorException the connection error exception
 	 */
-	public DefaultClientHandler(SocketServerInterface __serverSocket, Socket __socket, ParserInterface __dataParser,
-	        SocketTimeoutListener __timeoutListener) throws ConnectionErrorException {
+	public DefaultClientHandler(SocketServerInterface __serverSocket, Socket __socket,
+	        ParserInterface __dataParser, SocketTimeoutListener __timeoutListener)
+	        throws ConnectionErrorException {
 		this.isConnected = false;
 		this.parser = __dataParser;
 		this.startTime = System.currentTimeMillis();
@@ -134,7 +137,8 @@ public class DefaultClientHandler implements SocketClientInterface {
 
 				this.listen();
 
-				DefaultClientHandler.LOGGER.debug("A client connected, waiting to read data from client...");
+				DefaultClientHandler.LOGGER
+				        .debug("A client connected, waiting to read data from client...");
 			}
 			catch (IOException _e) {
 				DefaultClientHandler.LOGGER.error("Cannot connect to socket server", _e);
@@ -188,13 +192,14 @@ public class DefaultClientHandler implements SocketClientInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see logia.socket.Interface.SocketClientInterface#echo(logia.socket.Interface.WriteDataInterface)
+	 * @see
+	 * logia.socket.Interface.SocketClientInterface#echo(logia.socket.Interface.WriteDataInterface)
 	 */
 	@Override
 	public void echo(WriteDataInterface __data) throws WriteDataException {
 		synchronized (this.outputStream) {
 			try {
-				this.parser.applyOutputStream(this.outputStream, __data);
+				this.parser.applyOutputStream(this, __data);
 			}
 			catch (Exception _e) {
 				DefaultClientHandler.LOGGER.error("Send data error", _e);
@@ -206,67 +211,17 @@ public class DefaultClientHandler implements SocketClientInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see logia.socket.Interface.SocketClientInterface#echo(logia.socket.Interface.WriteDataInterface, int)
+	 * @see logia.socket.Interface.SocketClientInterface#echoAndWait(logia.socket.Interface.
+	 * WriteDataInterface)
 	 */
 	@Override
-	@Deprecated
-	public void echo(WriteDataInterface __data, Object __command) throws WriteDataException {
-		synchronized (this.outputStream) {
-			try {
-				this.parser.applyOutputStream(this.outputStream, __data, __command);
-			}
-			catch (Exception _e) {
-				DefaultClientHandler.LOGGER.error("Send data error", _e);
-				throw new WriteDataException(_e);
-			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see logia.socket.Interface.SocketClientInterface#echoAndWait(logia.socket.Interface.WriteDataInterface)
-	 */
-	@Override
-	public ReadDataInterface echoAndWait(WriteDataInterface __data) throws WriteDataException, InterruptedException {
+	public ReadDataInterface echoAndWait(WriteDataInterface __data)
+	        throws WriteDataException, InterruptedException {
 		synchronized (this.outputStream) {
 			this.isWait = true;
 			DefaultClientHandler.LOGGER.debug("Set wait response after echo data");
 			try {
-				this.parser.applyOutputStream(this.outputStream, __data);
-			}
-			catch (Exception _e) {
-				DefaultClientHandler.LOGGER.error("Send data error", _e);
-				throw new WriteDataException(_e);
-			}
-			DefaultClientHandler.LOGGER.debug("Send data to server");
-
-			// Waiting until have return value
-			DefaultClientHandler.LOGGER.debug("Is waiting response...");
-			synchronized (this) {
-				this.wait(60000);
-			}
-
-			this.isWait = false;
-			DefaultClientHandler.LOGGER.debug("Received data");
-
-			return this.returned.poll();
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see logia.socket.Interface.SocketClientInterface#echoAndWait(logia.socket.Interface.WriteDataInterface, int)
-	 */
-	@Override
-	@Deprecated
-	public ReadDataInterface echoAndWait(WriteDataInterface __data, Object __command) throws WriteDataException, InterruptedException {
-		synchronized (this.outputStream) {
-			this.isWait = true;
-			DefaultClientHandler.LOGGER.debug("Set wait response after echo data");
-			try {
-				this.parser.applyOutputStream(this.outputStream, __data, __command);
+				this.parser.applyOutputStream(this, __data);
 			}
 			catch (Exception _e) {
 				DefaultClientHandler.LOGGER.error("Send data error", _e);
@@ -406,7 +361,8 @@ public class DefaultClientHandler implements SocketClientInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see logia.socket.Interface.SocketClientInterface#setDataParser(logia.socket.Interface.ParserInterface)
+	 * @see logia.socket.Interface.SocketClientInterface#setDataParser(logia.socket.Interface.
+	 * ParserInterface)
 	 */
 	@Override
 	public void setDataParser(ParserInterface dataParser) {
@@ -426,7 +382,8 @@ public class DefaultClientHandler implements SocketClientInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see logia.socket.Interface.SocketClientInterface#setReturned(logia.socket.Interface.ReadDataInterface)
+	 * @see logia.socket.Interface.SocketClientInterface#setReturned(logia.socket.Interface.
+	 * ReadDataInterface)
 	 */
 	@Override
 	public void setReturned(ReadDataInterface __returned) {
@@ -436,7 +393,8 @@ public class DefaultClientHandler implements SocketClientInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see logia.socket.Interface.SocketClientInterface#setTimeoutListener(logia.socket.Interface.SocketTimeoutListener)
+	 * @see logia.socket.Interface.SocketClientInterface#setTimeoutListener(logia.socket.Interface.
+	 * SocketTimeoutListener)
 	 */
 	@Override
 	public void setTimeoutListener(SocketTimeoutListener __listener) {

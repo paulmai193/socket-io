@@ -11,15 +11,15 @@ import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.WriteDataInterface;
 
 /**
- * The Class ContactData. This class implements both ReadDataInterface and WriteDataInterface to read / write list contact data package
- * 
+ * The Class ContactData.
+ *
  * @author Paul Mai
  */
 @IOCommand(/* type = { CommandType.READER, CommandType.WRITER }, */value = 4)
 public class ContactData implements ReadDataInterface, WriteDataInterface {
 
 	/** The contacts. */
-	@IOData(order = 1, type = DataType.LIST, breakValue = "n/a")
+	@IOData(order = 1, type = DataType.LIST)
 	private List<Contact> contacts;
 
 	/**
@@ -31,7 +31,7 @@ public class ContactData implements ReadDataInterface, WriteDataInterface {
 
 	/**
 	 * Adds the contact.
-	 * 
+	 *
 	 * @param contact the contact
 	 */
 	public void addContact(Contact contact) {
@@ -57,13 +57,14 @@ public class ContactData implements ReadDataInterface, WriteDataInterface {
 	public void executeData(SocketClientInterface clientSocket) {
 		System.out.println("Server send contact list");
 		for (Contact contact : this.contacts) {
-			System.out.println(contact.getName() + " - " + contact.getEmail() + " - " + contact.getPhone());
+			System.out.println(
+			        contact.getName() + " - " + contact.getEmail() + " - " + contact.getPhone());
 		}
 	}
 
 	/**
 	 * Gets the contacts.
-	 * 
+	 *
 	 * @return the contacts
 	 */
 	public List<Contact> getContacts() {
@@ -72,7 +73,7 @@ public class ContactData implements ReadDataInterface, WriteDataInterface {
 
 	/**
 	 * Sets the contacts.
-	 * 
+	 *
 	 * @param contacts the new contacts
 	 */
 	public void setContacts(List<Contact> contacts) {

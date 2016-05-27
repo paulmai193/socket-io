@@ -6,8 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The annotation IOCommand.
- * 
+ * The Interface IOCommand.
+ *
  * @author Paul Mai
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 public @interface IOCommand {
 
 	/**
-	 * Command value.
+	 * Value.
 	 *
 	 * @return the int
 	 */

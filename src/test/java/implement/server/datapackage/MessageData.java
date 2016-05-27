@@ -8,23 +8,23 @@ import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.WriteDataInterface;
 
 /**
- * The Class ReceiveMessageData. This class implements both ReadDataListener and WriteDataListener to read / write Message data package
- * 
+ * The Class MessageData.
+ *
  * @author Paul Mai
  */
 @IOCommand(value = 2)
 public class MessageData implements ReadDataInterface, WriteDataInterface {
 
 	/** The message. */
-	@IOData(order = 1, type = DataType.STRING, breakValue = "n/a")
+	@IOData(order = 1, type = DataType.STRING)
 	private String message;
 
-	/** The recipient. */
-	@IOData(order = 2, type = DataType.INTEGER, breakValue = "n/a")
-	private int    user;
+	/** The user. */
+	@IOData(order = 2, type = DataType.INTEGER)
+	private int	   user;
 
 	/**
-	 * Instantiates a new receive message data.
+	 * Instantiates a new message data.
 	 */
 	public MessageData() {
 
@@ -32,7 +32,7 @@ public class MessageData implements ReadDataInterface, WriteDataInterface {
 
 	/**
 	 * Instantiates a new message data.
-	 * 
+	 *
 	 * @param user the user
 	 * @param message the message
 	 */
@@ -64,7 +64,7 @@ public class MessageData implements ReadDataInterface, WriteDataInterface {
 
 	/**
 	 * Gets the message.
-	 * 
+	 *
 	 * @return the message
 	 */
 	public String getMessage() {
@@ -73,7 +73,7 @@ public class MessageData implements ReadDataInterface, WriteDataInterface {
 
 	/**
 	 * Gets the user.
-	 * 
+	 *
 	 * @return the user
 	 */
 	public int getUser() {
@@ -82,7 +82,7 @@ public class MessageData implements ReadDataInterface, WriteDataInterface {
 
 	/**
 	 * Sets the message.
-	 * 
+	 *
 	 * @param message the new message
 	 */
 	public void setMessage(String message) {
@@ -91,7 +91,7 @@ public class MessageData implements ReadDataInterface, WriteDataInterface {
 
 	/**
 	 * Sets the user.
-	 * 
+	 *
 	 * @param user the new user
 	 */
 	public void setUser(int user) {

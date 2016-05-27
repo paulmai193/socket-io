@@ -12,7 +12,7 @@ import logia.socket.Interface.ParserInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.listener.AcceptClientListener;
 import logia.socket.server.DefaultClientHandler;
-import logia.socket.server.ServerSide;
+import logia.socket.server.DefaultSocketServer;
 
 /**
  * The Class RunSimpleServer.
@@ -29,7 +29,7 @@ public class RunSimpleServer extends Thread {
 	 */
 	public static void main(String[] args) throws InterruptedException {
 
-		final ServerSide server = new ServerSide(1234, 0, 5 * 60000);
+		final DefaultSocketServer server = new DefaultSocketServer(1234, 0, 5 * 60000);
 
 		server.setAcceptClientListener(new AcceptClientListener() {
 

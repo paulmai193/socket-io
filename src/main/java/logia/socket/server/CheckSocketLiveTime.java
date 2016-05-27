@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 
 /**
  * The Class CheckSocketLiveTime.
- * 
+ *
  * @author Paul Mai
  */
 public class CheckSocketLiveTime implements Runnable {
@@ -27,8 +27,8 @@ public class CheckSocketLiveTime implements Runnable {
 	/**
 	 * Instantiates a new check socket live time.
 	 *
-	 * @param __server the server
-	 * @param __maxLiveTime the max live time
+	 * @param __server the __server
+	 * @param __maxLiveTime the __max live time
 	 */
 	public CheckSocketLiveTime(SocketServerInterface __server, long __maxLiveTime) {
 		this.server = __server;
@@ -39,9 +39,9 @@ public class CheckSocketLiveTime implements Runnable {
 	/**
 	 * Instantiates a new check socket live time.
 	 *
-	 * @param __server the server
-	 * @param __idleLiveTime the idle live time
-	 * @param __maxLiveTime the max live time
+	 * @param __server the __server
+	 * @param __idleLiveTime the __idle live time
+	 * @param __maxLiveTime the __max live time
 	 */
 	public CheckSocketLiveTime(SocketServerInterface __server, long __idleLiveTime, long __maxLiveTime) {
 		this.server = __server;

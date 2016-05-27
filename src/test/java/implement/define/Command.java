@@ -1,7 +1,7 @@
 package implement.define;
 
 /**
- * The Class define all Command constant.
+ * The Class Command.
  *
  * @author Paul Mai
  */
@@ -22,7 +22,7 @@ public class Command {
 	/** The Constant PING. */
 	public static final int PING            = 1;
 
-	/** The Constant PING. */
+	/** The Constant PONG. */
 	public static final int PONG            = 0;
 
 	/** The Constant RECEIVE_MESSAGE. */

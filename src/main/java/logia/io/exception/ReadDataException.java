@@ -2,7 +2,7 @@ package logia.io.exception;
 
 /**
  * The Class ReadDataException.
- * 
+ *
  * @author Paul Mai
  */
 public class ReadDataException extends Exception {
@@ -23,7 +23,7 @@ public class ReadDataException extends Exception {
 	/**
 	 * Instantiates a new read data exception.
 	 *
-	 * @param __message the message
+	 * @param __message the __message
 	 */
 	public ReadDataException(String __message) {
 		super(__message);
@@ -32,7 +32,7 @@ public class ReadDataException extends Exception {
 	/**
 	 * Instantiates a new read data exception.
 	 *
-	 * @param __cause the cause
+	 * @param __cause the __cause
 	 */
 	public ReadDataException(Throwable __cause) {
 		super(__cause.getMessage(), __cause);

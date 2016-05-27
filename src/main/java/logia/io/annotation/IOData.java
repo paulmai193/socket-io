@@ -5,12 +5,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import logia.io.annotation.type.ConditionType;
 import logia.io.annotation.type.DataType;
 
 /**
- * The annotation IOData.
- * 
+ * The Interface IOData.
+ *
  * @author Paul Mai
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -18,49 +17,21 @@ import logia.io.annotation.type.DataType;
 public @interface IOData {
 
 	/**
-	 * Break value.
+	 * Conditions.
 	 *
-	 * @return the string
+	 * @return the IO condition[]
 	 */
-	public String breakValue() default "n/a";
+	public IOCondition[] conditions() default {};
 
 	/**
-	 * Condition field.
-	 *
-	 * @return the string
-	 */
-	public String[] conditionField() default {};
-
-	/**
-	 * Condition type.
-	 *
-	 * @return the condition type
-	 */
-	public ConditionType conditionType() default ConditionType.EQUAL;
-
-	/**
-	 * Condition value.
-	 *
-	 * @return the string
-	 */
-	public String[] conditionValue() default {};
-
-	/**
-	 * Continue value.
-	 *
-	 * @return the string
-	 */
-	public String continueValue() default "n/a";
-
-	/**
-	 * The data order.
+	 * Order.
 	 *
 	 * @return the byte
 	 */
 	public byte order();
 
 	/**
-	 * The data type.
+	 * Type.
 	 *
 	 * @return the data type
 	 */

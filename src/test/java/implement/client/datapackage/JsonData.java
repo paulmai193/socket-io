@@ -1,11 +1,11 @@
 package implement.client.datapackage;
 
+import com.google.gson.JsonObject;
+
 import logia.io.annotation.IOCommand;
 import logia.io.annotation.IOData;
 import logia.io.annotation.type.DataType;
 import logia.socket.Interface.WriteDataInterface;
-
-import com.google.gson.JsonObject;
 
 /**
  * The Class JsonData.
@@ -16,7 +16,7 @@ import com.google.gson.JsonObject;
 public class JsonData implements WriteDataInterface {
 
 	/** The jsonelement. */
-	@IOData(order = 1, type = DataType.JSON, breakValue = "n/a")
+	@IOData(order = 1, type = DataType.JSON)
 	private JsonObject jsonelement;
 
 	/**

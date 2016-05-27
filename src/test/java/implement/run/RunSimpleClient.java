@@ -11,7 +11,7 @@ import java.net.SocketException;
 import logia.io.parser.DataParserByAnnotation;
 import logia.socket.Interface.ParserInterface;
 import logia.socket.Interface.SocketClientInterface;
-import logia.socket.client.ClientSide;
+import logia.socket.client.DefaultSocketClient;
 
 /**
  * The Class RunSimpleClient.
@@ -30,7 +30,7 @@ public class RunSimpleClient {
 
 			ParserInterface parser = new DataParserByAnnotation(Config.DATA_PACKAGE_PATH_CLIENT, 1024 * 1024);
 
-			final SocketClientInterface client = new ClientSide("localhost", 1234, 5 * 60000, parser);
+			final SocketClientInterface client = new DefaultSocketClient("localhost", 1234, 5 * 60000, parser);
 			client.connect();
 			if (client.isConnected()) {
 

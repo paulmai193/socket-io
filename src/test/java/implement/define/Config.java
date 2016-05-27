@@ -1,7 +1,7 @@
 package implement.define;
 
 /**
- * The Class define all Command constant.
+ * The Class Config.
  *
  * @author Paul Mai
  */

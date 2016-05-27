@@ -2,22 +2,22 @@ package logia.socket.Interface;
 
 /**
  * The Interface ReadDataInterface.
- * 
+ *
  * @author Paul Mai
  */
 public interface ReadDataInterface {
 
 	/**
-	 * Execute data when read data from stream finish.
+	 * Execute data.
 	 *
 	 * @throws Exception the exception
 	 */
 	public void executeData() throws Exception;
 
 	/**
-	 * Execute data when read data from stream finish.
+	 * Execute data.
 	 *
-	 * @param __clientSocket the client socket
+	 * @param __clientSocket the __client socket
 	 * @throws Exception the exception
 	 */
 	public void executeData(SocketClientInterface __clientSocket) throws Exception;

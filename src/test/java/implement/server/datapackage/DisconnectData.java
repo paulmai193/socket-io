@@ -5,8 +5,8 @@ import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.WriteDataInterface;
 
 /**
- * The Class DisconnectData. This class implements both ReadDataListener and WriteDataListener to read / write disconnect data package
- * 
+ * The Class DisconnectData.
+ *
  * @author Paul Mai
  */
 public class DisconnectData implements ReadDataInterface, WriteDataInterface {

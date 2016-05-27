@@ -14,7 +14,7 @@ import logia.socket.Interface.WriteDataInterface;
 public class ResultData implements WriteDataInterface {
 
 	/** The message. */
-	@IOData(order = 1, type = DataType.STRING, breakValue = "n/a")
+	@IOData(order = 1, type = DataType.STRING)
 	private String message;
 
 	/**

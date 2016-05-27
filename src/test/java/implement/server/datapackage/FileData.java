@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
+
 import logia.io.annotation.IOCommand;
 import logia.io.annotation.IOData;
 import logia.io.annotation.type.DataType;
@@ -11,18 +13,16 @@ import logia.io.exception.WriteDataException;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
 
-import org.apache.commons.io.FileUtils;
-
 /**
- * The Class FileData. This class implements ReadDataListener to read write file data package
- * 
+ * The Class FileData.
+ *
  * @author Paul Mai
  */
 @IOCommand(value = 5)
 public class FileData implements ReadDataInterface {
 
 	/** The file. */
-	@IOData(order = 1, type = DataType.FILE, breakValue = "n/a")
+	@IOData(order = 1, type = DataType.FILE)
 	File file;
 
 	/**
@@ -52,7 +52,8 @@ public class FileData implements ReadDataInterface {
 		System.out.println("Client send file to server");
 		try {
 			long a = System.currentTimeMillis();
-			// FileUtils.writeByteArrayToFile(new File("C:/Users/Paul Mai/Desktop/Candy.jpg"), this.bytes);
+			// FileUtils.writeByteArrayToFile(new File("C:/Users/Paul Mai/Desktop/Candy.jpg"),
+			// this.bytes);
 			FileUtils.copyFile(this.file, new File("C:/Users/Paul Mai/Desktop/Candy_1.mp4"));
 			long b = System.currentTimeMillis();
 			System.out.println("FINISH WRITE A BUFFER TO FILE AFTER " + (b - a) / 1000 + " s");
@@ -73,7 +74,7 @@ public class FileData implements ReadDataInterface {
 			this.file.delete();
 			ResultData resultData = new ResultData("Send file success");
 			try {
-				clientSocket.echo(resultData, 11);
+				clientSocket.echo(resultData);
 			}
 			catch (WriteDataException e) {
 				e.printStackTrace();
@@ -94,7 +95,7 @@ public class FileData implements ReadDataInterface {
 	/**
 	 * Sets the file.
 	 *
-	 * @param file the file to set
+	 * @param file the new file
 	 */
 	public void setFile(File file) {
 		this.file = file;

@@ -5,8 +5,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * A factory for creating Thread objects.
- * 
- * @author Paul Mai
  */
 public class ThreadFactory {
 
@@ -32,12 +30,12 @@ public class ThreadFactory {
 	/** The Constant instance. */
 	private static final ThreadFactory instance = new ThreadFactory();
 
-	/** The thread pool. */
+	/** The pool. */
 	private static ThreadPoolExecutor  pool;
 
 	/**
 	 * Gets the single instance of ThreadFactory.
-	 * 
+	 *
 	 * @return single instance of ThreadFactory
 	 */
 	public final static ThreadFactory getInstance() {
@@ -45,7 +43,7 @@ public class ThreadFactory {
 	}
 
 	/**
-	 * Inits the pool.
+	 * Connect.
 	 *
 	 * @param maxConnection the max connection
 	 */
@@ -64,7 +62,7 @@ public class ThreadFactory {
 	}
 
 	/**
-	 * Release pool.
+	 * Release.
 	 */
 	public void release() {
 		ThreadFactory.pool.shutdown();
@@ -86,8 +84,8 @@ public class ThreadFactory {
 	}
 
 	/**
-	 * Get and the thread get from thread pool.
-	 * 
+	 * Start.
+	 *
 	 * @param runnable the runnable
 	 */
 	public void start(Runnable runnable) {

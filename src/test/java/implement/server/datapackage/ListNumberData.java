@@ -1,32 +1,30 @@
 package implement.server.datapackage;
 
-import implement.define.Command;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import implement.define.Command;
 import logia.io.annotation.IOCommand;
 import logia.io.annotation.IOData;
-import logia.io.annotation.type.ConditionType;
 import logia.io.annotation.type.DataType;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.WriteDataInterface;
 
 /**
- * The Class ListNumberData. This class implements both ReadDataListener and WriteDataListener to read / write ListNumberData data package
- * 
+ * The Class ListNumberData.
+ *
  * @author Paul Mai
  */
 @IOCommand(value = Command.LIST_NUMBER)
 public class ListNumberData implements ReadDataInterface, WriteDataInterface {
 
 	/** The check. */
-	@IOData(order = 1, type = DataType.INTEGER, breakValue = "-1")
-	private int          check;
+	@IOData(order = 1, type = DataType.INTEGER)
+	private int			 check;
 
 	/** The listnumber. */
-	@IOData(order = 2, type = DataType.LIST, conditionField = "check", conditionType = ConditionType.EQUAL, conditionValue = "2")
+	@IOData(order = 2, type = DataType.LIST)
 	private List<Double> listnumber;
 
 	/**
@@ -89,7 +87,7 @@ public class ListNumberData implements ReadDataInterface, WriteDataInterface {
 	/**
 	 * Sets the check.
 	 *
-	 * @param __check the check to set
+	 * @param __check the new check
 	 */
 	public void setCheck(int __check) {
 		this.check = __check;
@@ -98,7 +96,7 @@ public class ListNumberData implements ReadDataInterface, WriteDataInterface {
 	/**
 	 * Sets the listnumber.
 	 *
-	 * @param __listnumber the listnumber to set
+	 * @param __listnumber the new listnumber
 	 */
 	public void setListnumber(List<Double> __listnumber) {
 		this.listnumber = __listnumber;

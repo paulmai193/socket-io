@@ -7,15 +7,21 @@ package logia.io.annotation.type;
  */
 public enum ConditionType {
 
-	/** All conditions different. */
+    /** The different. */
 	DIFFERENT,
 
-	/** All conditions equal. */
+	/** The equal. */
 	EQUAL,
 
-	/** At least 1 condition different. */
-	OR_DIFFERENT,
+	/** The greater. */
+	GREATER,
 
-	/** At least 1 condition equal. */
-	OR_EQUAL
+	/** The greater or equal. */
+	GREATER_OR_EQUAL,
+
+	/** The smaller. */
+	SMALLER,
+
+	/** The smaller or equal. */
+	SMALLER_OR_EQUAL
 }

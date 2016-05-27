@@ -12,13 +12,13 @@ import logia.socket.listener.SocketTimeoutListener;
 
 /**
  * The Interface SocketClientInterface.
- * 
+ *
  * @author Paul Mai
  */
 public interface SocketClientInterface {
 
 	/**
-	 * Socket connect.
+	 * Connect.
 	 *
 	 * @throws ConnectionErrorException the connection error exception
 	 * @throws ReadDataException the read data exception
@@ -26,53 +26,28 @@ public interface SocketClientInterface {
 	public void connect() throws ConnectionErrorException, ReadDataException;
 
 	/**
-	 * Socket disconnect.
+	 * Disconnect.
 	 */
 	public void disconnect();
 
 	/**
-	 * Echo method. Start send data through connection
+	 * Echo.
 	 *
-	 * @param __data the data
+	 * @param __data the __data
 	 * @throws WriteDataException the write data exception
 	 */
 	public void echo(WriteDataInterface __data) throws WriteDataException;
 
 	/**
-	 * Echo method. Start send data through connection
-	 * 
-	 * @deprecated since version 0.0.8
+	 * Echo and wait.
 	 *
-	 * @param __data the data
-	 * @param __command the command
-	 * @throws WriteDataException the write data exception
-	 */
-	@Deprecated
-	public void echo(WriteDataInterface __data, Object __command) throws WriteDataException;
-
-	/**
-	 * Echo method. Start send data through connection and waiting a response
-	 *
-	 * @param __data the data
-	 * @return the response data
+	 * @param __data the __data
+	 * @return the read data interface
 	 * @throws WriteDataException the write data exception
 	 * @throws InterruptedException the interrupted exception
 	 */
-	public ReadDataInterface echoAndWait(WriteDataInterface __data) throws WriteDataException, InterruptedException;
-
-	/**
-	 * Echo method. Start send data through connection and waiting a response
-	 * 
-	 * @deprecated since version 0.0.8
-	 *
-	 * @param __data the data
-	 * @param __command the command
-	 * @return the response data
-	 * @throws WriteDataException the write data exception
-	 * @throws InterruptedException the interrupted exception
-	 */
-	@Deprecated
-	public ReadDataInterface echoAndWait(WriteDataInterface __data, Object __command) throws WriteDataException, InterruptedException;
+	public ReadDataInterface echoAndWait(WriteDataInterface __data)
+	        throws WriteDataException, InterruptedException;
 
 	/**
 	 * Gets the data parser.
@@ -90,7 +65,7 @@ public interface SocketClientInterface {
 
 	/**
 	 * Gets the input stream.
-	 * 
+	 *
 	 * @return the input stream
 	 */
 	public InputStream getInputStream();
@@ -104,7 +79,7 @@ public interface SocketClientInterface {
 
 	/**
 	 * Gets the output stream.
-	 * 
+	 *
 	 * @return the output stream
 	 */
 	public OutputStream getOutputStream();
@@ -118,20 +93,20 @@ public interface SocketClientInterface {
 
 	/**
 	 * Checks if is connected.
-	 * 
+	 *
 	 * @return true, if is connected
 	 */
 	public boolean isConnected();
 
 	/**
-	 * Checks if is connection is waiting for return response.
+	 * Checks if is wait for return.
 	 *
-	 * @return the isWait
+	 * @return true, if is wait for return
 	 */
 	public boolean isWaitForReturn();
 
 	/**
-	 * Listen method. Start reading data send through connection
+	 * Listen.
 	 *
 	 * @throws ReadDataException the read data exception
 	 * @throws SocketTimeoutException the socket timeout exception
@@ -156,7 +131,7 @@ public interface SocketClientInterface {
 	/**
 	 * Sets the returned.
 	 *
-	 * @param __returned the returned to set
+	 * @param __returned the new returned
 	 */
 	public void setReturned(ReadDataInterface __returned);
 

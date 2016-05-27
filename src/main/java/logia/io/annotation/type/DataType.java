@@ -2,7 +2,7 @@ package logia.io.annotation.type;
 
 /**
  * The Enum DataType.
- * 
+ *
  * @author Paul Mai
  */
 public enum DataType {

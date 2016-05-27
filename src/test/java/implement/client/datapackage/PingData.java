@@ -1,12 +1,11 @@
 package implement.client.datapackage;
 
-import implement.define.Command;
 import logia.socket.Interface.ReadDataInterface;
 import logia.socket.Interface.SocketClientInterface;
 
 /**
- * The Class PingData. This class implements ReadDataListener to read Ping data package
- * 
+ * The Class PingData.
+ *
  * @author Paul Mai
  */
 public class PingData implements ReadDataInterface {
@@ -18,7 +17,9 @@ public class PingData implements ReadDataInterface {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see logia.socket.Interface.ReadDataInterface#executeData()
 	 */
 	@Override
@@ -26,13 +27,16 @@ public class PingData implements ReadDataInterface {
 		System.out.println("Receive PING from server");
 	}
 
-	/* (non-Javadoc)
-	 * @see logia.socket.Interface.ReadDataInterface#executeData(logia.socket.Interface.SocketClientInterface)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see logia.socket.Interface.ReadDataInterface#executeData(logia.socket.Interface.
+	 * SocketClientInterface)
 	 */
 	@Override
 	public void executeData(SocketClientInterface clientSocket) throws Exception {
 		System.out.println("Receive PING from server, PONG again");
-		clientSocket.echo(new PongData(), Command.PONG);
+		clientSocket.echo(new PongData());
 	}
 
 }

@@ -11,123 +11,128 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
+
 import logia.io.exception.ConnectionErrorException;
 import logia.io.exception.ReadDataException;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.SocketServerInterface;
 import logia.socket.listener.AcceptClientListener;
 
-import org.apache.log4j.Logger;
-
 /**
- * The Class ServerSide.
- * 
+ * The Class DefaultSocketServer.
+ *
  * @author Paul Mai
  */
-public class ServerSide implements SocketServerInterface {
+public class DefaultSocketServer implements SocketServerInterface {
 
-	/** The logger. */
-	private static final Logger                      LOGGER = Logger.getLogger(ServerSide.class);
+	/** The Constant LOGGER. */
+	protected static final Logger					   LOGGER = Logger
+	        .getLogger(DefaultSocketServer.class);
 
 	/** The thread socket. */
-	private static Thread                            threadSocket;
+	protected static Thread							   threadSocket;
 
 	/** The instance. */
-	public final ServerSide                          INSTANCE;
+	protected final DefaultSocketServer				   INSTANCE;
 
 	/** The is running. */
-	public boolean                                   isRunning;
+	protected boolean								   isRunning;
 
 	/** The accept client listener. */
-	private AcceptClientListener                     acceptClientListener;
+	protected AcceptClientListener					   acceptClientListener;
 
-	/** The thread check socket live time. */
-	private ScheduledExecutorService                 checkRemoteSocketLiveTime;
+	/** The check remote socket live time. */
+	protected ScheduledExecutorService				   checkRemoteSocketLiveTime;
 
 	/** The clients. */
-	private final Map<String, SocketClientInterface> CLIENTS;
+	protected final Map<String, SocketClientInterface> CLIENTS;
 
 	/** The idle live time. */
-	private final long                               IDLE_LIVE_TIME;
+	protected final long							   IDLE_LIVE_TIME;
 
-	/** The max socket live time. */
-	private final long                               MAX_LIVE_TIME;
+	/** The max live time. */
+	protected final long							   MAX_LIVE_TIME;
 
 	/** The port. */
-	protected final int                              PORT;
+	protected final int								   PORT;
 
 	/** The server socket. */
-	protected ServerSocket                           serverSocket;
+	protected ServerSocket							   serverSocket;
 
-	/** The timeout in milliseconds. */
-	protected final int                              TIME_OUT;
+	/** The time out. */
+	protected final int								   TIME_OUT;
 
 	/**
-	 * Instantiates a new server side of socket.
+	 * Instantiates a new default socket server.
 	 *
-	 * @param __port the port
+	 * @param __port the __port
 	 */
-	public ServerSide(int __port) {
+	public DefaultSocketServer(int __port) {
 		this.PORT = __port;
 		this.TIME_OUT = 0;
 		this.isRunning = false;
 		this.IDLE_LIVE_TIME = 0;
 		this.MAX_LIVE_TIME = 0;
-		this.CLIENTS = Collections.synchronizedSortedMap(new TreeMap<String, SocketClientInterface>());
+		this.CLIENTS = Collections
+		        .synchronizedSortedMap(new TreeMap<String, SocketClientInterface>());
 
 		this.INSTANCE = this;
 	}
 
 	/**
-	 * Instantiates a new server side of socket.
+	 * Instantiates a new default socket server.
 	 *
-	 * @param __port the port
-	 * @param __timeout the timeout of socket when accepted
+	 * @param __port the __port
+	 * @param __timeout the __timeout
 	 */
-	public ServerSide(int __port, int __timeout) {
+	public DefaultSocketServer(int __port, int __timeout) {
 		this.PORT = __port;
 		this.TIME_OUT = __timeout;
 		this.isRunning = false;
 		this.IDLE_LIVE_TIME = 0;
 		this.MAX_LIVE_TIME = 0;
-		this.CLIENTS = Collections.synchronizedSortedMap(new TreeMap<String, SocketClientInterface>());
+		this.CLIENTS = Collections
+		        .synchronizedSortedMap(new TreeMap<String, SocketClientInterface>());
 
 		this.INSTANCE = this;
 	}
 
 	/**
-	 * Instantiates a new server side of socket.
+	 * Instantiates a new default socket server.
 	 *
-	 * @param __port the port
-	 * @param __timeout the timeout in milliseconds
-	 * @param __maxLiveTime the max client socket live time
+	 * @param __port the __port
+	 * @param __timeout the __timeout
+	 * @param __maxLiveTime the __max live time
 	 */
-	public ServerSide(int __port, int __timeout, long __maxLiveTime) {
+	public DefaultSocketServer(int __port, int __timeout, long __maxLiveTime) {
 		this.PORT = __port;
 		this.TIME_OUT = __timeout;
 		this.isRunning = false;
 		this.IDLE_LIVE_TIME = 0;
 		this.MAX_LIVE_TIME = __maxLiveTime;
-		this.CLIENTS = Collections.synchronizedSortedMap(new TreeMap<String, SocketClientInterface>());
+		this.CLIENTS = Collections
+		        .synchronizedSortedMap(new TreeMap<String, SocketClientInterface>());
 
 		this.INSTANCE = this;
 	}
 
 	/**
-	 * Instantiates a new server side of socket.
+	 * Instantiates a new default socket server.
 	 *
-	 * @param __port the port
-	 * @param __timeout the timeout in milliseconds
-	 * @param __idleLiveTime the idle client socket live time
-	 * @param __maxLiveTime the max client socket live time
+	 * @param __port the __port
+	 * @param __timeout the __timeout
+	 * @param __idleLiveTime the __idle live time
+	 * @param __maxLiveTime the __max live time
 	 */
-	public ServerSide(int __port, int __timeout, long __idleLiveTime, long __maxLiveTime) {
+	public DefaultSocketServer(int __port, int __timeout, long __idleLiveTime, long __maxLiveTime) {
 		this.PORT = __port;
 		this.TIME_OUT = __timeout;
 		this.isRunning = false;
 		this.IDLE_LIVE_TIME = __idleLiveTime;
 		this.MAX_LIVE_TIME = __maxLiveTime;
-		this.CLIENTS = Collections.synchronizedSortedMap(new TreeMap<String, SocketClientInterface>());
+		this.CLIENTS = Collections
+		        .synchronizedSortedMap(new TreeMap<String, SocketClientInterface>());
 
 		this.INSTANCE = this;
 	}
@@ -135,7 +140,8 @@ public class ServerSide implements SocketServerInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see logia.socket.Interface.SocketServerInterface#addClient(logia.socket.Interface.SocketClientInterface)
+	 * @see logia.socket.Interface.SocketServerInterface#addClient(logia.socket.Interface.
+	 * SocketClientInterface)
 	 */
 	@Override
 	public void addClient(SocketClientInterface __client) {
@@ -175,7 +181,8 @@ public class ServerSide implements SocketServerInterface {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see logia.socket.Interface.SocketServerInterface#removeClient(logia.socket.Interface.SocketClientInterface)
+	 * @see logia.socket.Interface.SocketServerInterface#removeClient(logia.socket.Interface.
+	 * SocketClientInterface)
 	 */
 	@Override
 	public void removeClient(SocketClientInterface __client) {
@@ -193,48 +200,58 @@ public class ServerSide implements SocketServerInterface {
 		this.isRunning = true;
 		try {
 			this.serverSocket = new ServerSocket(this.PORT);
-			// this.serverSocket.setReceiveBufferSize(10 * 1024);
-			ServerSide.LOGGER.debug("Default receive buffer size: " + this.serverSocket.getReceiveBufferSize());
+			DefaultSocketServer.LOGGER.debug(
+			        "Default receive buffer size: " + this.serverSocket.getReceiveBufferSize());
 			while (this.isRunning) {
 				final Socket _SOCKET = this.serverSocket.accept();
 				if (this.TIME_OUT > 0) {
 					_SOCKET.setSoTimeout(this.TIME_OUT);
 				}
 				if (this.acceptClientListener == null) {
+					// Default implement of accept client listenter
 					this.acceptClientListener = new AcceptClientListener() {
 
 						@Override
-						public void acceptClient(Socket _socket) throws ConnectionErrorException, ReadDataException {
-							SocketClientInterface _clientSocket = new DefaultClientHandler(ServerSide.this.INSTANCE, _socket);
+						public void acceptClient(Socket __socket)
+					            throws ConnectionErrorException, ReadDataException {
+							SocketClientInterface _clientSocket = new DefaultClientHandler(
+					                DefaultSocketServer.this.INSTANCE, __socket);
 							_clientSocket.connect();
-							ServerSide.this.addClient(_clientSocket);
-							// new Thread(_clientSocket).start();
+							DefaultSocketServer.this.addClient(_clientSocket);
 						}
 					};
 				}
+
 				try {
 					this.acceptClientListener.acceptClient(_SOCKET);
 				}
 				catch (ConnectionErrorException _e) {
-					ServerSide.LOGGER.error(_e.getMessage(), _e);
+					DefaultSocketServer.LOGGER.error(_e.getMessage(), _e);
 				}
 				catch (ClassNotFoundException _e) {
-					ServerSide.LOGGER.error(_e.getMessage(), _e);
+					DefaultSocketServer.LOGGER.error(_e.getMessage(), _e);
 				}
 				catch (ReadDataException _e) {
-					ServerSide.LOGGER.error(_e.getMessage(), _e);
+					DefaultSocketServer.LOGGER.error(_e.getMessage(), _e);
 				}
 			}
 		}
 		catch (IOException _e) {
-			ServerSide.LOGGER.error(_e.getMessage(), _e);
+			if (_e.getMessage().contentEquals("Socket closed")) {
+				// Swallow this exception, because the server close normally
+			}
+			else {
+				DefaultSocketServer.LOGGER.error(_e.getMessage(), _e);
+			}
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see logia.socket.Interface.SocketServerInterface#setAcceptClientListener(logia.socket.Interface.AcceptClientListener)
+	 * @see
+	 * logia.socket.Interface.SocketServerInterface#setAcceptClientListener(logia.socket.Interface.
+	 * AcceptClientListener)
 	 */
 	@Override
 	public void setAcceptClientListener(AcceptClientListener __acceptClientListener) {
@@ -248,20 +265,22 @@ public class ServerSide implements SocketServerInterface {
 	 */
 	@Override
 	public void start() {
-		ServerSide.threadSocket = new Thread(this);
-		ServerSide.threadSocket.start();
+		DefaultSocketServer.threadSocket = new Thread(this);
+		DefaultSocketServer.threadSocket.start();
 		if (this.MAX_LIVE_TIME > 0) {
 			this.checkRemoteSocketLiveTime = Executors.newSingleThreadScheduledExecutor();
 			if (this.IDLE_LIVE_TIME > 0) {
-				this.checkRemoteSocketLiveTime.scheduleWithFixedDelay(new CheckSocketLiveTime(this, this.IDLE_LIVE_TIME, this.MAX_LIVE_TIME),
+				this.checkRemoteSocketLiveTime.scheduleWithFixedDelay(
+				        new CheckSocketLiveTime(this, this.IDLE_LIVE_TIME, this.MAX_LIVE_TIME),
 				        this.MAX_LIVE_TIME, this.MAX_LIVE_TIME, TimeUnit.MINUTES);
 			}
 			else {
-				this.checkRemoteSocketLiveTime.scheduleWithFixedDelay(new CheckSocketLiveTime(this, this.MAX_LIVE_TIME), this.MAX_LIVE_TIME,
+				this.checkRemoteSocketLiveTime.scheduleWithFixedDelay(
+				        new CheckSocketLiveTime(this, this.MAX_LIVE_TIME), this.MAX_LIVE_TIME,
 				        this.MAX_LIVE_TIME, TimeUnit.MINUTES);
 			}
 		}
-		ServerSide.LOGGER.debug("Server online");
+		DefaultSocketServer.LOGGER.debug("Server online");
 	}
 
 	/*
@@ -277,13 +296,14 @@ public class ServerSide implements SocketServerInterface {
 		}
 		catch (IOException _e) {
 		}
-		if (ServerSide.threadSocket != null && ServerSide.threadSocket.isAlive()) {
-			ServerSide.threadSocket.interrupt();
+		if (DefaultSocketServer.threadSocket != null
+		        && DefaultSocketServer.threadSocket.isAlive()) {
+			DefaultSocketServer.threadSocket.interrupt();
 		}
 		if (this.checkRemoteSocketLiveTime != null) {
 			this.checkRemoteSocketLiveTime.shutdown();
 		}
-		ServerSide.LOGGER.debug("Server offline!!!");
+		DefaultSocketServer.LOGGER.debug("Server offline!!!");
 	}
 
 }

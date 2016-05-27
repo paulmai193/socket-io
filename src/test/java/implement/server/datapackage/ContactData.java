@@ -1,10 +1,9 @@
 package implement.server.datapackage;
 
-import implement.define.Command;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import implement.define.Command;
 import logia.io.annotation.IOCommand;
 import logia.io.annotation.IOData;
 import logia.io.annotation.type.DataType;
@@ -13,15 +12,15 @@ import logia.socket.Interface.SocketClientInterface;
 import logia.socket.Interface.WriteDataInterface;
 
 /**
- * The Class ContactData. This class implements both ReadDataInterface and WriteDataInterface to read / write list contact data package
- * 
+ * The Class ContactData.
+ *
  * @author Paul Mai
  */
 @IOCommand(value = Command.CONTACT)
 public class ContactData implements ReadDataInterface, WriteDataInterface {
 
 	/** The contacts. */
-	@IOData(order = 1, type = DataType.LIST, breakValue = "n/a")
+	@IOData(order = 1, type = DataType.LIST)
 	private List<Contact> contacts;
 
 	/**
@@ -33,7 +32,7 @@ public class ContactData implements ReadDataInterface, WriteDataInterface {
 
 	/**
 	 * Adds the contact.
-	 * 
+	 *
 	 * @param contact the contact
 	 */
 	public void addContact(Contact contact) {
@@ -61,7 +60,8 @@ public class ContactData implements ReadDataInterface, WriteDataInterface {
 		ListNumberData listNumberData = new ListNumberData();
 		listNumberData.setCheck(1);
 		for (Contact contact : this.contacts) {
-			System.out.println(contact.getName() + " - " + contact.getEmail() + " - " + contact.getPhone());
+			System.out.println(
+			        contact.getName() + " - " + contact.getEmail() + " - " + contact.getPhone());
 			listNumberData.addnumber(Double.parseDouble(contact.getPhone()));
 		}
 		System.out.println("Return list phone to client");
@@ -76,7 +76,7 @@ public class ContactData implements ReadDataInterface, WriteDataInterface {
 
 	/**
 	 * Gets the contacts.
-	 * 
+	 *
 	 * @return the contacts
 	 */
 	public List<Contact> getContacts() {
@@ -85,7 +85,7 @@ public class ContactData implements ReadDataInterface, WriteDataInterface {
 
 	/**
 	 * Sets the contacts.
-	 * 
+	 *
 	 * @param contacts the new contacts
 	 */
 	public void setContacts(List<Contact> contacts) {
