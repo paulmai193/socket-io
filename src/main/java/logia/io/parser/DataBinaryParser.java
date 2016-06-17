@@ -36,17 +36,16 @@ import logia.socket.Interface.WriteDataInterface;
 import logia.utility.readfile.XmlUtil;
 
 /**
- * The Class DataParserByAnnotation.
  *
  * @author Paul Mai
  */
-public class DataParserByAnnotation implements ParserInterface {
+public class DataBinaryParser implements ParserInterface {
 
 	/** The Constant DICTIONARY. */
 	protected static final Map<String, Byte> DICTIONARY        = new HashMap<String, Byte>();
 
 	/** The Constant LOGGER. */
-	protected static final Logger            LOGGER            = Logger.getLogger(DataParserByAnnotation.class);
+	protected static final Logger            LOGGER            = Logger.getLogger(DataBinaryParser.class);
 
 	/** The Constant TYPE_BYTE. */
 	protected static final byte              TYPE_BYTE         = 1;
@@ -82,40 +81,40 @@ public class DataParserByAnnotation implements ParserInterface {
 	protected static final byte              TYPE_STRING       = 9;
 
 	static {
-		DataParserByAnnotation.DICTIONARY.put("byte", DataParserByAnnotation.TYPE_BYTE);
-		DataParserByAnnotation.DICTIONARY.put("java.lang.byte", DataParserByAnnotation.TYPE_BYTE);
+		DataBinaryParser.DICTIONARY.put("byte", DataBinaryParser.TYPE_BYTE);
+		DataBinaryParser.DICTIONARY.put("java.lang.byte", DataBinaryParser.TYPE_BYTE);
 
-		DataParserByAnnotation.DICTIONARY.put("byte[]", DataParserByAnnotation.TYPE_BYTE_ARRAY);
-		DataParserByAnnotation.DICTIONARY.put("bytearray", DataParserByAnnotation.TYPE_BYTE_ARRAY);
-		DataParserByAnnotation.DICTIONARY.put("byte_array", DataParserByAnnotation.TYPE_BYTE_ARRAY);
+		DataBinaryParser.DICTIONARY.put("byte[]", DataBinaryParser.TYPE_BYTE_ARRAY);
+		DataBinaryParser.DICTIONARY.put("bytearray", DataBinaryParser.TYPE_BYTE_ARRAY);
+		DataBinaryParser.DICTIONARY.put("byte_array", DataBinaryParser.TYPE_BYTE_ARRAY);
 
-		DataParserByAnnotation.DICTIONARY.put("double", DataParserByAnnotation.TYPE_DOUBLE);
-		DataParserByAnnotation.DICTIONARY.put("java.lang.double", DataParserByAnnotation.TYPE_DOUBLE);
+		DataBinaryParser.DICTIONARY.put("double", DataBinaryParser.TYPE_DOUBLE);
+		DataBinaryParser.DICTIONARY.put("java.lang.double", DataBinaryParser.TYPE_DOUBLE);
 
-		DataParserByAnnotation.DICTIONARY.put("float", DataParserByAnnotation.TYPE_FLOAT);
-		DataParserByAnnotation.DICTIONARY.put("java.lang.float", DataParserByAnnotation.TYPE_FLOAT);
+		DataBinaryParser.DICTIONARY.put("float", DataBinaryParser.TYPE_FLOAT);
+		DataBinaryParser.DICTIONARY.put("java.lang.float", DataBinaryParser.TYPE_FLOAT);
 
-		DataParserByAnnotation.DICTIONARY.put("java.io.file", DataParserByAnnotation.TYPE_FILE);
-		DataParserByAnnotation.DICTIONARY.put("file", DataParserByAnnotation.TYPE_FILE);
+		DataBinaryParser.DICTIONARY.put("java.io.file", DataBinaryParser.TYPE_FILE);
+		DataBinaryParser.DICTIONARY.put("file", DataBinaryParser.TYPE_FILE);
 
-		DataParserByAnnotation.DICTIONARY.put("int", DataParserByAnnotation.TYPE_INTERGER);
-		DataParserByAnnotation.DICTIONARY.put("integer", DataParserByAnnotation.TYPE_INTERGER);
-		DataParserByAnnotation.DICTIONARY.put("java.lang.integer", DataParserByAnnotation.TYPE_INTERGER);
+		DataBinaryParser.DICTIONARY.put("int", DataBinaryParser.TYPE_INTERGER);
+		DataBinaryParser.DICTIONARY.put("integer", DataBinaryParser.TYPE_INTERGER);
+		DataBinaryParser.DICTIONARY.put("java.lang.integer", DataBinaryParser.TYPE_INTERGER);
 
-		DataParserByAnnotation.DICTIONARY.put("json", DataParserByAnnotation.TYPE_JSON);
-		DataParserByAnnotation.DICTIONARY.put("jsonobject", DataParserByAnnotation.TYPE_JSON);
+		DataBinaryParser.DICTIONARY.put("json", DataBinaryParser.TYPE_JSON);
+		DataBinaryParser.DICTIONARY.put("jsonobject", DataBinaryParser.TYPE_JSON);
 
-		DataParserByAnnotation.DICTIONARY.put("long", DataParserByAnnotation.TYPE_LONG);
-		DataParserByAnnotation.DICTIONARY.put("java.lang.long", DataParserByAnnotation.TYPE_LONG);
+		DataBinaryParser.DICTIONARY.put("long", DataBinaryParser.TYPE_LONG);
+		DataBinaryParser.DICTIONARY.put("java.lang.long", DataBinaryParser.TYPE_LONG);
 
-		DataParserByAnnotation.DICTIONARY.put("arraylist", DataParserByAnnotation.TYPE_LIST);
-		DataParserByAnnotation.DICTIONARY.put("list", DataParserByAnnotation.TYPE_LIST);
+		DataBinaryParser.DICTIONARY.put("arraylist", DataBinaryParser.TYPE_LIST);
+		DataBinaryParser.DICTIONARY.put("list", DataBinaryParser.TYPE_LIST);
 
-		DataParserByAnnotation.DICTIONARY.put("short", DataParserByAnnotation.TYPE_SHORT);
-		DataParserByAnnotation.DICTIONARY.put("java.lang.short", DataParserByAnnotation.TYPE_SHORT);
+		DataBinaryParser.DICTIONARY.put("short", DataBinaryParser.TYPE_SHORT);
+		DataBinaryParser.DICTIONARY.put("java.lang.short", DataBinaryParser.TYPE_SHORT);
 
-		DataParserByAnnotation.DICTIONARY.put("string", DataParserByAnnotation.TYPE_STRING);
-		DataParserByAnnotation.DICTIONARY.put("java.lang.string", DataParserByAnnotation.TYPE_STRING);
+		DataBinaryParser.DICTIONARY.put("string", DataBinaryParser.TYPE_STRING);
+		DataBinaryParser.DICTIONARY.put("java.lang.string", DataBinaryParser.TYPE_STRING);
 	}
 
 	/** The command type. */
@@ -145,7 +144,7 @@ public class DataParserByAnnotation implements ParserInterface {
 	 *
 	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public DataParserByAnnotation() throws ClassNotFoundException {
+	public DataBinaryParser() throws ClassNotFoundException {
 		this(10*1024);
 
 	}
@@ -156,8 +155,8 @@ public class DataParserByAnnotation implements ParserInterface {
 	 * @param __bufferSize the __buffer size
 	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public DataParserByAnnotation(int __bufferSize) throws ClassNotFoundException {
-		this(DataParserByAnnotation.class.getClassLoader().getResource("data-package.xml").getPath(), __bufferSize);
+	public DataBinaryParser(int __bufferSize) throws ClassNotFoundException {
+		this(DataBinaryParser.class.getClassLoader().getResource("data-package.xml").getPath(), __bufferSize);
 	}
 
 	/**
@@ -166,7 +165,7 @@ public class DataParserByAnnotation implements ParserInterface {
 	 * @param __definePath the __define path
 	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public DataParserByAnnotation(String __definePath) throws ClassNotFoundException {
+	public DataBinaryParser(String __definePath) throws ClassNotFoundException {
 		this(__definePath, 10*1024);
 	}
 
@@ -177,7 +176,7 @@ public class DataParserByAnnotation implements ParserInterface {
 	 * @param __bufferSize the __buffer size
 	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public DataParserByAnnotation(String __definePath, int __bufferSize) throws ClassNotFoundException {
+	public DataBinaryParser(String __definePath, int __bufferSize) throws ClassNotFoundException {
 		this.reader = new Reader(__bufferSize);
 		this.writer = new Writer(__bufferSize);
 		this.xml = new XmlUtil(__definePath);
@@ -186,7 +185,7 @@ public class DataParserByAnnotation implements ParserInterface {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see logia.socket.Interface.ParserInterface#applyInputStream(logia.socket.Interface.SocketClientInterface)
 	 */
 	@Override
@@ -195,15 +194,15 @@ public class DataParserByAnnotation implements ParserInterface {
 
 			@Override
 			public void run() {
-				reader.setDataInputStream(__clientSocket.getInputStream());
+				DataBinaryParser.this.reader.setDataInputStream(__clientSocket.getInputStream());
 				ReadDataInterface _data = null;
 				while (__clientSocket.isConnected()) {
 
 					try {
 						long _a = System.currentTimeMillis();
-						_data = readData();
+						_data = DataBinaryParser.this.readData();
 						long _b = System.currentTimeMillis();
-						DataParserByAnnotation.LOGGER.debug("Finish read data after " + (_b - _a) / 1000 + "s");
+						DataBinaryParser.LOGGER.debug("Finish read data after " + (_b - _a) / 1000 + "s");
 						if (_data != null) {
 							if (__clientSocket.isWaitForReturn()) {
 								__clientSocket.setReturned(_data);
@@ -216,7 +215,7 @@ public class DataParserByAnnotation implements ParserInterface {
 							}
 						}
 						else {
-							DataParserByAnnotation.LOGGER.warn("Not recognize data from inputstream");
+							DataBinaryParser.LOGGER.warn("Not recognize data from inputstream");
 						}
 					}
 					catch (SocketTimeoutException _e) {
@@ -224,30 +223,36 @@ public class DataParserByAnnotation implements ParserInterface {
 							__clientSocket.getTimeoutListener().solveTimeout();
 						}
 						else {
-							LOGGER.error(_e.getMessage(), _e);
+							DataBinaryParser.LOGGER.error(_e.getMessage(), _e);
 						}
 					}
 					catch (EOFException __ex) {
-						LOGGER.warn("End of reading stream");
+						DataBinaryParser.LOGGER.warn("End of reading stream");
 						__clientSocket.disconnect();
 						break;
 					}
 					catch (IOException __ex) {
-						LOGGER.error(__ex.getMessage(), __ex);
-						__clientSocket.disconnect();
+						if (__ex.getMessage().contentEquals("Socket closed")) {
+							DataBinaryParser.LOGGER.warn(__ex.getMessage());
+						}
+						else {
+							DataBinaryParser.LOGGER.error(__ex.getMessage(), __ex);
+							__clientSocket.disconnect();
+						}
 						break;
 					}
 					catch (Exception __ex) {
-						LOGGER.error(__ex.getMessage(), __ex);
+						DataBinaryParser.LOGGER.error(__ex.getMessage(), __ex);
 						break;
 					}
 					finally {
-						try {
-							reader.close();
-						}
-						catch (IOException __ex) {
-							// Swallow this exeption
-						}
+						//                        try {
+						//                            // TODO WARNING
+						//                            DataParserByAnnotation.this.reader.close();
+						//                        }
+						//                        catch (IOException __ex) {
+						//                            // Swallow this exeption
+						//                        }
 					}
 				}
 			}
@@ -257,17 +262,30 @@ public class DataParserByAnnotation implements ParserInterface {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see logia.socket.Interface.ParserInterface#applyOutputStream(java.io.OutputStream, logia.socket.Interface.WriteDataInterface)
 	 */
 	@Override
 	public void applyOutputStream(SocketClientInterface __clientSocket, WriteDataInterface __writeData) throws Exception {
 		long _a = System.currentTimeMillis();
-		writer.setDataOutputStream(__clientSocket.getOutputStream());
-		this.writeData(__writeData);
-		writer.flush();
-		long _b = System.currentTimeMillis();
-		DataParserByAnnotation.LOGGER.debug("Finish send data after " + (_b - _a) / 1000 + "s");
+		this.writer.setDataOutputStream(__clientSocket.getOutputStream());
+		try {
+			this.writeDataToStream(__writeData);
+			this.writer.flush();
+			long _b = System.currentTimeMillis();
+			DataBinaryParser.LOGGER.debug("Finish send data after " + (_b - _a) / 1000 + "s");
+		}
+		finally {
+			//            try {
+			//                // TODO WARNING
+			//                this.writer.close();
+			//            }
+			//            catch (Exception ___ex) {
+			//                // Swallow this exception
+			//            }
+
+		}
+
 	}
 
 
@@ -324,7 +342,7 @@ public class DataParserByAnnotation implements ParserInterface {
 
 				// Check condition to take action
 				IOCondition[] _conditionFields = _ioData.conditions();
-				boolean _isBreak = checkBreakCondition(_conditionFields, __data);							
+				boolean _isBreak = this.checkBreakCondition(_conditionFields, __data);
 				if (_isBreak) {
 					break;
 				}
@@ -337,7 +355,7 @@ public class DataParserByAnnotation implements ParserInterface {
 
 						int _size = this.reader.readInt();
 						_fieldData = new ArrayList<Object>();
-						for (int _k = 0; _k < _size; _k++) {
+						for (int _k = 1; _k <= _size; _k++) {
 							Object _element = this.readDataByType(_elementType);
 							((ArrayList<Object>) _fieldData).add(_element);
 						}
@@ -346,7 +364,7 @@ public class DataParserByAnnotation implements ParserInterface {
 						this.setValueOf(__data, _field.getName(), _fieldData);
 					}
 					catch (Exception e) {
-						DataParserByAnnotation.LOGGER.error("Try to set value " + _fieldData + " to field " + _field.getName() + " in "
+						DataBinaryParser.LOGGER.error("Try to set value " + _fieldData + " to field " + _field.getName() + " in "
 								+ _typeData + " type.", e);
 					}
 				}
@@ -364,7 +382,7 @@ public class DataParserByAnnotation implements ParserInterface {
 
 			/*
 			 * (non-Javadoc)
-			 * 
+			 *
 			 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 			 */
 			@Override
@@ -385,9 +403,13 @@ public class DataParserByAnnotation implements ParserInterface {
 	 * Write data.
 	 *
 	 * @param __data the __data
-	 * @throws Exception the exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws NoSuchFieldException the no such field exception
+	 * @throws SecurityException the security exception
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IllegalAccessException the illegal access exception
 	 */
-	private void writeData(Object __data) throws Exception {
+	private void writeData(Object __data) throws IOException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		if (ClassUtils.isPrimitiveOrWrapper(__data.getClass())) {
 			this.writeDataByType(ClassUtils.getShortCanonicalName(__data.getClass()).toLowerCase(), "",  __data);
 		}
@@ -398,10 +420,10 @@ public class DataParserByAnnotation implements ParserInterface {
 				_field.setAccessible(true);
 				IOData _ioData = _field.getAnnotation(IOData.class);
 				if (_ioData != null) {
-					
+
 					// Check condition to skip write this data and move to next one
 					IOCondition[] _conditionFields = _ioData.conditions();
-					boolean _isBreak = checkBreakCondition(_conditionFields, __data);							
+					boolean _isBreak = this.checkBreakCondition(_conditionFields, __data);
 					if (_isBreak) {
 						break;
 					}
@@ -410,7 +432,7 @@ public class DataParserByAnnotation implements ParserInterface {
 						String _nameData = _field.getName();
 						Object _valueData = _field.get(__data);
 						this.writeDataByType(_typeData, _nameData,  _valueData);
-					}					
+					}
 				}
 			}
 		}
@@ -423,7 +445,7 @@ public class DataParserByAnnotation implements ParserInterface {
 	 * @return the data type
 	 */
 	protected Byte getDataType(String __type) {
-		return DataParserByAnnotation.DICTIONARY.get(__type.toLowerCase());
+		return DataBinaryParser.DICTIONARY.get(__type.toLowerCase());
 	}
 
 	/**
@@ -439,7 +461,7 @@ public class DataParserByAnnotation implements ParserInterface {
 				return (ReadDataInterface) _clazz.newInstance();
 			}
 			catch (InstantiationException | IllegalAccessException e) {
-				DataParserByAnnotation.LOGGER.error("Get instance of data error", e);
+				DataBinaryParser.LOGGER.error("Get instance of data error", e);
 				return null;
 			}
 		}
@@ -461,7 +483,7 @@ public class DataParserByAnnotation implements ParserInterface {
 				return _clazz.newInstance();
 			}
 			catch (InstantiationException | IllegalAccessException e) {
-				DataParserByAnnotation.LOGGER.error("Get instance of data error", e);
+				DataBinaryParser.LOGGER.error("Get instance of data error", e);
 				return null;
 			}
 		}
@@ -488,7 +510,7 @@ public class DataParserByAnnotation implements ParserInterface {
 			if (_data != null) {
 				IOCommand _clazzAnnotation = _data.getClass().getAnnotation(IOCommand.class);
 				if (_clazzAnnotation != null) {
-					readData(_data);
+					this.readData(_data);
 					return _data;
 				}
 				else {
@@ -518,6 +540,9 @@ public class DataParserByAnnotation implements ParserInterface {
 	private boolean checkBreakCondition(IOCondition[] __conditionFields, Object __data) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		boolean _isBreak = false;
 		for (IOCondition _ioCondition : __conditionFields) {
+			if (_isBreak) {
+				break;
+			}
 			ConditionActionType _conditionAction = _ioCondition.action();
 			ConditionType _conditionType = _ioCondition.type();
 			Field _conditionField = __data.getClass().getDeclaredField(_ioCondition.field());
@@ -531,6 +556,7 @@ public class DataParserByAnnotation implements ParserInterface {
 							if (_compareValue == null || !_compareValue.toString().equals(_conditionValue)) {
 								// Match condtion
 								_isBreak = true;
+								break;
 							}
 							else {
 								_isBreak = false;
@@ -544,6 +570,7 @@ public class DataParserByAnnotation implements ParserInterface {
 							}
 							else {
 								_isBreak = true;
+								break;
 							}
 							break;
 					}
@@ -556,6 +583,7 @@ public class DataParserByAnnotation implements ParserInterface {
 							if (_compareValue != null && _compareValue.toString().equals(_conditionValue)) {
 								// Match condtion
 								_isBreak = true;
+								break;
 							}
 							else {
 								_isBreak = false;
@@ -569,6 +597,7 @@ public class DataParserByAnnotation implements ParserInterface {
 							}
 							else {
 								_isBreak = true;
+								break;
 							}
 							break;
 					}
@@ -581,6 +610,7 @@ public class DataParserByAnnotation implements ParserInterface {
 							if (_compareValue != null && _compareValue.toString().compareTo(_conditionValue) > 0) {
 								// Match condtion
 								_isBreak = true;
+								break;
 							}
 							else {
 								_isBreak=false;
@@ -771,7 +801,7 @@ public class DataParserByAnnotation implements ParserInterface {
 	 * @param __data the __data
 	 * @throws Exception the exception
 	 */
-	protected void writeData(WriteDataInterface __data) throws Exception {
+	protected void writeDataToStream(WriteDataInterface __data) throws Exception {
 		// Get annotation of this instance
 		IOCommand _ioCommand = __data.getClass().getAnnotation(IOCommand.class);
 		if (_ioCommand != null) {
@@ -793,9 +823,13 @@ public class DataParserByAnnotation implements ParserInterface {
 	 * @param __fieldName the __field name
 	 * @param __data the __data
 	 * @return the string
-	 * @throws Exception the exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws NoSuchFieldException the no such field exception
+	 * @throws SecurityException the security exception
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IllegalAccessException the illegal access exception
 	 */
-	protected String writeDataByType(String __typeData, String __fieldName, Object __data) throws Exception {
+	protected String writeDataByType(String __typeData, String __fieldName, Object __data) throws IOException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		Byte _objType = this.getDataType(__typeData);
 		if (_objType == null) {
 			_objType = Byte.MIN_VALUE;
@@ -871,5 +905,24 @@ public class DataParserByAnnotation implements ParserInterface {
 		}
 
 		return _returnValue;
+	}
+
+	@Override
+	public void close() throws Exception {
+		// Close reader
+		try {
+			this.reader.close();
+		}
+		catch (IOException __ex) {
+			// Swallow this exeption
+		}
+
+		// CLose writer
+		try {
+			this.writer.close();
+		}
+		catch (Exception ___ex) {
+			// Swallow this exception
+		}
 	}
 }

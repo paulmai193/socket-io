@@ -5,23 +5,23 @@ package logia.socket.Interface;
  *
  * @author Paul Mai
  */
-public interface ParserInterface {
+public interface ParserInterface extends AutoCloseable {
 
-	/**
-	 * Apply input stream.
-	 *
-	 * @param __clientSocket the __client socket
-	 */
-	public void applyInputStream(SocketClientInterface __clientSocket);
+    /**
+     * Apply input stream.
+     *
+     * @param __clientSocket the __client socket
+     */
+    public void applyInputStream(SocketClientInterface __clientSocket);
 
-	/**
-	 * Apply output stream.
-	 *
-	 * @param __clientSocket the __client socket
-	 * @param __writeData the __write data
-	 * @throws Exception the exception
-	 */
-	public void applyOutputStream(SocketClientInterface __clientSocket,
-	        WriteDataInterface __writeData) throws Exception;
+    /**
+     * Apply output stream.
+     *
+     * @param __clientSocket the __client socket
+     * @param __writeData the __write data
+     * @throws Exception the exception
+     */
+    public void applyOutputStream(SocketClientInterface __clientSocket,
+            WriteDataInterface __writeData) throws Exception;
 
 }

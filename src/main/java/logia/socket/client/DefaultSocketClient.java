@@ -73,12 +73,9 @@ public class DefaultSocketClient implements SocketClientInterface {
     /**
      * Instantiates a new default socket client.
      *
-     * @param __host
-     *            the __host
-     * @param __port
-     *            the __port
-     * @param __timeout
-     *            the __timeout
+     * @param __host the __host
+     * @param __port the __port
+     * @param __timeout the __timeout
      */
     public DefaultSocketClient(String __host, int __port, int __timeout) {
         this.isConnected = false;
@@ -93,14 +90,10 @@ public class DefaultSocketClient implements SocketClientInterface {
     /**
      * Instantiates a new default socket client.
      *
-     * @param __host
-     *            the __host
-     * @param __port
-     *            the __port
-     * @param __timeout
-     *            the __timeout
-     * @param __dataParser
-     *            the __data parser
+     * @param __host the __host
+     * @param __port the __port
+     * @param __timeout the __timeout
+     * @param __dataParser the __data parser
      */
     public DefaultSocketClient(String __host, int __port, int __timeout,
             ParserInterface __dataParser) {
@@ -117,16 +110,11 @@ public class DefaultSocketClient implements SocketClientInterface {
     /**
      * Instantiates a new default socket client.
      *
-     * @param __host
-     *            the __host
-     * @param __port
-     *            the __port
-     * @param __timeout
-     *            the __timeout
-     * @param __dataParser
-     *            the __data parser
-     * @param __timeoutListener
-     *            the __timeout listener
+     * @param __host the __host
+     * @param __port the __port
+     * @param __timeout the __timeout
+     * @param __dataParser the __data parser
+     * @param __timeoutListener the __timeout listener
      */
     public DefaultSocketClient(String __host, int __port, int __timeout,
             ParserInterface __dataParser, SocketTimeoutListener __timeoutListener) {

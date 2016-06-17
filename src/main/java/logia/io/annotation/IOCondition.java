@@ -14,7 +14,7 @@ import logia.io.annotation.type.ConditionType;
  * @author Paul Mai
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.FIELD })
+@Target(value = { ElementType.METHOD })
 public @interface IOCondition {
 
 	/**

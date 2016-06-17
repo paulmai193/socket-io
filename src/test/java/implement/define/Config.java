@@ -8,8 +8,8 @@ package implement.define;
 public class Config {
 
 	/** The Constant DATA_PACKAGE_PATH_CLIENT. */
-	public static final String DATA_PACKAGE_PATH_CLIENT = "C:/Users/Paul Mai/git/socket-io/src/test/java/implement/define/ClientDataPackage.xml";
+    public static final String DATA_PACKAGE_PATH_CLIENT = "/home/logia193/git/socket-io/src/test/java/implement/define/ClientDataPackage.xml";
 	
 	/** The Constant DATA_PACKAGE_PATH_SERVER. */
-	public static final String DATA_PACKAGE_PATH_SERVER = "c:/Users/Paul Mai/git/socket-io/src/test/java/implement/define/ServerDataPackage.xml";
+    public static final String DATA_PACKAGE_PATH_SERVER = "/home/logia193/git/socket-io/src/test/java/implement/define/ServerDataPackage.xml";
 }

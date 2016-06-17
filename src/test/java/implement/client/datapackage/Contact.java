@@ -1,6 +1,9 @@
 package implement.client.datapackage;
 
+import logia.io.annotation.IOCondition;
 import logia.io.annotation.IOData;
+import logia.io.annotation.type.ConditionActionType;
+import logia.io.annotation.type.ConditionType;
 import logia.io.annotation.type.DataType;
 
 /**
@@ -11,7 +14,7 @@ import logia.io.annotation.type.DataType;
 public class Contact {
 
 	/** The email. */
-	@IOData(order = 3, type = DataType.STRING)
+    @IOData(order = 3, type = DataType.STRING, conditions = @IOCondition(field = "phone", type = ConditionType.EQUAL, value = "break", action = ConditionActionType.BREAK))
 	String email;
 
 	/** The name. */
@@ -19,7 +22,9 @@ public class Contact {
 	String name;
 
 	/** The phone. */
-	@IOData(order = 2, type = DataType.STRING)
+    @IOData(order = 2, type = DataType.STRING, conditions = {
+            @IOCondition(field = "name", type = ConditionType.EQUAL, value = "", action = ConditionActionType.BREAK),
+            @IOCondition(field = "name", type = ConditionType.DIFFERENT, value = "n/a", action = ConditionActionType.CONTINUE) })
 	String phone;
 
 	/**

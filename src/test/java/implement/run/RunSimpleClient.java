@@ -1,14 +1,12 @@
 package implement.run;
 
-import implement.client.datapackage.Contact;
-import implement.client.datapackage.ContactData;
-import implement.client.datapackage.ListNumberData;
-import implement.define.Config;
-
 import java.io.IOException;
 import java.net.SocketException;
 
-import logia.io.parser.DataParserByAnnotation;
+import implement.client.datapackage.Contact;
+import implement.client.datapackage.ContactData;
+import implement.define.Config;
+import logia.io.parser.DataBinaryParser;
 import logia.socket.Interface.ParserInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.client.DefaultSocketClient;
@@ -28,9 +26,10 @@ public class RunSimpleClient {
 	public static void main(String[] args) {
 		try {
 
-			ParserInterface parser = new DataParserByAnnotation(Config.DATA_PACKAGE_PATH_CLIENT, 1024 * 1024);
+			ParserInterface parser = new DataBinaryParser(Config.DATA_PACKAGE_PATH_CLIENT);
 
-			final SocketClientInterface client = new DefaultSocketClient("localhost", 1234, 5 * 60000, parser);
+			final SocketClientInterface client = new DefaultSocketClient("localhost", 1234,
+			        5 * 60000, parser);
 			client.connect();
 			if (client.isConnected()) {
 
@@ -38,9 +37,15 @@ public class RunSimpleClient {
 
 				ContactData data = new ContactData();
 				data.addContact(new Contact("Dai", "0933101959", ""));
-				data.addContact(new Contact("Thuan", "0165505756", ""));
-				ListNumberData result = (ListNumberData) client.echoAndWait(data);
-				result.executeData();
+				// data.addContact(new Contact("", "", ""));
+				client.echo(data);
+
+				// ListNumberData result = (ListNumberData) client.echoAndWait(data);
+				// result.executeData();
+
+				data = new ContactData();
+				data.addContact(new Contact("Thuan", "01655051756", ""));
+				client.echo(data);
 
 				long d = System.currentTimeMillis();
 				System.out.println("FINISH SEND FILE AFTER " + (d - c) / 1000 + " s");

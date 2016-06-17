@@ -1,6 +1,9 @@
 package implement.server.datapackage;
 
+import logia.io.annotation.IOCondition;
 import logia.io.annotation.IOData;
+import logia.io.annotation.type.ConditionActionType;
+import logia.io.annotation.type.ConditionType;
 import logia.io.annotation.type.DataType;
 
 /**
@@ -10,17 +13,19 @@ import logia.io.annotation.type.DataType;
  */
 public class Contact {
 
-	/** The email. */
-	@IOData(order = 3, type = DataType.STRING)
-	String email;
+    /** The email. */
+    @IOData(order = 3, type = DataType.STRING, conditions = @IOCondition(field = "phone", type = ConditionType.EQUAL, value = "break", action = ConditionActionType.BREAK))
+    String email;
 
-	/** The name. */
-	@IOData(order = 1, type = DataType.STRING)
-	String name;
+    /** The name. */
+    @IOData(order = 1, type = DataType.STRING)
+    String name;
 
-	/** The phone. */
-	@IOData(order = 2, type = DataType.STRING)
-	String phone;
+    /** The phone. */
+    @IOData(order = 2, type = DataType.STRING, conditions = {
+            @IOCondition(field = "name", type = ConditionType.EQUAL, value = "", action = ConditionActionType.BREAK),
+            @IOCondition(field = "name", type = ConditionType.DIFFERENT, value = "n/a", action = ConditionActionType.CONTINUE) })
+    String phone;
 
 	/**
 	 * Instantiates a new contact.

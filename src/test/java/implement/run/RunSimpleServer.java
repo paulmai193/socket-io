@@ -1,13 +1,11 @@
 package implement.run;
 
-import implement.define.Config;
-
 import java.net.Socket;
-import java.net.SocketException;
 
+import implement.define.Config;
 import logia.io.exception.ConnectionErrorException;
 import logia.io.exception.ReadDataException;
-import logia.io.parser.DataParserByAnnotation;
+import logia.io.parser.DataBinaryParser;
 import logia.socket.Interface.ParserInterface;
 import logia.socket.Interface.SocketClientInterface;
 import logia.socket.listener.AcceptClientListener;
@@ -35,14 +33,8 @@ public class RunSimpleServer extends Thread {
 
 			@Override
 			public void acceptClient(Socket socket) throws ConnectionErrorException, ClassNotFoundException, ReadDataException {
-				int bufferSize = 10 * 1024 * 1024;
-				try {
-					socket.setReceiveBufferSize(10 * 1024 * 1024);
-				}
-				catch (SocketException e) {
-					e.printStackTrace();
-				}
-				ParserInterface parser = new DataParserByAnnotation(Config.DATA_PACKAGE_PATH_SERVER, bufferSize);
+                ParserInterface parser = new DataBinaryParser(
+                        Config.DATA_PACKAGE_PATH_SERVER);
 				SocketClientInterface clientSocket = new DefaultClientHandler(server, socket, parser);
 				clientSocket.connect();
 				server.addClient(clientSocket);

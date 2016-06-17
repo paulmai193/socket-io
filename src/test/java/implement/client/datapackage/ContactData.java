@@ -15,7 +15,7 @@ import logia.socket.Interface.WriteDataInterface;
  *
  * @author Paul Mai
  */
-@IOCommand(/* type = { CommandType.READER, CommandType.WRITER }, */value = 4)
+@IOCommand(value = 4)
 public class ContactData implements ReadDataInterface, WriteDataInterface {
 
 	/** The contacts. */

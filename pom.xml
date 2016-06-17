@@ -9,14 +9,14 @@
 		<repository>
 			<id>nexus</id>
 			<name>Internal repositories</name>
-			<url>http://192.168.1.6:8081/nexus/content/repositories/releases/</url>
+			<url>http://10.10.1.82:8081/nexus/content/repositories/releases/</url>
 		</repository>
 	</distributionManagement>
 	
 	<repositories>
 		<repository>
 			<id>nexus</id>
-			<url>http://192.168.1.6:8081/nexus/content/repositories/releases</url>
+			<url>http://10.10.1.82:8081/nexus/content/repositories/releases</url>
 			<releases>
 				<enabled>true</enabled>
 				<updatePolicy>always</updatePolicy>
